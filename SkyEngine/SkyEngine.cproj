@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{003B3EF0-2756-4F3A-8D25-DA747D9520CF}</ProjectGuid>
+    <Compiler>
+      <Compiler ctype="GppCompiler" />
+    </Compiler>
+    <Language>CPP</Language>
+    <Target>Bin</Target>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug</OutputPath>
+    <Externalconsole>true</Externalconsole>
+    <OutputName>SkyEngine</OutputName>
+    <CompileTarget>Bin</CompileTarget>
+    <DefineSymbols>DEBUG</DefineSymbols>
+    <SourceDirectory>.</SourceDirectory>
+    <ExtraCompilerArguments>-std=c++14</ExtraCompilerArguments>
+    <Includes>
+      <Includes>
+        <Include>${ProjectDir}</Include>
+      </Includes>
+    </Includes>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\Release</OutputPath>
+    <Externalconsole>true</Externalconsole>
+    <OutputName>SkyEngine</OutputName>
+    <CompileTarget>Bin</CompileTarget>
+    <OptimizationLevel>3</OptimizationLevel>
+    <DefineSymbols>MONODEVELOP</DefineSymbols>
+    <SourceDirectory>.</SourceDirectory>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="main.cpp" />
+    <Compile Include="Math\Matrix3.cpp" />
+    <Compile Include="Math\Matrix4.cpp" />
+    <Compile Include="Math\Vector2.cpp" />
+    <Compile Include="Math\Vector3.cpp" />
+    <Compile Include="Math\Vector4.cpp" />
+    <Compile Include="Camera\Academy.cpp" />
+    <Compile Include="Camera\Camera.cpp" />
+    <Compile Include="Camera\Super8.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Math\" />
+    <Folder Include="Camera\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Math\Matrix3.h" />
+    <None Include="Math\Matrix4.h" />
+    <None Include="Math\Vector2.h" />
+    <None Include="Math\Vector3.h" />
+    <None Include="Math\Vector4.h" />
+    <None Include="Camera\Academy.h" />
+    <None Include="Camera\Camera.h" />
+    <None Include="Camera\Super8.h" />
+  </ItemGroup>
+</Project>
