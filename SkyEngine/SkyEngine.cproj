@@ -44,6 +44,7 @@
     <Compile Include="Camera\Academy.cpp" />
     <Compile Include="Camera\Camera.cpp" />
     <Compile Include="Camera\Super8.cpp" />
+    <Compile Include="Ray.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Math\" />
@@ -58,5 +59,6 @@
     <None Include="Camera\Academy.h" />
     <None Include="Camera\Camera.h" />
     <None Include="Camera\Super8.h" />
+    <None Include="Ray.h" />
   </ItemGroup>
 </Project>
