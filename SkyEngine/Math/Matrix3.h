@@ -69,7 +69,7 @@ private:
 //Inline heterogeneous opeartors
 
 template <class T>
-Vector3<T> operator *= (Vector3<T>& vector, const Matrix3<T>& matrix)
+Vector3<T> operator *= (const Vector3<T>& vector, const Matrix3<T>& matrix)
 {
 	vector = vector * matrix;
 }

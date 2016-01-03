@@ -70,3 +70,17 @@ public:
 private:
 
 };
+
+//Inline heterogeneous opeartors
+
+template <class T>
+Vector4<T> operator *= (const T& value, const Vector4<T>& vector)
+{
+	vector = vector * value;
+}
+
+template <class T>
+Vector4<T> operator * (const T& value, const Vector4<T>& vector)
+{
+	return vector * value;
+}

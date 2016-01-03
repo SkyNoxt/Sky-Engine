@@ -87,7 +87,7 @@ Vector3<T> Vector3<T>::cross(const Vector3<T>& vector) const
 template<class T>
 Vector3<T> Vector3<T>::reflect(const Vector3<T>& normal) const
 {
-	return *this;
+	return *this - 2 * this->dot(normal) * normal;
 }
 
 template<class T>

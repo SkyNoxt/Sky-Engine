@@ -73,3 +73,17 @@ public:
 private:
 
 };
+
+//Inline heterogeneous opeartors
+
+template <class T>
+Vector3<T> operator *= (const T& value, const Vector3<T>& vector)
+{
+	vector = vector * value;
+}
+
+template <class T>
+Vector3<T> operator * (const T& value, const Vector3<T>& vector)
+{
+	return vector * value;
+}
