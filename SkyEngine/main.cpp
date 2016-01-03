@@ -28,7 +28,13 @@ public:
 
 class Sphere
 {
+
 public:
+
+    float radius, radius2;
+    Vector3<float> center;
+    Vector3<float> color = Vector3<float> { 0.1, 0.5, 0.3};
+
     Sphere(const Vector3<float> &c, const float &r) : radius(r), radius2(r *r ), center(c) {}
 
     bool intersect(const Ray &ray, float &t) const
@@ -67,9 +73,6 @@ public:
         tex.x = (1 + atan2(Nhit.z, Nhit.x) / M_PI) * 0.5; 
         tex.y = acosf(Nhit.y) / M_PI; 
     }
-    float radius, radius2;
-    Vector3<float> center;
-    Vector3<float> color = Vector3<float> { 0.1, 0.5, 0.3};
 
 private:
 	static bool solveQuadratic(const float &a, const float &b, const float &c, float &x0, float &x1)
@@ -89,9 +92,8 @@ private:
 
 	    return true;
 	}
-};
 
-const float kInfinity = std::numeric_limits<float>::max();
+};
 
 Sphere* sphere;
 
@@ -103,7 +105,7 @@ static inline
 float clamp(const float &lo, const float &hi, const float &v)
 { return std::max(lo, std::min(hi, v)); }
 
-static Vector3<float> castRay(const Ray &ray, Camera &camera, uint32_t depth)
+static Vector3<float> castRay(Ray &ray, Camera &camera, uint32_t depth)
 {
 	Vector3<float> hitColor = (ray.direction + Vector3<float>(1)) * 0.5;
 
@@ -119,8 +121,7 @@ static Vector3<float> castRay(const Ray &ray, Camera &camera, uint32_t depth)
         // to compute a basic checker board pattern
         float scale = 13; 
         float pattern = (fmodf(tex.x * scale, 1) > 0.5) ^ (fmodf(tex.y * scale, 1) > 0.5); 
-        Vector3<float> invDir = Vector3<float> { -ray.direction.x, -ray.direction.y, -ray.direction.z };
-        hitColor = mix(sphere->color, sphere->color * 0.8, pattern) * std::max(0.f, Nhit.dot(invDir) * 2);
+        hitColor = mix(sphere->color, sphere->color * 0.8, pattern) * std::max(0.f, Nhit.dot(-ray.direction) * 2);
 	}
 
     return hitColor;
@@ -160,6 +161,10 @@ int main (int argc, char *argv[])
 	int imgHeight = 1080;
 
 	sphere = new Sphere(Vector3<float> { 0.0, 0.0, -1.5 }, 1.0);
+
+	float p = sphere->center.reflect(Vector3<float>(1.0, 0.5, 0.25)).x;
+
+	std::cout << "Vector: " << p << std::endl;
 
 	Camera *camera = new Camera(1.0, 90.0, imgWidth / (float)imgHeight);
 	//camera->viewMatrix.rotate(45.0, 0.0, 0.0, 1.0);

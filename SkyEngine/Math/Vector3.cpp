@@ -38,7 +38,7 @@ T Vector3<T>::dot() const
 template<class T>
 T Vector3<T>::length() const
 {
-	return sqrtf(dot());
+	return sqrt(dot());
 }
 
 template<class T>
@@ -82,6 +82,24 @@ Vector3<T> Vector3<T>::cross(const Vector3<T>& vector) const
 	return Vector3<T>(y * vector.z - vector.y * z,
 		z * vector.x - vector.z * x,
 		x * vector.y - vector.x *y);
+}
+
+template<class T>
+Vector3<T> Vector3<T>::reflect(const Vector3<T>& normal) const
+{
+	return *this;
+}
+
+template<class T>
+Vector3<T> Vector3<T>::refract(const Vector3<T>& normal, float index) const
+{
+	return *this;
+}
+
+template <class T>
+Vector3<T> Vector3<T>::operator-()
+{
+	return Vector3<T>(-x, -y, -z);
 }
 
 template <class T>

@@ -37,7 +37,12 @@ public:
 	Vector3<T> middle(const Vector3<T>& vector) const;
 	Vector3<T> cross(const Vector3<T>& vector) const;
 
+	Vector3<T> reflect(const Vector3<T>& normal) const;
+	Vector3<T> refract(const Vector3<T>& normal, float index) const;
+
 	//Unary operators
+	Vector3<T> operator - ();
+
 	void operator =  (const Vector3<T>& vector);
 	void operator += (const Vector3<T>& vector);
 	void operator -= (const Vector3<T>& vector);

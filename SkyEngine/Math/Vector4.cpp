@@ -40,7 +40,7 @@ T Vector4<T>::dot() const
 template<class T>
 T Vector4<T>::length() const
 {
-	return sqrtf(dot());
+	return sqrt(dot());
 }
 
 template<class T>
@@ -76,6 +76,12 @@ template<class T>
 Vector4<T> Vector4<T>::middle(const Vector4<T>& vector) const
 {
 	return Vector4<T>((x + vector.x) * 0.5, (y + vector.y) * 0.5, (z + vector.z) * 0.5, (w + vector.w) * 0.5);
+}
+
+template <class T>
+Vector4<T> Vector4<T>::operator-()
+{
+	return Vector4<T>(-x, -y, -z, -w);
 }
 
 template <class T>

@@ -36,7 +36,7 @@ T Vector2<T>::dot() const
 template<class T>
 T Vector2<T>::length() const
 {
-	return sqrtf(dot());
+	return sqrt(dot());
 }
 
 template<class T>
@@ -72,6 +72,12 @@ template<class T>
 Vector2<T> Vector2<T>::middle(const Vector2<T>& vector) const
 {
 	return Vector2<T>((x + vector.x) * 0.5, (y + vector.y) * 0.5);
+}
+
+template <class T>
+Vector2<T> Vector2<T>::operator-()
+{
+	return Vector2<T>(-x, -y);
 }
 
 template <class T>
