@@ -93,7 +93,11 @@ Vector3<T> Vector3<T>::reflect(const Vector3<T>& normal) const
 template<class T>
 Vector3<T> Vector3<T>::refract(const Vector3<T>& normal, float index) const
 {
-	return *this;
+	T dot = normal.dot(*this);
+	T k = 1 - index * index * (1 - dot * dot);
+	if(k < 0)
+		return Vector3<T>(0.0);
+	return index * *this - (index * dot + (T)sqrt(k)) * normal;
 }
 
 template <class T>

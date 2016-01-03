@@ -74,7 +74,7 @@ private:
 //Inline heterogeneous opeartors
 
 template <class T>
-Vector4<T> operator *= (const T& value, const Vector4<T>& vector)
+void operator *= (const T& value, const Vector4<T>& vector)
 {
 	vector = vector * value;
 }
