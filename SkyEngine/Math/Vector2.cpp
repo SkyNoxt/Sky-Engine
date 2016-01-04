@@ -75,7 +75,7 @@ Vector2<T> Vector2<T>::middle(const Vector2<T>& vector) const
 }
 
 template <class T>
-Vector2<T> Vector2<T>::operator-()
+Vector2<T> Vector2<T>::operator-() const
 {
 	return Vector2<T>(-x, -y);
 }

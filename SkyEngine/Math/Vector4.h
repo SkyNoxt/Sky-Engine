@@ -38,7 +38,7 @@ public:
 	Vector4<T> middle(const Vector4<T>& vector) const;
 
 	//Unary operators
-	Vector4<T> operator - ();
+	Vector4<T> operator - () const;
 
 	void operator =  (const Vector4<T>& vector);
 	void operator += (const Vector4<T>& vector);

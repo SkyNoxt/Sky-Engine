@@ -101,7 +101,7 @@ Vector3<T> Vector3<T>::refract(const Vector3<T>& normal, float index) const
 }
 
 template <class T>
-Vector3<T> Vector3<T>::operator-()
+Vector3<T> Vector3<T>::operator-() const
 {
 	return Vector3<T>(-x, -y, -z);
 }

@@ -79,7 +79,7 @@ Vector4<T> Vector4<T>::middle(const Vector4<T>& vector) const
 }
 
 template <class T>
-Vector4<T> Vector4<T>::operator-()
+Vector4<T> Vector4<T>::operator-() const
 {
 	return Vector4<T>(-x, -y, -z, -w);
 }

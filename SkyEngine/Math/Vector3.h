@@ -41,7 +41,7 @@ public:
 	Vector3<T> refract(const Vector3<T>& normal, float index) const;
 
 	//Unary operators
-	Vector3<T> operator - ();
+	Vector3<T> operator - () const;
 
 	void operator =  (const Vector3<T>& vector);
 	void operator += (const Vector3<T>& vector);
