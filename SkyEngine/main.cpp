@@ -97,6 +97,8 @@ private:
 
 Sphere* sphere;
 
+float bias = 0.00001;
+
 inline 
 Vector3<float> mix(const Vector3<float> &a, const Vector3<float>& b, const float &mixValue) 
 { return a * (1 - mixValue) + b * mixValue; } 
@@ -105,23 +107,62 @@ static inline
 float clamp(const float &lo, const float &hi, const float &v)
 { return std::max(lo, std::min(hi, v)); }
 
+void fresnel(const Vector3<float> &I, const Vector3<float> &N, const float &ior, float &kr) 
+{ 
+    float cosi = clamp(-1, 1, I.dot(N)); 
+    float etai = 1, etat = ior; 
+    if (cosi > 0) {  std::swap(etai, etat); } 
+    // Compute sini using Snell's law
+    float sint = etai / etat * sqrtf(std::max(0.f, 1 - cosi * cosi)); 
+    // Total internal reflection
+    if (sint >= 1) { 
+        kr = 1; 
+    } 
+    else { 
+        float cost = sqrtf(std::max(0.f, 1 - sint * sint)); 
+        cosi = fabsf(cosi); 
+        float Rs = ((etat * cosi) - (etai * cost)) / ((etat * cosi) + (etai * cost)); 
+        float Rp = ((etai * cosi) - (etat * cost)) / ((etai * cosi) + (etat * cost)); 
+        kr = (Rs * Rs + Rp * Rp) / 2; 
+    } 
+    // As a consequence of the conservation of energy, transmittance is given by:
+    // kt = 1 - kr;
+} 
+
 static Vector3<float> castRay(Ray &ray, Camera &camera, uint32_t depth)
 {
 	Vector3<float> hitColor = (ray.direction + Vector3<float>(1)) * 0.5;
+	if(depth > 1) return hitColor;
 
 	float f = 0;
 	if(sphere->intersect(ray, f))
 	{
-        Vector3<float> Phit = ray.origin + ray.direction * f; 
-        Vector3<float> Nhit; 
-        Vector2<float> tex; 
-        sphere->getSurfaceData(Phit, Nhit, tex); 
-        // Use the normal and texture coordinates to shade the hit point.
-        // The normal is used to compute a simple facing ratio and the texture coordinate
-        // to compute a basic checker board pattern
+        Vector3<float> hitPoint = ray.origin + ray.direction * f; 
+        Vector3<float> N; // normal 
+        Vector2<float> st; // st coordinates 
+        sphere->getSurfaceData(hitPoint, N, st); 
+
+	    Vector3<float> reflectionDirection = ray.direction.reflect(N).normalize(); 
+	    Vector3<float> refractionDirection = ray.direction.refract(N, 1).normalize(); 
+	    Vector3<float> reflectionRayOrig = reflectionDirection.dot(N) < 0 ? 
+	        hitPoint - N * bias : 
+	        hitPoint + N * bias; 
+	    Vector3<float> refractionRayOrig = refractionDirection.dot(N) < 0 ? 
+	        hitPoint - N * bias : 
+	        hitPoint + N * bias; 
+
+        Ray refl = Ray(reflectionRayOrig, reflectionDirection);
+        Ray refr = Ray(refractionRayOrig, refractionDirection);
+
+	    Vector3<float> reflectionColor = castRay(refl, camera, depth + 1); 
+	    Vector3<float> refractionColor = castRay(refr, camera, depth + 1); 
+	    float kr; 
+	    fresnel(ray.direction, N, 1, kr); 
+	    hitColor = mix(hitColor, reflectionColor * kr + refractionColor * (1 - kr), 0.75); 
+
         float scale = 13; 
-        float pattern = (fmodf(tex.x * scale, 1) > 0.5) ^ (fmodf(tex.y * scale, 1) > 0.5); 
-        hitColor = mix(sphere->color, sphere->color * 0.8, pattern) * std::max(0.f, Nhit.dot(-ray.direction) * 2);
+    	float pattern = (fmodf(st.x * scale, 1) > 0.5) ^ (fmodf(st.y * scale, 1) > 0.5); 
+    	hitColor = mix(hitColor, hitColor * 0.8, pattern);
 	}
 
     return hitColor;
@@ -129,6 +170,8 @@ static Vector3<float> castRay(Ray &ray, Camera &camera, uint32_t depth)
 
 static void render(Camera &camera, int width, int height)
 {
+	float level = 0;
+
     Vector3<float> *framebuffer = new Vector3<float>[width * height];
     Vector3<float> *pix = framebuffer;
 
@@ -136,7 +179,7 @@ static void render(Camera &camera, int width, int height)
         for (uint32_t i = 0; i < width; ++i) {
 
             Ray ray = camera.castRay(width, height, i, j);
-            *(pix++) = castRay(ray, camera, 0);
+            *(pix++) = castRay(ray, camera, level);
         }
     }
 
@@ -161,10 +204,6 @@ int main (int argc, char *argv[])
 	int imgHeight = 1080;
 
 	sphere = new Sphere(Vector3<float> { 0.0, 0.0, -1.5 }, 1.0);
-
-	float p = sphere->center.reflect(Vector3<float>(1.0, 0.5, 0.25)).x;
-
-	std::cout << "Vector: " << p << std::endl;
 
 	Camera *camera = new Camera(1.0, 90.0, imgWidth / (float)imgHeight);
 	//camera->viewMatrix.rotate(45.0, 0.0, 0.0, 1.0);
