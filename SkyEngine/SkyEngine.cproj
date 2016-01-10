@@ -13,7 +13,6 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\Debug</OutputPath>
-    <Externalconsole>true</Externalconsole>
     <OutputName>SkyEngine</OutputName>
     <CompileTarget>Bin</CompileTarget>
     <DefineSymbols>DEBUG</DefineSymbols>
@@ -24,15 +23,21 @@
         <Include>${ProjectDir}</Include>
       </Includes>
     </Includes>
+    <Externalconsole>true</Externalconsole>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <OutputPath>bin\Release</OutputPath>
-    <Externalconsole>true</Externalconsole>
     <OutputName>SkyEngine</OutputName>
     <CompileTarget>Bin</CompileTarget>
     <OptimizationLevel>3</OptimizationLevel>
-    <DefineSymbols>MONODEVELOP</DefineSymbols>
     <SourceDirectory>.</SourceDirectory>
+    <ExtraCompilerArguments>-std=c++14</ExtraCompilerArguments>
+    <Includes>
+      <Includes>
+        <Include>${ProjectDir}</Include>
+      </Includes>
+    </Includes>
+    <Externalconsole>true</Externalconsole>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="main.cpp" />
@@ -45,10 +50,12 @@
     <Compile Include="Camera\Camera.cpp" />
     <Compile Include="Camera\Super8.cpp" />
     <Compile Include="Ray.cpp" />
+    <Compile Include="Geometry\Mesh.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Math\" />
     <Folder Include="Camera\" />
+    <Folder Include="Geometry\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Math\Matrix3.h" />
@@ -60,5 +67,7 @@
     <None Include="Camera\Camera.h" />
     <None Include="Camera\Super8.h" />
     <None Include="Ray.h" />
+    <None Include="Geometry\Mesh.h" />
+    <None Include="Geometry\Vertex.h" />
   </ItemGroup>
 </Project>
