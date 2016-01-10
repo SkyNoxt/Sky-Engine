@@ -8,9 +8,9 @@
 
 #include <Geometry/Mesh.h>
 
-inline 
+/*inline
 Vector3<float> mix(const Vector3<float> &a, const Vector3<float>& b, const float &mixValue) 
-{ return a * (1 - mixValue) + b * mixValue; } 
+{ return a * (1 - mixValue) + b * mixValue; }*/
 
 static inline
 float clamp(const float &lo, const float &hi, const float &v)
@@ -33,9 +33,7 @@ float clamp(const float &lo, const float &hi, const float &v)
         float Rs = ((etat * cosi) - (etai * cost)) / ((etat * cosi) + (etai * cost)); 
         float Rp = ((etai * cosi) - (etat * cost)) / ((etai * cosi) + (etat * cost)); 
         kr = (Rs * Rs + Rp * Rp) / 2; 
-    } 
-    // As a consequence of the conservation of energy, transmittance is given by:
-    // kt = 1 - kr;
+    }
 }*/
 
 Mesh* mesh;
@@ -43,38 +41,41 @@ Mesh* mesh;
 static Vector3<float> castRay(Ray &ray, Camera &camera, uint32_t depth)
 {
 	Vector3<float> hitColor = (ray.direction + Vector3<float>(1)) * 0.5;
-	if(depth > 1) return hitColor;
+	if(depth > 3) return hitColor;
 
 	float distance;
 	unsigned int index;
-	Vector2<float> barycenter;
+	Vector2<float> uv;
 
-    //if (rayTriangleIntersect(ray, v0, v1, v2, t, u, v))
-    if(mesh->intersect(ray, distance, index, barycenter))
+    if(mesh->intersect(ray, distance, index, uv))
     {
-	    // [comment]
-	    // Interpolate colors using the barycentric coordinates
-	    // [/comment]
-	    //hitColor = u * cols[0] + v * cols[1] + (1 - u - v) * cols[2];
-	    // uncomment this line if you want to visualize the row barycentric coordinates
-	    hitColor = Vector3<float>(barycenter.x, barycenter.y, 1 - barycenter.x - barycenter.y);
+	    hitColor = Vector3<float>(uv.x, uv.y, 1 - uv.x - uv.y);
 	}
 
-	/*if(sphere->intersect(ray, f))
+	/*if(mesh->intersect(ray, distance, index, uv))
 	{
-        Vector3<float> hitPoint = ray.origin + ray.direction * f; 
-        Vector3<float> N; // normal 
-        Vector2<float> st; // st coordinates 
-        sphere->getSurfaceData(hitPoint, N, st); 
+        Vector3<float> hitPoint = ray.origin + ray.direction * distance;
+
+        Vector3<float> n0 = mesh->vertexArray[index    ].normal;
+        Vector3<float> n1 = mesh->vertexArray[index + 1].normal;
+        Vector3<float> n2 = mesh->vertexArray[index + 2].normal;
+
+        Vector3<float> N = (1 - uv.x - uv.y) * n0 + uv.x * n1 + uv.y * n2;
+
+        Vector2<float> st0 = mesh->vertexArray[index].texCoord;
+        Vector2<float> st1 = mesh->vertexArray[index + 1].texCoord;
+        Vector2<float> st2 = mesh->vertexArray[index + 2].texCoord;
+
+        Vector2<float> st = (1 - uv.x - uv.y) * st0 + uv.x * st1 + uv.y * st2;
 
 	    Vector3<float> reflectionDirection = ray.direction.reflect(N).normalize(); 
 	    Vector3<float> refractionDirection = ray.direction.refract(N, 1).normalize(); 
 	    Vector3<float> reflectionRayOrig = reflectionDirection.dot(N) < 0 ? 
-	        hitPoint - N * bias : 
-	        hitPoint + N * bias; 
+	        hitPoint - N * 0.0001 : 
+	        hitPoint + N * 0.0001; 
 	    Vector3<float> refractionRayOrig = refractionDirection.dot(N) < 0 ? 
-	        hitPoint - N * bias : 
-	        hitPoint + N * bias; 
+	        hitPoint - N * 0.0001 : 
+	        hitPoint + N * 0.0001; 
 
         Ray refl = Ray(reflectionRayOrig, reflectionDirection);
         Ray refr = Ray(refractionRayOrig, refractionDirection);
@@ -119,7 +120,7 @@ static void render(Camera &camera, int width, int height)
 
     ofs.close();
 
-    delete [] framebuffer;
+    delete[] framebuffer;
 }
 
 int main (int argc, char *argv[])
@@ -133,14 +134,9 @@ int main (int argc, char *argv[])
 	mesh->vertexArray = new Vertex[mesh->numVertices];
 	meshStream.read((char*)mesh->vertexArray, sizeof(Vertex) * mesh->numVertices);
 
-	Mesh* testMesh = mesh;
-
-	std::cout << mesh->numVertices << std::endl;
-
 	Camera camera = Camera(1.0, 50.0393, imgWidth / (float)imgHeight);
 	//camera.viewMatrix = Matrix4<float>(0.707107, -0.331295, 0.624695, 0, 0, 0.883452, 0.468521, 0, -0.707107, -0.331295, 0.624695, 0, -1.63871, -5.747777, -40.400412, 1).inverse();
 
-    // finally, render
     render(camera, imgWidth, imgHeight);
 
     return 0;

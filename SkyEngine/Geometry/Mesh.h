@@ -27,9 +27,9 @@ public:
 	//Destructor
 	~Mesh();
 
-private:
+protected:
 
-	//Private member function
+	//Protected member function
 	bool triangleIntersect(const Ray& ray,
 		const Vector3<float>& vertex0, const Vector3<float>& vertex1, const Vector3<float>& vertex2,
     	float &distance, float &u, float &v) const;

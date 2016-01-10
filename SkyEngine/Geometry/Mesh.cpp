@@ -20,6 +20,7 @@ bool Mesh::intersect(const Ray& ray, float& distance, unsigned int& index, Vecto
 				distance = tempDist;
 				barycenter.x = u;
 				barycenter.y = v;
+				index = i;
 				intersect = true;
 			}
 	}
