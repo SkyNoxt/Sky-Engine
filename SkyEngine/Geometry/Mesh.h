@@ -16,13 +16,13 @@ public:
 
 	bool culling = false;
 	unsigned int numVertices;
-	struct Vertex* vertexArray;
+	Vertex* vertexArray;
 
 	//Constructor
 	Mesh();
 
 	//Member function
-	bool intersect(const Ray& ray, float& distance, unsigned int& index, Vector2<float>& baricenter) const;
+	virtual bool intersect(const Ray& ray, float& distance, unsigned int& index, Vector2<float>& barycenter) const;
 
 	//Destructor
 	~Mesh();

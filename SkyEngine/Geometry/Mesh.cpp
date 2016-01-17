@@ -18,8 +18,7 @@ bool Mesh::intersect(const Ray& ray, float& distance, unsigned int& index, Vecto
 			tempDist, u, v) && tempDist < distance)
 			{
 				distance = tempDist;
-				barycenter.x = u;
-				barycenter.y = v;
+				barycenter = { u, v };
 				index = i;
 				intersect = true;
 			}

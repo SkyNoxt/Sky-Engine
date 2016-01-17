@@ -6,7 +6,8 @@
 #include <Math/Vector3.h>
 #include <Camera/Camera.h>
 
-#include <Geometry/Mesh.h>
+#include <Geometry/Box.h>
+#include <Geometry/IndexedMesh.h>
 
 /*inline
 Vector3<float> mix(const Vector3<float> &a, const Vector3<float>& b, const float &mixValue) 
@@ -36,18 +37,21 @@ float clamp(const float &lo, const float &hi, const float &v)
     }
 }*/
 
-Mesh* mesh;
+Box* boundingBox;
+IndexedMesh* mesh;
 
 static Vector3<float> castRay(Ray &ray, Camera &camera, uint32_t depth)
 {
-	Vector3<float> hitColor = (ray.direction + Vector3<float>(1)) * 0.5;
-	if(depth > 3) return hitColor;
+	//Vector3<float> hitColor = (ray.direction + Vector3<float>(1)) * 0.5;
+	//if(depth > 3) return hitColor;
+
+	Vector3<float> hitColor = { 0.235294, 0.67451, 0.843137 };
 
 	float distance;
 	unsigned int index;
 	Vector2<float> uv;
 
-    if(mesh->intersect(ray, distance, index, uv))
+    if(/*boundingBox->intersect(ray, distance) && */mesh->intersect(ray, distance, index, uv))
     {
 	    hitColor = Vector3<float>(uv.x, uv.y, 1 - uv.x - uv.y);
 	}
@@ -98,7 +102,7 @@ static void render(Camera &camera, int width, int height)
 {
 	float level = 0;
 
-    Vector3<float> *framebuffer = new Vector3<float>[width * height];
+    Vector3<float>* framebuffer = new Vector3<float>[width * height];
 
     for (uint32_t j = 0; j < height; ++j) {
         for (uint32_t i = 0; i < width; ++i) {
@@ -125,18 +129,50 @@ static void render(Camera &camera, int width, int height)
 
 int main (int argc, char *argv[])
 {
-	int imgWidth = 160;
-	int imgHeight = 120;
+	int imgWidth = 640;
+	int imgHeight = 480;
 
-	mesh = new Mesh();
-	std::ifstream meshStream("/home/nelson/Desktop/ad.mesh", std::ios::in | std::ios::binary);
+	//Compute mesh
+	mesh = new IndexedMesh();
+	std::ifstream meshStream("/home/nelson/Desktop/cow.mesh", std::ios::in | std::ios::binary);
+
 	meshStream.read((char*)&(mesh->numVertices), sizeof(mesh->numVertices));
 	mesh->vertexArray = new Vertex[mesh->numVertices];
 	meshStream.read((char*)mesh->vertexArray, sizeof(Vertex) * mesh->numVertices);
 
-	Camera camera = Camera(1.0, 50.0393, imgWidth / (float)imgHeight);
-	//camera.viewMatrix = Matrix4<float>(0.707107, -0.331295, 0.624695, 0, 0, 0.883452, 0.468521, 0, -0.707107, -0.331295, 0.624695, 0, -1.63871, -5.747777, -40.400412, 1).inverse();
+	meshStream.read((char*)&(mesh->numIndices), sizeof(mesh->numIndices));
+	mesh->indexArray = new unsigned int[mesh->numIndices];
+	meshStream.read((char*)mesh->indexArray, sizeof(unsigned int) * mesh->numIndices);
 
+	//Compute bounding box
+	/*Vector3<float> minima = Vector3<float>(0.0, 0.0, 0.0);
+	Vector3<float> maxima = Vector3<float>(0.0, 0.0, 0.0);
+
+	for(int i = 0; i < mesh->numVertices; ++i)
+	{
+		if(mesh->vertexArray[i].position.x < minima.x)
+			minima.x = mesh->vertexArray[i].position.x;
+		else if(mesh->vertexArray[i].position.x > maxima.x)
+			maxima.x = mesh->vertexArray[i].position.x;
+
+		if(mesh->vertexArray[i].position.y < minima.y)
+			minima.y = mesh->vertexArray[i].position.y;
+		else if(mesh->vertexArray[i].position.y > maxima.y)
+			maxima.y = mesh->vertexArray[i].position.y;
+
+		if(mesh->vertexArray[i].position.z < minima.z)
+			minima.z = mesh->vertexArray[i].position.z;
+		else if(mesh->vertexArray[i].position.z > maxima.z)
+			maxima.z = mesh->vertexArray[i].position.z;
+	}
+
+	boundingBox = new Box(minima, maxima);*/
+
+	//Compute camera
+	Camera camera = Camera(1.0, 50.0393, imgWidth / (float)imgHeight);
+	camera.viewMatrix = Matrix4<float>(0.707107, -0.331295, 0.624695, 0, 0, 0.883452, 0.468521, 0, -0.707107, -0.331295, 0.624695, 0, -1.63871, -5.747777, -40.400412, 1).inverse();
+
+	//Render
     render(camera, imgWidth, imgHeight);
 
     return 0;

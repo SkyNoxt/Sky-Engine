@@ -51,6 +51,8 @@
     <Compile Include="Camera\Super8.cpp" />
     <Compile Include="Ray.cpp" />
     <Compile Include="Geometry\Mesh.cpp" />
+    <Compile Include="Geometry\Box.cpp" />
+    <Compile Include="Geometry\IndexedMesh.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Math\" />
@@ -69,5 +71,7 @@
     <None Include="Ray.h" />
     <None Include="Geometry\Mesh.h" />
     <None Include="Geometry\Vertex.h" />
+    <None Include="Geometry\Box.h" />
+    <None Include="Geometry\IndexedMesh.h" />
   </ItemGroup>
 </Project>

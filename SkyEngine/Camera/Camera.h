@@ -24,7 +24,7 @@ public:
 	//destructor
 	~Camera();
 
-private:
+//private:
 
 	float focalLength;
 	float fieldOfView;
