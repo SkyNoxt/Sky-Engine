@@ -9,10 +9,11 @@ Mesh::Mesh()
 bool Mesh::intersect(const Ray& ray, float& distance, unsigned int& index, Vector2<float>& barycenter) const
 {
 	bool intersect = false;
+	float tempDist, u, v;
+
+	distance = Ray::maxLength;
 	for(unsigned int i = 0; i < numVertices; i+=3)
 	{
-		distance = Ray::maxLength;
-		float tempDist, u, v;
 		if(triangleIntersect(ray,
 			vertexArray[i].position, vertexArray[i + 1].position, vertexArray[i + 2].position,
 			tempDist, u, v) && tempDist < distance)

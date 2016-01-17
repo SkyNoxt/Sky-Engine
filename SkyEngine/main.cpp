@@ -40,7 +40,7 @@ float clamp(const float &lo, const float &hi, const float &v)
 Box* boundingBox;
 IndexedMesh* mesh;
 
-static Vector3<float> castRay(Ray &ray, Camera &camera, uint32_t depth)
+static Vector3<float> castRay(Ray &ray, Camera &camera, unsigned int depth)
 {
 	//Vector3<float> hitColor = (ray.direction + Vector3<float>(1)) * 0.5;
 	//if(depth > 3) return hitColor;
@@ -54,6 +54,7 @@ static Vector3<float> castRay(Ray &ray, Camera &camera, uint32_t depth)
     if(/*boundingBox->intersect(ray, distance) && */mesh->intersect(ray, distance, index, uv))
     {
 	    hitColor = Vector3<float>(uv.x, uv.y, 1 - uv.x - uv.y);
+	    //hitColor = Vector3<float>(distance);
 	}
 
 	/*if(mesh->intersect(ray, distance, index, uv))
@@ -104,8 +105,8 @@ static void render(Camera &camera, int width, int height)
 
     Vector3<float>* framebuffer = new Vector3<float>[width * height];
 
-    for (uint32_t j = 0; j < height; ++j) {
-        for (uint32_t i = 0; i < width; ++i) {
+    for (unsigned int j = 0; j < height; ++j) {
+        for (unsigned int i = 0; i < width; ++i) {
             Ray ray = camera.castRay(width, height, i, j);
             framebuffer[width * j + i] = castRay(ray, camera, level);
         }

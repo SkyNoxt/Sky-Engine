@@ -9,10 +9,11 @@ IndexedMesh::IndexedMesh()
 bool IndexedMesh::intersect(const Ray& ray, float& distance, unsigned int& index, Vector2<float>& barycenter) const
 {
 	bool intersect = false;
+	float tempDist, u, v;
+
+	distance = Ray::maxLength;
 	for(unsigned int i = 0; i < numIndices; i+=3)
 	{
-		distance = Ray::maxLength;
-		float tempDist, u, v;
 		if(triangleIntersect(ray,
 			vertexArray[indexArray[i]].position, vertexArray[indexArray[i + 1]].position,
 			vertexArray[indexArray[i + 2]].position, tempDist, u, v) && tempDist < distance)
