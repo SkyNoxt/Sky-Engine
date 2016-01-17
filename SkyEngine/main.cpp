@@ -2,6 +2,8 @@
 #include <iostream>
 #include <fstream>
 
+#include <omp.h>
+
 #include <Math/Vector2.h>
 #include <Math/Vector3.h>
 #include <Camera/Camera.h>
@@ -9,15 +11,15 @@
 #include <Geometry/Box.h>
 #include <Geometry/IndexedMesh.h>
 
-/*inline
+inline
 Vector3<float> mix(const Vector3<float> &a, const Vector3<float>& b, const float &mixValue) 
-{ return a * (1 - mixValue) + b * mixValue; }*/
+{ return a * (1 - mixValue) + b * mixValue; }
 
 static inline
 float clamp(const float &lo, const float &hi, const float &v)
 { return std::max(lo, std::min(hi, v)); }
 
-/*void fresnel(const Vector3<float> &I, const Vector3<float> &N, const float &ior, float &kr) 
+void fresnel(const Vector3<float> &I, const Vector3<float> &N, const float &ior, float &kr) 
 { 
     float cosi = clamp(-1, 1, I.dot(N)); 
     float etai = 1, etat = ior; 
@@ -35,29 +37,27 @@ float clamp(const float &lo, const float &hi, const float &v)
         float Rp = ((etai * cosi) - (etat * cost)) / ((etai * cosi) + (etat * cost)); 
         kr = (Rs * Rs + Rp * Rp) / 2; 
     }
-}*/
+}
 
 Box* boundingBox;
 IndexedMesh* mesh;
 
 static Vector3<float> castRay(Ray &ray, Camera &camera, unsigned int depth)
 {
-	//Vector3<float> hitColor = (ray.direction + Vector3<float>(1)) * 0.5;
+	Vector3<float> hitColor = (ray.direction + Vector3<float>(1)) * 0.5;
 	//if(depth > 3) return hitColor;
-
-	Vector3<float> hitColor = { 0.235294, 0.67451, 0.843137 };
 
 	float distance;
 	unsigned int index;
 	Vector2<float> uv;
 
-    if(/*boundingBox->intersect(ray, distance) && */mesh->intersect(ray, distance, index, uv))
+    /*if(boundingBox->intersect(ray, distance) && mesh->intersect(ray, distance, index, uv))
     {
 	    hitColor = Vector3<float>(uv.x, uv.y, 1 - uv.x - uv.y);
 	    //hitColor = Vector3<float>(distance);
-	}
+	}*/
 
-	/*if(mesh->intersect(ray, distance, index, uv))
+	if(boundingBox->intersect(ray, distance) && mesh->intersect(ray, distance, index, uv))
 	{
         Vector3<float> hitPoint = ray.origin + ray.direction * distance;
 
@@ -67,13 +67,13 @@ static Vector3<float> castRay(Ray &ray, Camera &camera, unsigned int depth)
 
         Vector3<float> N = (1 - uv.x - uv.y) * n0 + uv.x * n1 + uv.y * n2;
 
-        Vector2<float> st0 = mesh->vertexArray[index].texCoord;
+        Vector2<float> st0 = mesh->vertexArray[index    ].texCoord;
         Vector2<float> st1 = mesh->vertexArray[index + 1].texCoord;
         Vector2<float> st2 = mesh->vertexArray[index + 2].texCoord;
 
         Vector2<float> st = (1 - uv.x - uv.y) * st0 + uv.x * st1 + uv.y * st2;
 
-	    Vector3<float> reflectionDirection = ray.direction.reflect(N).normalize(); 
+	    /*Vector3<float> reflectionDirection = ray.direction.reflect(N).normalize(); 
 	    Vector3<float> refractionDirection = ray.direction.refract(N, 1).normalize(); 
 	    Vector3<float> reflectionRayOrig = reflectionDirection.dot(N) < 0 ? 
 	        hitPoint - N * 0.0001 : 
@@ -89,12 +89,12 @@ static Vector3<float> castRay(Ray &ray, Camera &camera, unsigned int depth)
 	    Vector3<float> refractionColor = castRay(refr, camera, depth + 1); 
 	    float kr; 
 	    fresnel(ray.direction, N, 1, kr); 
-	    hitColor = mix(hitColor, reflectionColor * kr + refractionColor * (1 - kr), 0.75); 
+	    hitColor = mix(hitColor, reflectionColor * kr + refractionColor * (1 - kr), 0.75); */
 
         float scale = 13; 
     	float pattern = (fmodf(st.x * scale, 1) > 0.5) ^ (fmodf(st.y * scale, 1) > 0.5); 
-    	hitColor = mix(hitColor, hitColor * 0.8, pattern);
-	}*/
+    	hitColor = (pattern);
+	}
 
     return hitColor;
 }
@@ -105,6 +105,7 @@ static void render(Camera &camera, int width, int height)
 
     Vector3<float>* framebuffer = new Vector3<float>[width * height];
 
+    #pragma omp parallel for num_threads(1024)
     for (unsigned int j = 0; j < height; ++j) {
         for (unsigned int i = 0; i < width; ++i) {
             Ray ray = camera.castRay(width, height, i, j);
@@ -130,8 +131,8 @@ static void render(Camera &camera, int width, int height)
 
 int main (int argc, char *argv[])
 {
-	int imgWidth = 640;
-	int imgHeight = 480;
+	int imgWidth = 1920;
+	int imgHeight = 1080;
 
 	//Compute mesh
 	mesh = new IndexedMesh();
@@ -146,7 +147,7 @@ int main (int argc, char *argv[])
 	meshStream.read((char*)mesh->indexArray, sizeof(unsigned int) * mesh->numIndices);
 
 	//Compute bounding box
-	/*Vector3<float> minima = Vector3<float>(0.0, 0.0, 0.0);
+	Vector3<float> minima = Vector3<float>(0.0, 0.0, 0.0);
 	Vector3<float> maxima = Vector3<float>(0.0, 0.0, 0.0);
 
 	for(int i = 0; i < mesh->numVertices; ++i)
@@ -167,7 +168,7 @@ int main (int argc, char *argv[])
 			maxima.z = mesh->vertexArray[i].position.z;
 	}
 
-	boundingBox = new Box(minima, maxima);*/
+	boundingBox = new Box(minima, maxima);
 
 	//Compute camera
 	Camera camera = Camera(1.0, 50.0393, imgWidth / (float)imgHeight);
