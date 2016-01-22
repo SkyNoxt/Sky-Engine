@@ -118,9 +118,9 @@ static void render(Camera &camera, int width, int height)
 	std::ofstream ofs("/home/nelson/Desktop/RayTrace.ppm", std::ios::out | std::ios::binary);
     ofs << "P6\n" << width << " " << height << "\n255\n";
     for (uint32_t i = 0; i < height * width; ++i) {
-        char r = (char)(255 * clamp(0, 1, framebuffer[i].x));
-        char g = (char)(255 * clamp(0, 1, framebuffer[i].y));
-        char b = (char)(255 * clamp(0, 1, framebuffer[i].z));
+        unsigned char r = (unsigned char)(255 * clamp(0, 1, framebuffer[i].x));
+        unsigned char g = (unsigned char)(255 * clamp(0, 1, framebuffer[i].y));
+        unsigned char b = (unsigned char)(255 * clamp(0, 1, framebuffer[i].z));
         ofs << r << g << b;
     }
 

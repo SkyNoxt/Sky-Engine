@@ -17,13 +17,14 @@
     <CompileTarget>Bin</CompileTarget>
     <DefineSymbols>DEBUG</DefineSymbols>
     <SourceDirectory>.</SourceDirectory>
-    <ExtraCompilerArguments>-std=c++14</ExtraCompilerArguments>
+    <ExtraCompilerArguments>-std=c++14 -fopenmp</ExtraCompilerArguments>
     <Includes>
       <Includes>
         <Include>${ProjectDir}</Include>
       </Includes>
     </Includes>
     <Externalconsole>true</Externalconsole>
+    <ExtraLinkerArguments>-fopenmp</ExtraLinkerArguments>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <OutputPath>bin\Release</OutputPath>
