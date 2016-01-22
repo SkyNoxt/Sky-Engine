@@ -45,6 +45,11 @@ Matrix4<float>* modelMatrix;
 
 static Vector3<float> castRay(Ray &ray, Camera &camera, unsigned int depth)
 {
+	//Inverse Ray Transform
+	Matrix4<float> rayMatrix = modelMatrix->inverse();
+	Vector4<float> rayOrigin = Vector4<float>(ray.origin.x, ray.origin.y, ray.origin.z, 1.0) * rayMatrix;
+	ray = Ray(Vector3<float>(rayOrigin.x, rayOrigin.y, rayOrigin.z), ray.direction * rayMatrix);
+
 	Vector3<float> hitColor = (ray.direction + Vector3<float>(1)) * 0.5;
 	//if(depth > 3) return hitColor;
 
@@ -150,15 +155,17 @@ int main (int argc, char *argv[])
 	mesh->indexArray = new unsigned int[mesh->numIndices];
 	meshStream.read((char*)mesh->indexArray, sizeof(unsigned int) * mesh->numIndices);
 
+	//Compute transformation matrix
 	modelMatrix = new Matrix4<float>();
 	modelMatrix->rotate(90, 0.0, 1.0, 0.0);
 	Matrix4<float> normalMatrix = modelMatrix->inverse().transpose();
 
-	for(unsigned int i = 0; i < mesh->numVertices; ++i)
+	//Forward Mesh Transformation
+	/*for(unsigned int i = 0; i < mesh->numVertices; ++i)
 	{
-		mesh->vertexArray[i].position = mesh->vertexArray[i].position * *modelMatrix;
+		mesh->vertexArray[i].position *= *modelMatrix;
 		mesh->vertexArray[i].normal *= normalMatrix;
-	}
+	}*/
 
 	//Compute bounding box
 	Vector3<float> minima = Vector3<float>(0.0, 0.0, 0.0);
