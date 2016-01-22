@@ -17,14 +17,14 @@
     <CompileTarget>Bin</CompileTarget>
     <DefineSymbols>DEBUG</DefineSymbols>
     <SourceDirectory>.</SourceDirectory>
-    <ExtraCompilerArguments>-std=c++14 -fopenmp</ExtraCompilerArguments>
+    <ExtraCompilerArguments>-std=c++14 -flto -fopenmp</ExtraCompilerArguments>
     <Includes>
       <Includes>
         <Include>${ProjectDir}</Include>
       </Includes>
     </Includes>
     <Externalconsole>true</Externalconsole>
-    <ExtraLinkerArguments>-fopenmp</ExtraLinkerArguments>
+    <ExtraLinkerArguments>-flto -O3 -fopenmp</ExtraLinkerArguments>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <OutputPath>bin\Release</OutputPath>
@@ -32,14 +32,14 @@
     <CompileTarget>Bin</CompileTarget>
     <OptimizationLevel>3</OptimizationLevel>
     <SourceDirectory>.</SourceDirectory>
-    <ExtraCompilerArguments>-std=c++14 -fopenmp</ExtraCompilerArguments>
+    <ExtraCompilerArguments>-std=c++14 -flto -fopenmp</ExtraCompilerArguments>
     <Includes>
       <Includes>
         <Include>${ProjectDir}</Include>
       </Includes>
     </Includes>
     <Externalconsole>true</Externalconsole>
-    <ExtraLinkerArguments>-fopenmp</ExtraLinkerArguments>
+    <ExtraLinkerArguments>-flto -O3 -fopenmp</ExtraLinkerArguments>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="main.cpp" />

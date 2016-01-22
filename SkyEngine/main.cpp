@@ -57,7 +57,7 @@ static Vector3<float> castRay(Ray &ray, Camera &camera, unsigned int depth)
 	    //hitColor = Vector3<float>(distance);
 	}*/
 
-	if(boundingBox->intersect(ray, distance) && mesh->intersect(ray, distance, index, uv))
+	if(/*boundingBox->intersect(ray, distance) && */mesh->intersect(ray, distance, index, uv))
 	{
         Vector3<float> hitPoint = ray.origin + ray.direction * distance;
 
@@ -91,9 +91,12 @@ static Vector3<float> castRay(Ray &ray, Camera &camera, unsigned int depth)
 	    fresnel(ray.direction, N, 1, kr); 
 	    hitColor = mix(hitColor, reflectionColor * kr + refractionColor * (1 - kr), 0.75); */
 
-        float scale = 13; 
-    	float pattern = (fmodf(st.x * scale, 1) > 0.5) ^ (fmodf(st.y * scale, 1) > 0.5); 
-    	hitColor = (pattern);
+        float NdotView = std::max(0.f, N.dot(-ray.direction));
+        const int M = 10;
+        float checker = (fmod(st.x * M, 1.0) > 0.5) ^ (fmod(st.y * M, 1.0) < 0.5);
+        float c = 0.3 * (1 - checker) + 0.7 * checker;
+        
+        hitColor = c * NdotView; //Vec3f(uv.x, uv.y, 0);
 	}
 
     return hitColor;
@@ -105,7 +108,7 @@ static void render(Camera &camera, int width, int height)
 
     Vector3<float>* framebuffer = new Vector3<float>[width * height];
 
-    #pragma omp parallel for num_threads(1024)
+    //#pragma omp parallel for num_threads(1024)
     for (unsigned int j = 0; j < height; ++j) {
         for (unsigned int i = 0; i < width; ++i) {
             Ray ray = camera.castRay(width, height, i, j);
@@ -131,8 +134,8 @@ static void render(Camera &camera, int width, int height)
 
 int main (int argc, char *argv[])
 {
-	int imgWidth = 1920;
-	int imgHeight = 1080;
+	int imgWidth = 640;
+	int imgHeight = 480;
 
 	//Compute mesh
 	mesh = new IndexedMesh();
