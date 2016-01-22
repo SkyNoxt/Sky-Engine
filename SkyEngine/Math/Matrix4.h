@@ -81,7 +81,7 @@ private:
 //Inline heterogeneous opeartors
 
 template <class T>
-void operator *= (const Vector3<T>& vector, const Matrix4<T>& matrix)
+void operator *= (Vector3<T>& vector, const Matrix4<T>& matrix)
 {
 	vector = vector * matrix;
 }
@@ -105,7 +105,7 @@ Vector3<T> operator * (const Vector3<T>& vector, const Matrix4<T>& matrix)
 }
 
 template <class T>
-void operator *= (const Vector4<T>& vector, const Matrix4<T>& matrix)
+void operator *= (Vector4<T>& vector, const Matrix4<T>& matrix)
 {
 	vector = vector * matrix;
 }
