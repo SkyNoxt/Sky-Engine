@@ -16,7 +16,7 @@ class Camera
 public:
 
 	//Constructors
-	Camera(float fLength, float fov, float targetRatio);
+	Camera(float fLength, float fov, float targetRatio, float zNear = 0, float zFar = Ray::maxLength);
 
 	//Member functions
 	Ray castRay(unsigned int width, unsigned int height, unsigned int x, unsigned int y);
@@ -32,5 +32,6 @@ public:
 	float scale;
 
 	Matrix4<float> viewMatrix;
+	Matrix4<float> projectionMatrix;
 
 };

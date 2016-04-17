@@ -1,7 +1,7 @@
 ﻿
 #include "Camera.h"
 
-Camera::Camera(float fLength, float fov, float targetRatio)
+Camera::Camera(float fLength, float fov, float targetRatio, float zNear, float zFar)
 {
 	focalLength = fLength;
 	fieldOfView = fov;
@@ -9,6 +9,17 @@ Camera::Camera(float fLength, float fov, float targetRatio)
 	scale = tan(fieldOfView * 0.5 * DEG_TO_RAD);
 
 	viewMatrix = Matrix4<float>();
+
+	projectionMatrix = Matrix4<float>();
+
+	float distance = zFar - zNear;
+
+	projectionMatrix.xx = scale / aspectRatio;
+	projectionMatrix.yy = scale;
+	projectionMatrix.zz = -(zFar + zNear) / distance;
+	projectionMatrix.zw = -1.0f;
+	projectionMatrix.wz = -2.0f * zNear * zFar / distance;
+	projectionMatrix.ww = 0.0;
 
 	//aperture = tan(fieldOfView / 2 * DEG_TO_RAD) * focalLength * 2;
 	//fieldOfView = atan((aperture / 2) / focalLength) * 2 * RAD_TO_DEG;
