@@ -31,6 +31,7 @@ public:
 	float aspectRatio;
 	float scale;
 
+	Matrix4<float> cameraMatrix;
 	Matrix4<float> viewMatrix;
 	Matrix4<float> projectionMatrix;
 
