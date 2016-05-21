@@ -20,7 +20,7 @@ Camera::Camera(float fLength, float fov, float targetRatio, float zNear, float z
     projectionMatrix.zz = -zFar / distance;
     projectionMatrix.wz = -zFar * zNear / distance;
     projectionMatrix.zw = -1;
-    projectionMatrix.ww = 0; 
+    projectionMatrix.ww = 0;
 
 	//aperture = tan(fieldOfView / 2 * DEG_TO_RAD) * focalLength * 2;
 	//fieldOfView = atan((aperture / 2) / focalLength) * 2 * RAD_TO_DEG;

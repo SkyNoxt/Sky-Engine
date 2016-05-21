@@ -44,7 +44,7 @@ bool Mesh::triangleIntersect(const Ray& ray,
 
     float det = edge1.dot(pvec);
 
-    if(culling && det == 0) return false;
+    if(culling && det < 0) return false;
     else if(fabs(det) == 0) return false;
 
     float invDet = 1 / det;
