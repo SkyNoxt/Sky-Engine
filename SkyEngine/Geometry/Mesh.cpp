@@ -16,7 +16,7 @@ bool Mesh::intersect(const Ray& ray, float& distance, unsigned int& index, Vecto
 	{
 		if(triangleIntersect(ray,
 			vertexArray[i].position, vertexArray[i + 1].position, vertexArray[i + 2].position,
-			tempDist, u, v) && tempDist < distance)
+			tempDist, u, v) && tempDist > 0 && tempDist < distance)
 			{
 				distance = tempDist;
 				barycenter = { u, v };

@@ -16,7 +16,7 @@ bool IndexedMesh::intersect(const Ray& ray, float& distance, unsigned int& index
 	{
 		if(triangleIntersect(ray,
 			vertexArray[indexArray[i]].position, vertexArray[indexArray[i + 1]].position,
-			vertexArray[indexArray[i + 2]].position, tempDist, u, v) && tempDist < distance)
+			vertexArray[indexArray[i + 2]].position, tempDist, u, v) && tempDist > 0 && tempDist < distance)
 			{
 				distance = tempDist;
 				barycenter = { u, v };
