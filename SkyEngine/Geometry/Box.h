@@ -14,6 +14,7 @@ public:
 
 	//Constructor
 	Box(const Vector3<float>& min, const Vector3<float>& max);
+	Box();
 
 	//Member function
 	bool intersect(const Ray& ray, float& distance);

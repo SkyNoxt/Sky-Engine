@@ -1,6 +1,12 @@
 ﻿
 #include "Box.h"
 
+Box::Box()
+{
+	bounds[0] = 0.0;
+	bounds[1] = 0.0;
+}
+
 Box::Box(const Vector3<float>& min, const Vector3<float>& max)
 {
 	bounds[0] = min;
