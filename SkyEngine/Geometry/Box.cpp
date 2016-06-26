@@ -9,8 +9,7 @@ Box::Box(const Vector3<float>& min, const Vector3<float>& max)
 
 Box::Box()
 {
-	bounds[0] = 0.0;
-	bounds[1] = 0.0;
+	
 }
 
 bool Box::intersect(const Ray& ray, float& distance)
