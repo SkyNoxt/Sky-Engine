@@ -40,6 +40,9 @@ public:
 	Vector3<T> reflect(const Vector3<T>& normal) const;
 	Vector3<T> refract(const Vector3<T>& normal, float index) const;
 
+	static Vector3<T> minima(const Vector3<T>& aVec, const Vector3<T>& bVec);
+	static Vector3<T> maxima(const Vector3<T>& aVec, const Vector3<T>& bVec);
+
 	//Unary operators
 	Vector3<T> operator - () const;
 

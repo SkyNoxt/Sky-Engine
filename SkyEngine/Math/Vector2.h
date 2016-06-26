@@ -35,6 +35,9 @@ public:
 	Vector2<T> normalize() const;
 	Vector2<T> middle(const Vector2<T>& vector) const;
 
+	static Vector2<T> minima(const Vector2<T>& aVec, const Vector2<T>& bVec);
+	static Vector2<T> maxima(const Vector2<T>& aVec, const Vector2<T>& bVec);
+
 	//Unary operators
 	Vector2<T> operator - () const;
 

@@ -29,37 +29,37 @@ Vector3<T>::Vector3()
 	x = y = z = 0;
 }
 
-template<class T>
+template <class T>
 T Vector3<T>::dot() const
 {
 	return x * x + y * y + z * z;
 }
 
-template<class T>
+template <class T>
 T Vector3<T>::length() const
 {
 	return sqrt(dot());
 }
 
-template<class T>
+template <class T>
 T Vector3<T>::dot(const Vector3<T>& vector) const
 {
 	return x * vector.x + y * vector.y + z * vector.z;
 }
 
-template<class T>
+template <class T>
 T Vector3<T>::distance(const Vector3<T>& vector) const
 {
 	return (*this - vector).length();
 }
 
-template<class T>
+template <class T>
 Vector3<T> Vector3<T>::invert() const
 {
 	return Vector3<T>(-x, -y, -z);
 }
 
-template<class T>
+template <class T>
 Vector3<T> Vector3<T>::normalize() const
 {
 	T l = 1 / length();
@@ -70,13 +70,13 @@ Vector3<T> Vector3<T>::normalize() const
 	return Vector3 <T> { 0, 0, 0 };
 }
 
-template<class T>
+template <class T>
 Vector3<T> Vector3<T>::middle(const Vector3<T>& vector) const
 {
 	return Vector3<T>((x + vector.x) * 0.5, (y + vector.y) * 0.5, (z + vector.z) * 0.5);
 }
 
-template<class T>
+template <class T>
 Vector3<T> Vector3<T>::cross(const Vector3<T>& vector) const
 {
 	return Vector3<T>(y * vector.z - vector.y * z,
@@ -84,13 +84,13 @@ Vector3<T> Vector3<T>::cross(const Vector3<T>& vector) const
 		x * vector.y - vector.x *y);
 }
 
-template<class T>
+template <class T>
 Vector3<T> Vector3<T>::reflect(const Vector3<T>& normal) const
 {
 	return *this - 2 * this->dot(normal) * normal;
 }
 
-template<class T>
+template <class T>
 Vector3<T> Vector3<T>::refract(const Vector3<T>& normal, float index) const
 {
 	T dot = normal.dot(*this);
@@ -98,6 +98,18 @@ Vector3<T> Vector3<T>::refract(const Vector3<T>& normal, float index) const
 	if(k < 0)
 		return Vector3<T>(0.0);
 	return index * *this - (index * dot + (T)sqrt(k)) * normal;
+}
+
+template <class T>
+Vector3<T> Vector3<T>::minima(const Vector3<T>& aVec, const Vector3<T>& bVec)
+{
+	return Vector3<T>(aVec.x < bVec.x ? aVec.x : bVec.x, aVec.y < bVec.y ? aVec.y : bVec.y, aVec.z < bVec.z ? aVec.z : bVec.z);
+}
+
+template <class T>
+Vector3<T> Vector3<T>::maxima(const Vector3<T>& aVec, const Vector3<T>& bVec)
+{
+	return Vector3<T>(aVec.x > bVec.x ? aVec.x : bVec.x, aVec.y > bVec.y ? aVec.y : bVec.y, aVec.z > bVec.z ? aVec.z : bVec.z);
 }
 
 template <class T>

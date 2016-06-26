@@ -31,37 +31,37 @@ Vector4<T>::Vector4()
 	x = y = z = w = 0;
 }
 
-template<class T>
+template <class T>
 T Vector4<T>::dot() const
 {
 	return x * x + y * y + z * z + w * w;
 }
 
-template<class T>
+template <class T>
 T Vector4<T>::length() const
 {
 	return sqrt(dot());
 }
 
-template<class T>
+template <class T>
 T Vector4<T>::dot(const Vector4<T>& vector) const
 {
 	return x * vector.x + y * vector.y + z * vector.z + w * vector.w;
 }
 
-template<class T>
+template <class T>
 T Vector4<T>::distance(const Vector4<T>& vector) const
 {
 	return (*this - vector).length();
 }
 
-template<class T>
+template <class T>
 Vector4<T> Vector4<T>::invert() const
 {
 	return Vector4<T>(-x, -y, -z, -w);
 }
 
-template<class T>
+template <class T>
 Vector4<T> Vector4<T>::normalize() const
 {
 	T l = 1 / length();
@@ -72,10 +72,22 @@ Vector4<T> Vector4<T>::normalize() const
 	return Vector4 <T> { 0, 0, 0, 0 };
 }
 
-template<class T>
+template <class T>
 Vector4<T> Vector4<T>::middle(const Vector4<T>& vector) const
 {
 	return Vector4<T>((x + vector.x) * 0.5, (y + vector.y) * 0.5, (z + vector.z) * 0.5, (w + vector.w) * 0.5);
+}
+
+template <class T>
+Vector4<T> Vector4<T>::minima(const Vector4<T>& aVec, const Vector4<T>& bVec)
+{
+	return Vector4<T>(aVec.x < bVec.x ? aVec.x : bVec.x, aVec.y < bVec.y ? aVec.y : bVec.y, aVec.z < bVec.z ? aVec.z : bVec.z, aVec.w < bVec.w ? aVec.w : bVec.w);
+}
+
+template <class T>
+Vector4<T> Vector4<T>::maxima(const Vector4<T>& aVec, const Vector4<T>& bVec)
+{
+	return Vector4<T>(aVec.x > bVec.x ? aVec.x : bVec.x, aVec.y > bVec.y ? aVec.y : bVec.y, aVec.z > bVec.z ? aVec.z : bVec.z, aVec.w > bVec.w ? aVec.w : bVec.w);
 }
 
 template <class T>
