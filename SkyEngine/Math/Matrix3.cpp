@@ -1,7 +1,7 @@
 ﻿
 #include "Matrix3.h"
 
-template<class T>
+template <class T>
 const Matrix3<T> Matrix3<T>::identity = Matrix3 < T > { 1, 0, 0,
 														0, 1, 0,
 														0, 0, 1 };

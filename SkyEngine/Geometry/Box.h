@@ -5,19 +5,20 @@
 
 #include <Ray.h>
 
+template <class T>
 class Box
 {
 
 public:
 
-	Vector3<float> bounds[2];
+	Vector3<T> bounds[2];
 
 	//Constructor
-	Box(const Vector3<float>& min, const Vector3<float>& max);
+	Box(const Vector3<T>& min, const Vector3<T>& max);
 	Box();
 
 	//Member function
-	bool intersect(const Ray& ray, float& distance);
+	bool intersect(const Ray& ray, T& distance);
 
 	//Destructor
 	~Box();

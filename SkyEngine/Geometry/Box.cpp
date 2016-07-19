@@ -1,20 +1,23 @@
 ﻿
 #include "Box.h"
 
-Box::Box(const Vector3<float>& min, const Vector3<float>& max)
+template <class T>
+Box<T>::Box(const Vector3<T>& min, const Vector3<T>& max)
 {
 	bounds[0] = min;
 	bounds[1] = max;
 }
 
-Box::Box()
+template <class T>
+Box<T>::Box()
 {
 	
 }
 
-bool Box::intersect(const Ray& ray, float& distance)
+template <class T>
+bool Box<T>::intersect(const Ray& ray, T& distance)
 {
-	float xMin, xMax, yMin, yMax, zMin, zMax;
+	T xMin, xMax, yMin, yMax, zMin, zMax;
 
 	xMin = (bounds[ray.sign[0]].x - ray.origin.x) * ray.inverseDirection.x;
 	xMax = (bounds[1 - ray.sign[0]].x - ray.origin.x) * ray.inverseDirection.x;
@@ -52,7 +55,10 @@ bool Box::intersect(const Ray& ray, float& distance)
 	return true;
 }
 
-Box::~Box()
+template <class T>
+Box<T>::~Box()
 {
 	
 }
+
+template class Box < float > ;

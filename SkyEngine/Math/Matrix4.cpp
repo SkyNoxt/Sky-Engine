@@ -1,7 +1,7 @@
 ﻿
 #include "Matrix4.h"
 
-template<class T>
+template <class T>
 const Matrix4<T> Matrix4<T>::identity = Matrix4 < T > { 1, 0, 0, 0,
 														0, 1, 0, 0,
 														0, 0, 1, 0,
