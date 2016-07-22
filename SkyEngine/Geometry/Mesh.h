@@ -12,6 +12,8 @@
 class Mesh
 {
 
+template <class T> friend class BVH;
+
 public:
 
 	bool culling = false;
