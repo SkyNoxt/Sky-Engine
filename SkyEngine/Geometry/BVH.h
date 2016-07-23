@@ -27,7 +27,6 @@ public:
 
 private:
 
-	static const T minBound;
 	static const T maxBound;
 
 	struct BVHBox : Box<T>

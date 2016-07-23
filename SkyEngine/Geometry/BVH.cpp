@@ -12,13 +12,13 @@ BVH<T>::BVH(IndexedMesh* mesh)
 {
 	std::vector<BVHBox> workSet;
 	Vector3<T> bottom(maxBound);
-	Vector3<T> top(minBound);
+	Vector3<T> top(-maxBound);
 
 	for(unsigned int i = 0; i < mesh->numIndices; i+=3)
 	{
 		BVHBox box;
 		box.bounds[0] = Vector3<T>(maxBound);
-		box.bounds[1] = Vector3<T>(minBound);
+		box.bounds[1] = Vector3<T>(-maxBound);
 		box.indices[0] = mesh->indexArray[i];
 		box.indices[1] = mesh->indexArray[i + 1];
 		box.indices[2] = mesh->indexArray[i + 2];
@@ -58,9 +58,6 @@ BVH<T>::~BVH()
 }
 
 template <class T>
-const T BVH<T>::minBound = std::numeric_limits<T>::min();
-
-template <class T>
 const T BVH<T>::maxBound = std::numeric_limits<T>::max();
 
 template <class T>
@@ -82,7 +79,7 @@ typename BVH<T>::BVHNode* BVH<T>::recurse(std::vector<BVHBox>& workSet, unsigned
 	}
 
 	Vector3<T> bottom(maxBound);
-	Vector3<T> top(minBound);
+	Vector3<T> top(-maxBound);
 
 	for(unsigned int i = 0; i < workSet.size(); ++i)
 	{
@@ -123,17 +120,17 @@ typename BVH<T>::BVHNode* BVH<T>::recurse(std::vector<BVHBox>& workSet, unsigned
 			stop = top.z;
 		}
 
-		//Check Axis Packing
+		if(fabsf(stop - start) < 1e-4) continue;
 
 		step = (stop - start) / (1024 / (depth + 1));
 
 		for(T testSplit = start + step; testSplit < stop - step; testSplit += step)
 		{
 			Vector3<T> leftBottom(maxBound);
-			Vector3<T> leftTop(minBound);
+			Vector3<T> leftTop(-maxBound);
 
 			Vector3<T> rightBottom(maxBound);
-			Vector3<T> rightTop(minBound);
+			Vector3<T> rightTop(-maxBound);
 
 			unsigned int countLeft = 0, countRight = 0;
 
@@ -204,9 +201,9 @@ typename BVH<T>::BVHNode* BVH<T>::recurse(std::vector<BVHBox>& workSet, unsigned
 	std::vector<BVHBox> right;
 
 	Vector3<T> leftBottom(maxBound);
-	Vector3<T> leftTop(minBound);
+	Vector3<T> leftTop(-maxBound);
 	Vector3<T> rightBottom(maxBound);
-	Vector3<T> rightTop(minBound);
+	Vector3<T> rightTop(-maxBound);
 
 	for(unsigned int i = 0; i < workSet.size(); ++i)
 	{
