@@ -54,7 +54,7 @@ bool BVH<T>::intersect(const Mesh* mesh, const Ray& ray, T& distance, unsigned i
 template <class T>
 BVH<T>::~BVH()
 {
-	
+	//TODO: Implement destructor...
 }
 
 template <class T>
