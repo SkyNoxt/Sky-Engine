@@ -28,6 +28,16 @@ bool IndexedMesh::intersect(const Ray& ray, float& distance, unsigned int& index
 	return intersect;
 }
 
+unsigned int IndexedMesh::numElements() const
+{
+	return numIndices;
+}
+
+const Vertex& IndexedMesh::getVertex(const int index) const
+{
+	return vertexArray[indexArray[index]];
+}
+
 IndexedMesh::~IndexedMesh()
 {
 	delete[] indexArray;

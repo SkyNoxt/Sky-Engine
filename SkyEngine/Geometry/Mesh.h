@@ -25,6 +25,9 @@ public:
 
 	//Member function
 	virtual bool intersect(const Ray& ray, float& distance, unsigned int& index, Vector2<float>& barycenter) const;
+	virtual unsigned int numElements() const;
+
+	virtual const Vertex& getVertex(const int index) const;
 
 	//Destructor
 	~Mesh();

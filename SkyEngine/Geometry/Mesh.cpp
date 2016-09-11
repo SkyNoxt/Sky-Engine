@@ -28,6 +28,16 @@ bool Mesh::intersect(const Ray& ray, float& distance, unsigned int& index, Vecto
 	return intersect;
 }
 
+unsigned int Mesh::numElements() const
+{
+	return numVertices;
+}
+
+const Vertex& Mesh::getVertex(const int index) const
+{
+	return vertexArray[index];
+}
+
 Mesh::~Mesh()
 {
 	delete[] vertexArray;
