@@ -6,6 +6,10 @@ Camera::Camera(float fLength, float fov, float targetRatio, float zNear, float z
 	focalLength = fLength;
 	fieldOfView = fov;
 	aspectRatio = targetRatio;
+
+	nearPlane = zNear;
+	farPlane = zFar;
+
 	scale = tan(fieldOfView * 0.5 * DEG_TO_RAD);
 
 	cameraMatrix = Matrix4<float>();
@@ -13,12 +17,12 @@ Camera::Camera(float fLength, float fov, float targetRatio, float zNear, float z
 	projectionMatrix = Matrix4<float>();
 
     float invScale = 1.0 / scale;
-    float distance = zFar - zNear;
+    float distance = farPlane - nearPlane;
 
     projectionMatrix.xx = invScale / aspectRatio;
     projectionMatrix.yy = invScale;
-    projectionMatrix.zz = -zFar / distance;
-    projectionMatrix.wz = -zFar * zNear / distance;
+    projectionMatrix.zz = -farPlane / distance;
+    projectionMatrix.wz = -farPlane * (nearPlane / distance);
     projectionMatrix.zw = -1;
     projectionMatrix.ww = 0;
 

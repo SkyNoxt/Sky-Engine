@@ -29,6 +29,10 @@ public:
 	float focalLength;
 	float fieldOfView;
 	float aspectRatio;
+
+	float nearPlane;
+	float farPlane;
+
 	float scale;
 
 	Matrix4<float> cameraMatrix;
