@@ -1,6 +1,8 @@
 ﻿
 #pragma once
 
+#include <stdio.h>
+
 #include <Math/Vector2.h>
 #include <Math/Vector3.h>
 #include <Math/Matrix4.h>
@@ -28,6 +30,9 @@ public:
 	virtual unsigned int numElements() const;
 
 	virtual const Vertex& getVertex(const int index) const;
+
+	virtual void write(FILE* file);
+	virtual void read(FILE* file);
 
 	//Destructor
 	~Mesh();

@@ -38,6 +38,19 @@ const Vertex& Mesh::getVertex(const int index) const
 	return vertexArray[index];
 }
 
+void Mesh::write(FILE* file)
+{
+	fwrite(&numVertices, sizeof(numVertices), 1, file);
+	fwrite(vertexArray, sizeof(Vertex), numVertices, file);
+}
+
+void Mesh::read(FILE* file)
+{
+	fread(&numVertices, sizeof(numVertices), 1, file);
+	vertexArray = new Vertex[numVertices];
+	fread(vertexArray, sizeof(Vertex), numVertices, file);
+}
+
 Mesh::~Mesh()
 {
 	delete[] vertexArray;

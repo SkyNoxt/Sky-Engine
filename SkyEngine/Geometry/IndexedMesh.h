@@ -20,6 +20,9 @@ public:
 
 	const Vertex& getVertex(const int index) const;
 
+	void write(FILE* file);
+	void read(FILE* file);
+
 	//Destructor
 	~IndexedMesh();
 		

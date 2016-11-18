@@ -24,7 +24,7 @@
       </Includes>
     </Includes>
     <Externalconsole>true</Externalconsole>
-    <ExtraLinkerArguments>-flto -O3 -fopenmp</ExtraLinkerArguments>
+    <ExtraLinkerArguments>-flto -O3 -fopenmp -lassimp</ExtraLinkerArguments>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <OutputPath>bin\Release</OutputPath>
@@ -39,7 +39,8 @@
       </Includes>
     </Includes>
     <Externalconsole>true</Externalconsole>
-    <ExtraLinkerArguments>-flto -O3 -fopenmp</ExtraLinkerArguments>
+    <ExtraLinkerArguments>-flto -O3 -fopenmp -lopencv_core -lopencv_imgproc -lopencv_highgui</ExtraLinkerArguments>
+    <ConsolePause>false</ConsolePause>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="main.cpp" />
@@ -55,11 +56,18 @@
     <Compile Include="Geometry\Mesh.cpp" />
     <Compile Include="Geometry\Box.cpp" />
     <Compile Include="Geometry\IndexedMesh.cpp" />
+    <Compile Include="Shading\Shader.cpp" />
+    <Compile Include="Shading\DeltaLight.cpp" />
+    <Compile Include="Input\LinuxGamepad.cpp" />
+    <Compile Include="Geometry\BVH.cpp" />
+    <Compile Include="FPS.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Math\" />
     <Folder Include="Camera\" />
     <Folder Include="Geometry\" />
+    <Folder Include="Shading\" />
+    <Folder Include="Input\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Math\Matrix3.h" />
@@ -75,5 +83,11 @@
     <None Include="Geometry\Vertex.h" />
     <None Include="Geometry\Box.h" />
     <None Include="Geometry\IndexedMesh.h" />
+    <None Include="Shading\Shader.h" />
+    <None Include="Shading\DeltaLight.h" />
+    <None Include="Input\Gamepad.h" />
+    <None Include="Input\LinuxGamepad.h" />
+    <None Include="Geometry\BVH.h" />
+    <None Include="FPS.h" />
   </ItemGroup>
 </Project>
