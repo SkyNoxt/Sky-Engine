@@ -122,7 +122,7 @@ static bool rasterVertex(Vector3<float>& raster, const Vector4<float> &vertex, u
 
 //std::ofstream ofs("/home/nelson/Desktop/SkyPipe", std::ios::out | std::ios::binary);
 
-static void render(Camera& camera, int width, int height)
+static void render(Camera& camera, unsigned int width, unsigned int height)
 {
 	float level = 0;
 
@@ -194,7 +194,7 @@ static void rasterize(Camera& camera, int width, int height)
 	{
 		unsigned int numTriangles = meshes[m]->numElements() / 3;
 		#pragma omp parallel for num_threads(512)
-		for(int i = 0; i < numTriangles; ++i)
+		for(unsigned int i = 0; i < numTriangles; ++i)
 		{
 			const Vector3<float>& v0 = meshes[m]->getVertex(i * 3).position;
 			const Vector3<float>& v1 = meshes[m]->getVertex(i * 3 + 1).position;
@@ -327,7 +327,6 @@ static void rasterize(Camera& camera, int width, int height)
 
 IndexedMesh* loadMesh(int i)
 {
-	char string[256];
 	FILE* f = fopen("/home/nelson/Desktop/cow.bin", "rb");
 	IndexedMesh* mesh = new IndexedMesh();
 	std::cout << "here" << std::endl;
@@ -358,8 +357,7 @@ int main (int argc, char *argv[])
 	numMeshes = 1;
 	meshes = new IndexedMesh*[numMeshes];
 	bvhs = new BVH<float>*[numMeshes];
-
-	int nv = 0, ni = 0;
+	
 	for(int i = 0; i < numMeshes; ++i)
 	{
 		std::cout << "Loading Mesh " << i << std::endl;
