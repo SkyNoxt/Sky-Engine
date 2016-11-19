@@ -30,6 +30,3 @@
 # Additional extensions
 *.d
 *.md.pc
-
-#additional directories
-SkyEngine/bin/

@@ -8,7 +8,7 @@ CC_DEBUG = -std=c++14 -g -fopenmp -I. -Wall
 LD_DEBUG = -fopenmp -lopencv_core -lopencv_imgproc -lopencv_highgui
 
 # File names
-TARGET = SkyEngine
+TARGET = SkyEngine.out
 SOURCES = $(shell find . -name "*.cpp")
 OBJECTS = $(SOURCES:.cpp=.o)
 
