@@ -62,10 +62,10 @@ Vector2<T> Vector2<T>::normalize() const
 {
 	T l = 1 / length();
 
-	if (l)
+	if(l)
 		return Vector2<T>(x * l, y * l);
 
-	return Vector2 <T> { 0, 0 };
+	return Vector2<T>{ 0, 0 };
 }
 
 template <class T>
@@ -198,7 +198,6 @@ Vector2<T> Vector2<T>::operator*(const T value) const
 template <class T>
 Vector2<T>::~Vector2()
 {
-
 }
 
-template class Vector2 < float > ;
+template class Vector2<float>;

@@ -9,6 +9,7 @@ LD_DEBUG = -fopenmp -lopencv_core -lopencv_imgproc -lopencv_highgui
 
 # File names
 TARGET = SkyEngine.out
+HEADERS = $(shell find . -name "*.h")
 SOURCES = $(shell find . -name "*.cpp")
 OBJECTS = $(SOURCES:.cpp=.o)
 
@@ -22,7 +23,7 @@ $(TARGET): $(OBJECTS)
 
 # Format code
 format:
-	clang-format $(SOURCES) 
+	clang-format -style=file -i $(HEADERS) $(SOURCES)
 
 # Clean generated files
 clean:

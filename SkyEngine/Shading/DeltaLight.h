@@ -1,14 +1,13 @@
 ﻿
 #pragma once
 
-#include <Math/Vector3.h>
 #include <Math/Matrix4.h>
+#include <Math/Vector3.h>
 
 class DeltaLight
 {
 
 public:
-
 	Matrix4<float> lightMatrix;
 	Vector3<float> color;
 	float intensity;
@@ -20,5 +19,4 @@ public:
 
 	//Destructor
 	~DeltaLight();
-		
 };

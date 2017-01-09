@@ -14,7 +14,6 @@ class Camera
 {
 
 public:
-
 	//Constructors
 	Camera(float fLength, float fov, float targetRatio, float zNear = 0, float zFar = Ray::maxLength);
 
@@ -24,7 +23,7 @@ public:
 	//destructor
 	~Camera();
 
-//private:
+	//private:
 
 	float focalLength;
 	float fieldOfView;
@@ -38,5 +37,4 @@ public:
 	Matrix4<float> cameraMatrix;
 	Matrix4<float> viewMatrix;
 	Matrix4<float> projectionMatrix;
-
 };

@@ -7,7 +7,6 @@ class IndexedMesh : public Mesh
 {
 
 public:
-
 	unsigned int numIndices;
 	unsigned int* indexArray;
 
@@ -25,5 +24,4 @@ public:
 
 	//Destructor
 	~IndexedMesh();
-		
 };

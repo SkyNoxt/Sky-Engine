@@ -9,7 +9,6 @@ class Ray
 {
 
 public:
-
 	static const float maxLength;
 
 	//Member variables
@@ -24,5 +23,4 @@ public:
 
 	//Destructor
 	~Ray();
-		
 };

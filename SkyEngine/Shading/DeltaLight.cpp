@@ -10,5 +10,4 @@ DeltaLight::DeltaLight(const Vector3<float>& clr, float ntnst)
 
 DeltaLight::~DeltaLight()
 {
-	
 }

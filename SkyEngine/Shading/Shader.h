@@ -8,7 +8,6 @@ class Shader
 {
 
 public:
-
 	//Constructor
 	Shader();
 
@@ -18,5 +17,4 @@ public:
 
 	//Destructor
 	~Shader();
-		
 };

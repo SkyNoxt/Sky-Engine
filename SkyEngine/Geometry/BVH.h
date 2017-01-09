@@ -1,8 +1,8 @@
 ﻿
 #pragma once
 
-#include <vector>
 #include <limits>
+#include <vector>
 
 #include <Math/Vector3.h>
 
@@ -14,7 +14,6 @@ class BVH
 {
 
 public:
-
 	//Constructor
 	BVH(Mesh* mesh);
 	BVH(IndexedMesh* mesh);
@@ -26,7 +25,6 @@ public:
 	~BVH();
 
 private:
-
 	static const T maxBound;
 
 	struct BVHBox : Box<T>
@@ -60,5 +58,4 @@ private:
 	bool recurseIntersect(BVHNode* node, const Mesh* mesh, const Ray& ray, T& distance, unsigned int& index, Vector2<T>& barycenter, unsigned int depth = 0) const;
 
 	BVHNode* root;
-		
 };

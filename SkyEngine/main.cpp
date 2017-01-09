@@ -1,16 +1,16 @@
 ﻿
+#include <fstream>
 #include <iostream>
 #include <memory.h>
-#include <fstream>
 
 #include <omp.h>
 
-#include <Math/Vector3.h>
 #include <Camera/Camera.h>
+#include <Math/Vector3.h>
 
+#include <Geometry/BVH.h>
 #include <Geometry/Box.h>
 #include <Geometry/IndexedMesh.h>
-#include <Geometry/BVH.h>
 
 #include <Shading/DeltaLight.h>
 
@@ -24,8 +24,8 @@
 
 /*//Import test
 #include <assimp/Importer.hpp>
-#include <assimp/scene.h>
 #include <assimp/postprocess.h>*/
+#include <assimp/scene.h>
 
 int numMeshes;
 IndexedMesh** meshes;
@@ -35,14 +35,15 @@ bool mode = true;
 
 LinuxGamepad* gamepad;
 
-static inline
-float clamp(const float &lo, const float &hi, const float &v)
-{ return std::max(lo, std::min(hi, v)); }
+static inline float clamp(const float& lo, const float& hi, const float& v)
+{
+	return std::max(lo, std::min(hi, v));
+}
 
 DeltaLight* light;
 Vector3<float>* lightDirection;
 
-static Vector3<float> castRay(Ray &ray, Camera &camera, unsigned int depth)
+static Vector3<float> castRay(Ray& ray, Camera& camera, unsigned int depth)
 {
 	//Inverse Ray Transform
 	/*Matrix4<float> rayMatrix = modelMatrix->inverse();
@@ -62,62 +63,65 @@ static Vector3<float> castRay(Ray &ray, Camera &camera, unsigned int depth)
 	int meshIndex;
 
 	for(int i = 0; i < numMeshes; ++i)
-	{
-		if(bvhs[i]->intersect(meshes[i], ray, tempDistance, tempIndex, tempUV) && tempDistance > 0 && tempDistance < distance)
 		{
-			meshIndex = i;
-			distance = tempDistance;
-			index = tempIndex;
-			uv = tempUV;
-			intersect = true;
+			if(bvhs[i]->intersect(meshes[i], ray, tempDistance, tempIndex, tempUV) && tempDistance > 0 && tempDistance < distance)
+				{
+					meshIndex = i;
+					distance = tempDistance;
+					index = tempIndex;
+					uv = tempUV;
+					intersect = true;
+				}
 		}
-	}
 
 	if(intersect)
-	{
-		//std::cout << index << std::endl;
-        Vector3<float> hitPoint = ray.origin + ray.direction * distance;
+		{
+			//std::cout << index << std::endl;
+			Vector3<float> hitPoint = ray.origin + ray.direction * distance;
 
-        Vector3<float> n0 = meshes[meshIndex]->vertexArray[index    ].normal;
-        Vector3<float> n1 = meshes[meshIndex]->vertexArray[index + 1].normal;
-        Vector3<float> n2 = meshes[meshIndex]->vertexArray[index + 2].normal;
+			Vector3<float> n0 = meshes[meshIndex]->vertexArray[index].normal;
+			Vector3<float> n1 = meshes[meshIndex]->vertexArray[index + 1].normal;
+			Vector3<float> n2 = meshes[meshIndex]->vertexArray[index + 2].normal;
 
-        /*Vector3<float> v0 = meshes[meshIndex]->vertexArray[index    ].position; 
+			/*Vector3<float> v0 = meshes[meshIndex]->vertexArray[index    ].position; 
     	Vector3<float> v1 = meshes[meshIndex]->vertexArray[index + 1].position; 
     	Vector3<float> v2 = meshes[meshIndex]->vertexArray[index + 2].position;*/
 
-    	//Face and vertex Normals
-        //Vector3<float> fN = (v1 - v0).cross(v2 - v0).normalize();
-        Vector3<float> vN = (1 - uv.x - uv.y) * n0 + uv.x * n1 + uv.y * n2;
+			//Face and vertex Normals
+			//Vector3<float> fN = (v1 - v0).cross(v2 - v0).normalize();
+			Vector3<float> vN = (1 - uv.x - uv.y) * n0 + uv.x * n1 + uv.y * n2;
 
-        //Light direction (inverse ray transformed)
-        //Vector3<float> L = -(*lightDirection * modelMatrix->inverse());
+			//Light direction (inverse ray transformed)
+			//Vector3<float> L = -(*lightDirection * modelMatrix->inverse());
 
-        //Face ratio
-        hitColor = std::max(0.f, vN.dot(-ray.direction));
+			//Face ratio
+			hitColor = std::max(0.f, vN.dot(-ray.direction));
 
-        //Diffuse shading
-        //hitColor = Vector3<float>(0.18) * (1.0/M_PI) * light->intensity * light->color * std::max(0.f, vN.dot(L));
-	}
+			//Diffuse shading
+			//hitColor = Vector3<float>(0.18) * (1.0/M_PI) * light->intensity * light->color * std::max(0.f, vN.dot(L));
+		}
 
-    return hitColor;
+	return hitColor;
 }
 
-static bool rasterVertex(Vector3<float>& raster, const Vector4<float> &vertex, unsigned int width, unsigned int height)
+static bool rasterVertex(Vector3<float>& raster, const Vector4<float>& vertex, unsigned int width, unsigned int height)
 {
 	raster = { vertex.x, vertex.y, -vertex.z };
 
 	raster.x /= vertex.w;
-	if(raster.x > 1.0 || raster.x < -1.0) return false;
+	if(raster.x > 1.0 || raster.x < -1.0)
+		return false;
 	raster.y /= vertex.w;
-	if(raster.y > 1.0 || raster.y < -1.0) return false;
+	if(raster.y > 1.0 || raster.y < -1.0)
+		return false;
 	raster.z /= vertex.w;
-	if(raster.z > 1.0 || raster.z < -1.0) return false;
+	if(raster.z > 1.0 || raster.z < -1.0)
+		return false;
 
-    raster.x = ((raster.x + 1) * 0.5 * width);
-    raster.y = ((1 - (raster.y + 1) * 0.5) * height);
+	raster.x = ((raster.x + 1) * 0.5 * width);
+	raster.y = ((1 - (raster.y + 1) * 0.5) * height);
 
-    return true;
+	return true;
 }
 
 //std::ofstream ofs("/home/nelson/Desktop/SkyPipe", std::ios::out | std::ios::binary);
@@ -126,42 +130,52 @@ static void render(Camera& camera, unsigned int width, unsigned int height)
 {
 	float level = 0;
 
-    Vector3<float>* framebuffer = new Vector3<float>[width * height];
+	Vector3<float>* framebuffer = new Vector3<float>[width * height];
 
-    #pragma omp parallel for num_threads(32)
-    for (unsigned int j = 0; j < height; ++j) {
-    	#pragma omp parallel for num_threads(32)
-        for (unsigned int i = 0; i < width; ++i) {
-            Ray ray = camera.castRay(width, height, i, j);
-            framebuffer[width * j + i] = castRay(ray, camera, level);
-        }
-    }
+#pragma omp parallel for num_threads(32)
+	for(unsigned int j = 0; j < height; ++j)
+		{
+#pragma omp parallel for num_threads(32)
+			for(unsigned int i = 0; i < width; ++i)
+				{
+					Ray ray = camera.castRay(width, height, i, j);
+					framebuffer[width * j + i] = castRay(ray, camera, level);
+				}
+		}
 
-    cv::Mat img(height, width, CV_32FC3, framebuffer);
-    imshow("Sky Engine", img);
-    cv::waitKey(1);
-	
-    /*for (uint32_t i = 0; i < height * width; ++i) {
+	cv::Mat img(height, width, CV_32FC3, framebuffer);
+	imshow("Sky Engine", img);
+	cv::waitKey(1);
+
+	/*for (uint32_t i = 0; i < height * width; ++i) {
         unsigned char r = (unsigned char)(255 * clamp(0, 1, framebuffer[i].x));
         unsigned char g = (unsigned char)(255 * clamp(0, 1, framebuffer[i].y));
         unsigned char b = (unsigned char)(255 * clamp(0, 1, framebuffer[i].z));
         ofs << r << g << b;
     }*/
 
-    delete[] framebuffer;
+	delete[] framebuffer;
 }
 
-float min3(const float &a, const float &b, const float &c) 
-{ return std::min(a, std::min(b, c)); } 
+float min3(const float& a, const float& b, const float& c)
+{
+	return std::min(a, std::min(b, c));
+}
 
-float max3(const float &a, const float &b, const float &c) 
-{ return std::max(a, std::max(b, c)); } 
+float max3(const float& a, const float& b, const float& c)
+{
+	return std::max(a, std::max(b, c));
+}
 
-float frontFace(const Vector3<float> &a, const Vector3<float> &b, const Vector3<float> &c) 
-{ return (c.x - a.x) * (b.y - a.y) - (c.y - a.y) * (b.x - a.x); } 
+float frontFace(const Vector3<float>& a, const Vector3<float>& b, const Vector3<float>& c)
+{
+	return (c.x - a.x) * (b.y - a.y) - (c.y - a.y) * (b.x - a.x);
+}
 
-float backFace(const Vector3<float> &a, const Vector3<float> &b, const Vector3<float> &c) 
-{ return (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x); } 
+float backFace(const Vector3<float>& a, const Vector3<float>& b, const Vector3<float>& c)
+{
+	return (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x);
+}
 
 static void rasterize(Camera& camera, int width, int height)
 {
@@ -189,90 +203,114 @@ static void rasterize(Camera& camera, int width, int height)
 	}*/
 
 	unsigned int tris = 0;
-	#pragma omp parallel for num_threads(64)
+#pragma omp parallel for num_threads(64)
 	for(int m = 0; m < numMeshes; ++m)
-	{
-		unsigned int numTriangles = meshes[m]->numElements() / 3;
-		#pragma omp parallel for num_threads(512)
-		for(unsigned int i = 0; i < numTriangles; ++i)
 		{
-			const Vector3<float>& v0 = meshes[m]->getVertex(i * 3).position;
-			const Vector3<float>& v1 = meshes[m]->getVertex(i * 3 + 1).position;
-			const Vector3<float>& v2 = meshes[m]->getVertex(i * 3 + 2).position;
+			unsigned int numTriangles = meshes[m]->numElements() / 3;
+#pragma omp parallel for num_threads(512)
+			for(unsigned int i = 0; i < numTriangles; ++i)
+				{
+					const Vector3<float>& v0 = meshes[m]->getVertex(i * 3).position;
+					const Vector3<float>& v1 = meshes[m]->getVertex(i * 3 + 1).position;
+					const Vector3<float>& v2 = meshes[m]->getVertex(i * 3 + 2).position;
 
-			Vector4<float> t0 = Vector4<float>{ v0.x, v0.y, v0.z, 1.0 } * transform;
-			Vector4<float> t1 = Vector4<float>{ v1.x, v1.y, v1.z, 1.0 } * transform;
-			Vector4<float> t2 = Vector4<float>{ v2.x, v2.y, v2.z, 1.0 } * transform;
+					Vector4<float> t0 = Vector4<float>{ v0.x, v0.y, v0.z, 1.0 } * transform;
+					Vector4<float> t1 = Vector4<float>{ v1.x, v1.y, v1.z, 1.0 } * transform;
+					Vector4<float> t2 = Vector4<float>{ v2.x, v2.y, v2.z, 1.0 } * transform;
 
-			//if(t0.w <= 0.0 || t1.w <= 0.0 || t2.w <= 0.0)
-			{
-				if(t0.w <= 0) t0.w = 0.0001;
-				if(t1.w <= 0) t1.w = 0.0001;
-				if(t2.w <= 0) t2.w = 0.0001;
-			}
-			if(t0.z < camera.nearPlane && t1.z < camera.nearPlane && t2.z < camera.nearPlane) continue;
-			if(t0.z > camera.farPlane && t1.z > camera.farPlane && t2.z > camera.farPlane) continue;
+					//if(t0.w <= 0.0 || t1.w <= 0.0 || t2.w <= 0.0)
+					{
+						if(t0.w <= 0)
+							t0.w = 0.0001;
+						if(t1.w <= 0)
+							t1.w = 0.0001;
+						if(t2.w <= 0)
+							t2.w = 0.0001;
+					}
+					if(t0.z < camera.nearPlane && t1.z < camera.nearPlane && t2.z < camera.nearPlane)
+						continue;
+					if(t0.z > camera.farPlane && t1.z > camera.farPlane && t2.z > camera.farPlane)
+						continue;
 
-			Vector3<float> v0Raster = { t0.x, t0.y, -t0.z }; v0Raster *= (1 / t0.w); v0Raster.x = ((v0Raster.x + 1) * 0.5 * width); v0Raster.y = ((1 - (v0Raster.y + 1) * 0.5) * height);
-			Vector3<float> v1Raster = { t1.x, t1.y, -t1.z }; v1Raster *= (1 / t1.w); v1Raster.x = ((v1Raster.x + 1) * 0.5 * width); v1Raster.y = ((1 - (v1Raster.y + 1) * 0.5) * height);
-			Vector3<float> v2Raster = { t2.x, t2.y, -t2.z }; v2Raster *= (1 / t2.w); v2Raster.x = ((v2Raster.x + 1) * 0.5 * width); v2Raster.y = ((1 - (v2Raster.y + 1) * 0.5) * height);
+					Vector3<float> v0Raster = { t0.x, t0.y, -t0.z };
+					v0Raster *= (1 / t0.w);
+					v0Raster.x = ((v0Raster.x + 1) * 0.5 * width);
+					v0Raster.y = ((1 - (v0Raster.y + 1) * 0.5) * height);
+					Vector3<float> v1Raster = { t1.x, t1.y, -t1.z };
+					v1Raster *= (1 / t1.w);
+					v1Raster.x = ((v1Raster.x + 1) * 0.5 * width);
+					v1Raster.y = ((1 - (v1Raster.y + 1) * 0.5) * height);
+					Vector3<float> v2Raster = { t2.x, t2.y, -t2.z };
+					v2Raster *= (1 / t2.w);
+					v2Raster.x = ((v2Raster.x + 1) * 0.5 * width);
+					v2Raster.y = ((1 - (v2Raster.y + 1) * 0.5) * height);
 
-			float xmin = min3(v0Raster.x, v1Raster.x, v2Raster.x); 
-	        float ymin = min3(v0Raster.y, v1Raster.y, v2Raster.y); 
-	        float xmax = max3(v0Raster.x, v1Raster.x, v2Raster.x); 
-	        float ymax = max3(v0Raster.y, v1Raster.y, v2Raster.y); 
+					float xmin = min3(v0Raster.x, v1Raster.x, v2Raster.x);
+					float ymin = min3(v0Raster.y, v1Raster.y, v2Raster.y);
+					float xmax = max3(v0Raster.x, v1Raster.x, v2Raster.x);
+					float ymax = max3(v0Raster.y, v1Raster.y, v2Raster.y);
 
-	        //Partial triangle clipping
-	        if (xmin >= width || xmax < 0 || ymin >= height || ymax < 0) continue; 
-	        //Full triangle clipping
-	        //if (xmin < 0 || xmax >= width || ymin < 0 || ymax >= height) continue; 
+					//Partial triangle clipping
+					if(xmin >= width || xmax < 0 || ymin >= height || ymax < 0)
+						continue;
+					//Full triangle clipping
+					//if (xmin < 0 || xmax >= width || ymin < 0 || ymax >= height) continue;
 
-	        if(xmax >= width) xmax = width - 1; if(ymax >= height) ymax = height - 1;
-	        if(xmin < 0) xmin = 0; if(ymin < 0) ymin = 0;
+					if(xmax >= width)
+						xmax = width - 1;
+					if(ymax >= height)
+						ymax = height - 1;
+					if(xmin < 0)
+						xmin = 0;
+					if(ymin < 0)
+						ymin = 0;
 
-	        float (*edgeFunction)(const Vector3<float>&, const Vector3<float>&, const Vector3<float>&) = &frontFace;
-	        float area = edgeFunction(v0Raster, v1Raster, v2Raster);
-	        if(area < 0)
-	        {
-	        	area = -area;
-	        	edgeFunction = &backFace;
-	        }
+					float (*edgeFunction)(const Vector3<float>&, const Vector3<float>&, const Vector3<float>&) = &frontFace;
+					float area = edgeFunction(v0Raster, v1Raster, v2Raster);
+					if(area < 0)
+						{
+							area = -area;
+							edgeFunction = &backFace;
+						}
 
-	        tris++;
+					tris++;
 
-	        for (uint32_t y = ymin; y <= ymax; ++y) { 
-	            for (uint32_t x = xmin; x <= xmax; ++x) { 
+					for(uint32_t y = ymin; y <= ymax; ++y)
+						{
+							for(uint32_t x = xmin; x <= xmax; ++x)
+								{
 
-	                Vector3<float> pixelSample(x + 0.5, y + 0.5, 0); 
-	                float w0 = edgeFunction(v1Raster, v2Raster, pixelSample); 
-	                float w1 = edgeFunction(v2Raster, v0Raster, pixelSample); 
-	                float w2 = edgeFunction(v0Raster, v1Raster, pixelSample);
+									Vector3<float> pixelSample(x + 0.5, y + 0.5, 0);
+									float w0 = edgeFunction(v1Raster, v2Raster, pixelSample);
+									float w1 = edgeFunction(v2Raster, v0Raster, pixelSample);
+									float w2 = edgeFunction(v0Raster, v1Raster, pixelSample);
 
-	                if (w0 >= 0 && w1 >= 0 && w2 >= 0)
-	                {
-		                w0 /= area; 
-	                    w1 /= area; 
-	                    w2 /= area; 
+									if(w0 >= 0 && w1 >= 0 && w2 >= 0)
+										{
+											w0 /= area;
+											w1 /= area;
+											w2 /= area;
 
-	                    float oneOverZ = v0Raster.z * w0 + v1Raster.z * w1 + v2Raster.z * w2; 
-	                    float z = -(oneOverZ); 
-	                    if(z < -1 || z > 1) continue;
-	                    if (z < depthbuffer[y * width + x])
-	                    { 
-                        	depthbuffer[y * width + x] = z;
-		            		framebuffer[y * width + x] = meshes[m]->getVertex(i * 3).normal;
-		            	}
-	            	}
-	            }
-	        }
+											float oneOverZ = v0Raster.z * w0 + v1Raster.z * w1 + v2Raster.z * w2;
+											float z = -(oneOverZ);
+											if(z < -1 || z > 1)
+												continue;
+											if(z < depthbuffer[y * width + x])
+												{
+													depthbuffer[y * width + x] = z;
+													framebuffer[y * width + x] = meshes[m]->getVertex(i * 3).normal;
+												}
+										}
+								}
+						}
+				}
 		}
-	}
 
 	std::cout << tris << std::endl;
 
 	cv::Mat img(height, width, CV_32FC3, framebuffer);
-    imshow("Sky Engine", img);
-    cv::waitKey(1);
+	imshow("Sky Engine", img);
+	cv::waitKey(1);
 
 	/*for (uint32_t i = 0; i < height * width; ++i) {
         unsigned char r = (unsigned char)(255 * clamp(0, 1, framebuffer[i].x));
@@ -281,8 +319,8 @@ static void rasterize(Camera& camera, int width, int height)
         ofs << r << g << b;
     }*/
 
-    delete[] framebuffer;
-    delete[] depthbuffer;
+	delete[] framebuffer;
+	delete[] depthbuffer;
 }
 
 /*IndexedMesh* loadAssimpMesh(aiMesh* aimesh)
@@ -336,7 +374,7 @@ IndexedMesh* loadMesh(int i)
 	return mesh;
 }
 
-int main (int argc, char *argv[])
+int main(int argc, char* argv[])
 {
 	int imgWidth = 1280;
 	int imgHeight = 720;
@@ -346,7 +384,7 @@ int main (int argc, char *argv[])
 
 	Camera camera = Camera(1.0, 90, imgWidth / (float)imgHeight, 0.1, 100.0);
 	//FPS camera
-	FPS *fps;
+	FPS* fps;
 
 	//Import meshes
 
@@ -357,13 +395,13 @@ int main (int argc, char *argv[])
 	numMeshes = 1;
 	meshes = new IndexedMesh*[numMeshes];
 	bvhs = new BVH<float>*[numMeshes];
-	
+
 	for(int i = 0; i < numMeshes; ++i)
-	{
-		std::cout << "Loading Mesh " << i << std::endl;
-		meshes[i] = loadMesh(i);
-		bvhs[i] = new BVH<float>(meshes[i]);
-	}
+		{
+			std::cout << "Loading Mesh " << i << std::endl;
+			meshes[i] = loadMesh(i);
+			bvhs[i] = new BVH<float>(meshes[i]);
+		}
 
 	//Compute transformation matrix
 	modelMatrix = new Matrix4<float>();
@@ -385,7 +423,7 @@ int main (int argc, char *argv[])
 	light->lightMatrix.translate(0.0, 0.0, 0.0); //Point light transform
 	//light->lightMatrix.rotate(45, 1.0, 0.0, 0.0);
 	lightDirection = new Vector3<float>();
-	*lightDirection = Vector3<float> { 0.0, 0.0, -1.0 } * light->lightMatrix;
+	*lightDirection = Vector3<float>{ 0.0, 0.0, -1.0 } * light->lightMatrix;
 
 	//Instance gamepad
 	gamepad = new LinuxGamepad();
@@ -395,28 +433,28 @@ int main (int argc, char *argv[])
 
 	//Render
 	while(true)
-	{
-		clock_t begin = clock();
+		{
+			clock_t begin = clock();
 
-		camera.viewMatrix = Matrix4<float>::identity;
+			camera.viewMatrix = Matrix4<float>::identity;
 
-		gamepad->poll();
-		fps->update();
+			gamepad->poll();
+			fps->update();
 
-		if(gamepad->state.buttons & Gamepad::BUTTON_RIGHT_SHOULDER)
-			render(camera, imgWidth, imgHeight);
-		else
-			rasterize(camera, imgWidth, imgHeight);
+			if(gamepad->state.buttons & Gamepad::BUTTON_RIGHT_SHOULDER)
+				render(camera, imgWidth, imgHeight);
+			else
+				rasterize(camera, imgWidth, imgHeight);
 
-		/*light->lightMatrix.rotate(1, 0.0, 1.0, 0.0);
+			/*light->lightMatrix.rotate(1, 0.0, 1.0, 0.0);
 		*lightDirection = Vector3<float> { 0.0, 0.0, -1.0 } * light->lightMatrix;*/
 
-		clock_t end = clock();
-		double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-		std::cout << "FPS: " << 1.0 / elapsed_secs << std::endl;
-	}
+			clock_t end = clock();
+			double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+			std::cout << "FPS: " << 1.0 / elapsed_secs << std::endl;
+		}
 
-    //ofs.close();
+	//ofs.close();
 
-    return 0;
+	return 0;
 }

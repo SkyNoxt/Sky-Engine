@@ -7,7 +7,5 @@ class Academy : public Camera
 {
 
 public:
-
 	Academy(float targetWidth);
-		
 };

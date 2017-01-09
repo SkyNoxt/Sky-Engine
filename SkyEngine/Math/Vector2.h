@@ -8,7 +8,6 @@ class Vector2
 {
 
 public:
-
 	union
 	{
 		struct
@@ -39,43 +38,42 @@ public:
 	static Vector2<T> maxima(const Vector2<T>& aVec, const Vector2<T>& bVec);
 
 	//Unary operators
-	Vector2<T> operator - () const;
+	Vector2<T> operator-() const;
 
-	void operator =  (const Vector2<T>& vector);
-	void operator += (const Vector2<T>& vector);
-	void operator -= (const Vector2<T>& vector);
-	void operator *= (const Vector2<T>& vector);
+	void operator=(const Vector2<T>& vector);
+	void operator+=(const Vector2<T>& vector);
+	void operator-=(const Vector2<T>& vector);
+	void operator*=(const Vector2<T>& vector);
 
-	void operator += (const T value);
-	void operator -= (const T value);
-	void operator *= (const T value);
+	void operator+=(const T value);
+	void operator-=(const T value);
+	void operator*=(const T value);
 
 	//Subscript operator
-	T& operator [] (const int index);
+	T& operator[](const int index);
 
 	//Binary operators
-	bool operator == (const Vector2<T>& vector) const;
-	bool operator != (const Vector2<T>& vector) const;
+	bool operator==(const Vector2<T>& vector) const;
+	bool operator!=(const Vector2<T>& vector) const;
 
-	Vector2<T> operator + (const Vector2<T>& vector) const;
-	Vector2<T> operator - (const Vector2<T>& vector) const;
-	Vector2<T> operator * (const Vector2<T>& vector) const;
-	
-	Vector2<T> operator + (const T value) const;
-	Vector2<T> operator - (const T value) const;
-	Vector2<T> operator * (const T value) const;
+	Vector2<T> operator+(const Vector2<T>& vector) const;
+	Vector2<T> operator-(const Vector2<T>& vector) const;
+	Vector2<T> operator*(const Vector2<T>& vector) const;
+
+	Vector2<T> operator+(const T value) const;
+	Vector2<T> operator-(const T value) const;
+	Vector2<T> operator*(const T value) const;
 
 	//Destructor
 	~Vector2();
 
 private:
-
 };
 
 //Inline heterogeneous opeartors
 
 template <class T>
-Vector2<T> operator * (const T& value, const Vector2<T>& vector)
+Vector2<T> operator*(const T& value, const Vector2<T>& vector)
 {
 	return vector * value;
 }

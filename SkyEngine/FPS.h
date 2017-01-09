@@ -8,7 +8,6 @@ class FPS
 {
 
 public:
-
 	//Constructor
 	FPS(Camera* cam, const Gamepad* pad, float moveVel = 1.0, float rotationVel = 1.0);
 
@@ -19,7 +18,6 @@ public:
 	~FPS();
 
 private:
-
 	Camera* camera;
 	const Gamepad* gamepad;
 

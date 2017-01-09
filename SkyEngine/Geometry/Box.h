@@ -10,7 +10,6 @@ class Box
 {
 
 public:
-
 	Vector3<T> bounds[2];
 
 	//Constructor
@@ -22,5 +21,4 @@ public:
 
 	//Destructor
 	~Box();
-		
 };

@@ -37,7 +37,6 @@ void FPS::update()
 
 FPS::~FPS()
 {
-	
 }
 
 void FPS::moveCamera(float distance, float direction)

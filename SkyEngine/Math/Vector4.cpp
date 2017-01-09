@@ -66,10 +66,10 @@ Vector4<T> Vector4<T>::normalize() const
 {
 	T l = 1 / length();
 
-	if (l)
+	if(l)
 		return Vector4<T>(x * l, y * l, z * l, w * l);
 
-	return Vector4 <T> { 0, 0, 0, 0 };
+	return Vector4<T>{ 0, 0, 0, 0 };
 }
 
 template <class T>
@@ -216,7 +216,6 @@ Vector4<T> Vector4<T>::operator*(const T value) const
 template <class T>
 Vector4<T>::~Vector4()
 {
-
 }
 
-template class Vector4 < float >;
+template class Vector4<float>;

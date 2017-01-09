@@ -2,32 +2,42 @@
 #include "Matrix3.h"
 
 template <class T>
-const Matrix3<T> Matrix3<T>::identity = Matrix3 < T > { 1, 0, 0,
-														0, 1, 0,
-														0, 0, 1 };
+const Matrix3<T> Matrix3<T>::identity = Matrix3<T>{ 1, 0, 0,
+	0, 1, 0,
+	0, 0, 1 };
 
 template <class T>
 Matrix3<T>::Matrix3(T xxVal, T xyVal, T xzVal, T yxVal, T yyVal, T yzVal, T zxVal, T zyVal, T zzVal)
 {
-	xx = xxVal; xy = xyVal; xz = xzVal;
-	yx = yxVal; yy = yyVal; yz = yzVal;
-	zx = zxVal; zy = zyVal; zz = zzVal;
+	xx = xxVal;
+	xy = xyVal;
+	xz = xzVal;
+	yx = yxVal;
+	yy = yyVal;
+	yz = yzVal;
+	zx = zxVal;
+	zy = zyVal;
+	zz = zzVal;
 }
 
 template <class T>
 Matrix3<T>::Matrix3(T matrix[9])
 {
-	xx = matrix[0];	xy = matrix[1];	xz = matrix[2];
-	yx = matrix[3];	yy = matrix[4];	yz = matrix[5];
-	zx = matrix[6];	zy = matrix[7];	zz = matrix[8];
+	xx = matrix[0];
+	xy = matrix[1];
+	xz = matrix[2];
+	yx = matrix[3];
+	yy = matrix[4];
+	yz = matrix[5];
+	zx = matrix[6];
+	zy = matrix[7];
+	zz = matrix[8];
 }
 
 template <class T>
 Matrix3<T>::Matrix3(T value)
 {
-	xx = xy = xz =
-		yx = yy = yz =
-		zx = zy = zz = value;
+	xx = xy = xz = yx = yy = yz = zx = zy = zz = value;
 }
 
 template <class T>
@@ -55,19 +65,16 @@ Matrix3<T>::Matrix3(const Vector3<T> vec[3])
 template <class T>
 T Matrix3<T>::determinant() const
 {
-	return  xx * (yy * zz - zy * yz) -
-			xy * (yx * zz - yz * zx) +
-			xz * (yx * zy - yy * zx);
+	return xx * (yy * zz - zy * yz) - xy * (yx * zz - yz * zx) + xz * (yx * zy - yy * zx);
 }
 
 template <class T>
 Matrix3<T> Matrix3<T>::transpose() const
 {
-	return Matrix3 <T>(
+	return Matrix3<T>(
 		xx, yx, zx,
 		xy, yy, zy,
-		xz, yz, zz
-		);
+		xz, yz, zz);
 }
 
 template <class T>
@@ -84,8 +91,7 @@ Matrix3<T> Matrix3<T>::inverse() const
 		(yx * xz - xx * yz) * invdet,
 		(yx * zy - zx * yy) * invdet,
 		(zx * xy - xx * zy) * invdet,
-		(xx * yy - yx * xy) * invdet
-		);
+		(xx * yy - yx * xy) * invdet);
 }
 
 template <class T>
@@ -129,7 +135,7 @@ bool Matrix3<T>::operator!=(const Matrix3<T>& matrix) const
 template <class T>
 Matrix3<T> Matrix3<T>::operator*(const Matrix3<T>& matrix) const
 {
-	return Matrix3 <T>(
+	return Matrix3<T>(
 		xx * matrix.xx + xy * matrix.yx + xz * matrix.zx,
 		xx * matrix.xy + xy * matrix.yy + xz * matrix.zy,
 		xx * matrix.xz + xy * matrix.yz + xz * matrix.zz,
@@ -140,8 +146,7 @@ Matrix3<T> Matrix3<T>::operator*(const Matrix3<T>& matrix) const
 
 		zx * matrix.xx + zy * matrix.yx + zz * matrix.zx,
 		zx * matrix.xy + zy * matrix.yy + zz * matrix.zy,
-		zx * matrix.xz + zy * matrix.yz + zz * matrix.zz
-	);
+		zx * matrix.xz + zy * matrix.yz + zz * matrix.zz);
 }
 
 template <class T>
@@ -153,7 +158,6 @@ Matrix3<T> Matrix3<T>::operator*(const T value) const
 template <class T>
 Matrix3<T>::~Matrix3()
 {
-
 }
 
-template class Matrix3 < float > ;
+template class Matrix3<float>;

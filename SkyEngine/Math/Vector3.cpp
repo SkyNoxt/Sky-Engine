@@ -64,10 +64,10 @@ Vector3<T> Vector3<T>::normalize() const
 {
 	T l = 1 / length();
 
-	if (l)
+	if(l)
 		return Vector3<T>(x * l, y * l, z * l);
 
-	return Vector3 <T> { 0, 0, 0 };
+	return Vector3<T>{ 0, 0, 0 };
 }
 
 template <class T>
@@ -81,7 +81,7 @@ Vector3<T> Vector3<T>::cross(const Vector3<T>& vector) const
 {
 	return Vector3<T>(y * vector.z - vector.y * z,
 		z * vector.x - vector.z * x,
-		x * vector.y - vector.x *y);
+		x * vector.y - vector.x * y);
 }
 
 template <class T>
@@ -231,7 +231,6 @@ Vector3<T> Vector3<T>::operator*(const T value) const
 template <class T>
 Vector3<T>::~Vector3()
 {
-
 }
 
-template class Vector3 < float >;
+template class Vector3<float>;

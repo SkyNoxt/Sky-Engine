@@ -3,9 +3,9 @@
 
 #include <stdio.h>
 
+#include <Math/Matrix4.h>
 #include <Math/Vector2.h>
 #include <Math/Vector3.h>
-#include <Math/Matrix4.h>
 
 #include <Ray.h>
 
@@ -14,10 +14,10 @@
 class Mesh
 {
 
-template <class T> friend class BVH;
+	template <class T>
+	friend class BVH;
 
 public:
-
 	bool culling = false;
 	unsigned int numVertices;
 	Vertex* vertexArray;
@@ -38,10 +38,8 @@ public:
 	~Mesh();
 
 protected:
-
 	//Protected member function
 	bool triangleIntersect(const Ray& ray,
 		const Vector3<float>& vertex0, const Vector3<float>& vertex1, const Vector3<float>& vertex2,
-    	float &distance, float &u, float &v) const;
-		
+		float& distance, float& u, float& v) const;
 };
