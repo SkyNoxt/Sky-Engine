@@ -11,7 +11,7 @@ public:
 	unsigned int* indexArray;
 
 	//Constructor
-	IndexedMesh();
+	IndexedMesh(const Stream& stream);
 
 	//Member function
 	bool intersect(const Ray& ray, float& distance, unsigned int& index, Vector2<float>& barycenter) const;
@@ -19,8 +19,7 @@ public:
 
 	const Vertex& getVertex(const int index) const;
 
-	void write(const Stream& stream);
-	void read(const Stream& stream);
+	void serialize(const Stream& stream);
 
 	//Destructor
 	~IndexedMesh();

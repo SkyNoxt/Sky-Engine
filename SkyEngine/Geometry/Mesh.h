@@ -23,7 +23,7 @@ public:
 	Vertex* vertexArray;
 
 	//Constructor
-	Mesh();
+	Mesh(const Stream& stream);
 
 	//Member function
 	virtual bool intersect(const Ray& ray, float& distance, unsigned int& index, Vector2<float>& barycenter) const;
@@ -31,8 +31,7 @@ public:
 
 	virtual const Vertex& getVertex(const int index) const;
 
-	virtual void write(const Stream& stream);
-	virtual void read(const Stream& stream);
+	virtual void serialize(const Stream& stream);
 
 	//Destructor
 	~Mesh();

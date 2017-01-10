@@ -1,8 +1,10 @@
 ﻿
 #include "Mesh.h"
 
-Mesh::Mesh()
+Mesh::Mesh(const Stream& stream)
 {
+	numVertices = stream.read<unsigned int>();
+	vertexArray = stream.read<Vertex>(numVertices);
 }
 
 bool Mesh::intersect(const Ray& ray, float& distance, unsigned int& index, Vector2<float>& barycenter) const
@@ -38,16 +40,10 @@ const Vertex& Mesh::getVertex(const int index) const
 	return vertexArray[index];
 }
 
-void Mesh::write(const Stream& stream)
+void Mesh::serialize(const Stream& stream)
 {
 	stream.write<unsigned int>(numVertices);
 	stream.write<Vertex>(vertexArray, numVertices);
-}
-
-void Mesh::read(const Stream& stream)
-{
-	numVertices = stream.read<unsigned int>();
-	vertexArray = stream.read<Vertex>(numVertices);
 }
 
 Mesh::~Mesh()

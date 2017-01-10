@@ -1,8 +1,11 @@
 ﻿
 #include "IndexedMesh.h"
 
-IndexedMesh::IndexedMesh()
+IndexedMesh::IndexedMesh(const Stream& stream)
+	: Mesh(stream)
 {
+	numIndices = stream.read<unsigned int>();
+	indexArray = stream.read<unsigned int>(numIndices);
 }
 
 bool IndexedMesh::intersect(const Ray& ray, float& distance, unsigned int& index, Vector2<float>& barycenter) const
@@ -38,18 +41,11 @@ const Vertex& IndexedMesh::getVertex(const int index) const
 	return vertexArray[indexArray[index]];
 }
 
-void IndexedMesh::write(const Stream& stream)
+void IndexedMesh::serialize(const Stream& stream)
 {
-	Mesh::write(stream);
+	Mesh::serialize(stream);
 	stream.write<unsigned int>(numIndices);
 	stream.write<unsigned int>(indexArray, numIndices);
-}
-
-void IndexedMesh::read(const Stream& stream)
-{
-	Mesh::read(stream);
-	numIndices = stream.read<unsigned int>();
-	indexArray = stream.read<unsigned int>(numIndices);
 }
 
 IndexedMesh::~IndexedMesh()

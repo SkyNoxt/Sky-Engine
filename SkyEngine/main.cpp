@@ -368,9 +368,7 @@ static void rasterize(Camera& camera, int width, int height)
 IndexedMesh* loadMesh(int i)
 {
 	Stream* stream = new FileStream("/home/nelson/Desktop/cow.bin");
-	IndexedMesh* mesh = new IndexedMesh();
-	std::cout << "here" << std::endl;
-	mesh->read(*stream);
+	IndexedMesh* mesh = new IndexedMesh(*stream);
 	stream->flush();
 	delete stream;
 	return mesh;
