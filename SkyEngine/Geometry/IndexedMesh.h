@@ -19,8 +19,8 @@ public:
 
 	const Vertex& getVertex(const int index) const;
 
-	void write(FILE* file);
-	void read(FILE* file);
+	void write(const Stream& stream);
+	void read(const Stream& stream);
 
 	//Destructor
 	~IndexedMesh();

@@ -8,6 +8,8 @@
 #include <Camera/Camera.h>
 #include <Math/Vector3.h>
 
+#include <Streams/FileStream.h>
+
 #include <Geometry/BVH.h>
 #include <Geometry/Box.h>
 #include <Geometry/IndexedMesh.h>
@@ -104,7 +106,7 @@ static Vector3<float> castRay(Ray& ray, Camera& camera, unsigned int depth)
 	return hitColor;
 }
 
-static bool rasterVertex(Vector3<float>& raster, const Vector4<float>& vertex, unsigned int width, unsigned int height)
+/*static bool rasterVertex(Vector3<float>& raster, const Vector4<float>& vertex, unsigned int width, unsigned int height)
 {
 	raster = { vertex.x, vertex.y, -vertex.z };
 
@@ -122,7 +124,7 @@ static bool rasterVertex(Vector3<float>& raster, const Vector4<float>& vertex, u
 	raster.y = ((1 - (raster.y + 1) * 0.5) * height);
 
 	return true;
-}
+}*/
 
 //std::ofstream ofs("/home/nelson/Desktop/SkyPipe", std::ios::out | std::ios::binary);
 
@@ -365,12 +367,12 @@ static void rasterize(Camera& camera, int width, int height)
 
 IndexedMesh* loadMesh(int i)
 {
-	FILE* f = fopen("/home/nelson/Desktop/cow.bin", "rb");
+	Stream* stream = new FileStream("/home/nelson/Desktop/cow.bin");
 	IndexedMesh* mesh = new IndexedMesh();
 	std::cout << "here" << std::endl;
-	mesh->read(f);
-	fflush(f);
-	fclose(f);
+	mesh->read(*stream);
+	stream->flush();
+	delete stream;
 	return mesh;
 }
 

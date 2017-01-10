@@ -38,19 +38,18 @@ const Vertex& IndexedMesh::getVertex(const int index) const
 	return vertexArray[indexArray[index]];
 }
 
-void IndexedMesh::write(FILE* file)
+void IndexedMesh::write(const Stream& stream)
 {
-	Mesh::write(file);
-	fwrite(&numIndices, sizeof(numIndices), 1, file);
-	fwrite(indexArray, sizeof(unsigned int), numIndices, file);
+	Mesh::write(stream);
+	stream.write<unsigned int>(numIndices);
+	stream.write<unsigned int>(indexArray, numIndices);
 }
 
-void IndexedMesh::read(FILE* file)
+void IndexedMesh::read(const Stream& stream)
 {
-	Mesh::read(file);
-	fread(&numIndices, sizeof(numIndices), 1, file);
-	indexArray = new unsigned int[numIndices];
-	fread(indexArray, sizeof(unsigned int), numIndices, file);
+	Mesh::read(stream);
+	numIndices = stream.read<unsigned int>();
+	indexArray = stream.read<unsigned int>(numIndices);
 }
 
 IndexedMesh::~IndexedMesh()

@@ -38,17 +38,16 @@ const Vertex& Mesh::getVertex(const int index) const
 	return vertexArray[index];
 }
 
-void Mesh::write(FILE* file)
+void Mesh::write(const Stream& stream)
 {
-	fwrite(&numVertices, sizeof(numVertices), 1, file);
-	fwrite(vertexArray, sizeof(Vertex), numVertices, file);
+	stream.write<unsigned int>(numVertices);
+	stream.write<Vertex>(vertexArray, numVertices);
 }
 
-void Mesh::read(FILE* file)
+void Mesh::read(const Stream& stream)
 {
-	fread(&numVertices, sizeof(numVertices), 1, file);
-	vertexArray = new Vertex[numVertices];
-	fread(vertexArray, sizeof(Vertex), numVertices, file);
+	numVertices = stream.read<unsigned int>();
+	vertexArray = stream.read<Vertex>(numVertices);
 }
 
 Mesh::~Mesh()

@@ -1,13 +1,13 @@
 ﻿
 #pragma once
 
-#include <stdio.h>
-
 #include <Math/Matrix4.h>
 #include <Math/Vector2.h>
 #include <Math/Vector3.h>
 
 #include <Ray.h>
+
+#include <Streams/Stream.h>
 
 #include "Vertex.h"
 
@@ -31,8 +31,8 @@ public:
 
 	virtual const Vertex& getVertex(const int index) const;
 
-	virtual void write(FILE* file);
-	virtual void read(FILE* file);
+	virtual void write(const Stream& stream);
+	virtual void read(const Stream& stream);
 
 	//Destructor
 	~Mesh();
