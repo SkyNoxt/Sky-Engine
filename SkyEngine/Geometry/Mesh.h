@@ -22,10 +22,12 @@ public:
 	unsigned int numVertices;
 	Vertex* vertexArray;
 
-	//Constructor
+	//Constructors
+	Mesh(unsigned int vertexCount, Vertex* vertices);
 	Mesh(const Stream& stream);
+	Mesh();
 
-	//Member function
+	//Member functions
 	virtual bool intersect(const Ray& ray, float& distance, unsigned int& index, Vector2<float>& barycenter) const;
 	virtual unsigned int numElements() const;
 
@@ -34,7 +36,7 @@ public:
 	virtual void serialize(const Stream& stream);
 
 	//Destructor
-	~Mesh();
+	virtual ~Mesh();
 
 protected:
 	//Protected member function

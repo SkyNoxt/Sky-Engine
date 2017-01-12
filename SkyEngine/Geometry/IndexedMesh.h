@@ -10,10 +10,12 @@ public:
 	unsigned int numIndices;
 	unsigned int* indexArray;
 
-	//Constructor
+	//Constructors
+	IndexedMesh(unsigned int vertexCount, Vertex* vertices, unsigned int indexCount, unsigned int* indices);
 	IndexedMesh(const Stream& stream);
+	IndexedMesh();
 
-	//Member function
+	//Member functions
 	bool intersect(const Ray& ray, float& distance, unsigned int& index, Vector2<float>& barycenter) const;
 	unsigned int numElements() const;
 

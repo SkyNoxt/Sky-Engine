@@ -26,7 +26,11 @@ public:
 	virtual ~Stream() = 0;
 };
 
-//Template method implementations
+//Pure virtual destructor implementation
+
+inline Stream::~Stream() {}
+
+//Template method specific instantiation
 
 template <typename T>
 T Stream::read() const

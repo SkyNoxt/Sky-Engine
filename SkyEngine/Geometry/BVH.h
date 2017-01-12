@@ -19,7 +19,7 @@ public:
 	BVH(IndexedMesh* mesh);
 
 	//Member function
-	bool intersect(const Mesh* mesh, const Ray& ray, T& distance, unsigned int& index, Vector2<T>& barycenter) const;
+	bool intersect(const Mesh& mesh, const Ray& ray, T& distance, unsigned int& index, Vector2<T>& barycenter) const;
 
 	//Destructor
 	~BVH();
@@ -55,7 +55,7 @@ private:
 	};
 
 	BVHNode* recurse(std::vector<BVHBox>& workSet, unsigned int depth = 0);
-	bool recurseIntersect(BVHNode* node, const Mesh* mesh, const Ray& ray, T& distance, unsigned int& index, Vector2<T>& barycenter, unsigned int depth = 0) const;
+	bool recurseIntersect(BVHNode* node, const Mesh& mesh, const Ray& ray, T& distance, unsigned int& index, Vector2<T>& barycenter, unsigned int depth = 0) const;
 
 	BVHNode* root;
 };

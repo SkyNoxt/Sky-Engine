@@ -45,7 +45,7 @@ BVH<T>::BVH(IndexedMesh* mesh)
 }
 
 template <class T>
-bool BVH<T>::intersect(const Mesh* mesh, const Ray& ray, T& distance, unsigned int& index, Vector2<T>& barycenter) const
+bool BVH<T>::intersect(const Mesh& mesh, const Ray& ray, T& distance, unsigned int& index, Vector2<T>& barycenter) const
 {
 	return recurseIntersect(root, mesh, ray, distance, index, barycenter);
 }
@@ -248,7 +248,7 @@ typename BVH<T>::BVHNode* BVH<T>::recurse(std::vector<BVHBox>& workSet, unsigned
 }
 
 template <class T>
-bool BVH<T>::recurseIntersect(BVHNode* node, const Mesh* mesh, const Ray& ray, T& distance, unsigned int& index, Vector2<T>& barycenter, unsigned int depth) const
+bool BVH<T>::recurseIntersect(BVHNode* node, const Mesh& mesh, const Ray& ray, T& distance, unsigned int& index, Vector2<T>& barycenter, unsigned int depth) const
 {
 	if(depth > 50)
 		{
@@ -270,9 +270,9 @@ bool BVH<T>::recurseIntersect(BVHNode* node, const Mesh* mesh, const Ray& ray, T
 					distance = Ray::maxLength;
 					for(unsigned int i = 0; i < leaf->numIndices; i += 3)
 						{
-							if(mesh->triangleIntersect(ray,
-								   mesh->vertexArray[leaf->indexArray[i]].position, mesh->vertexArray[leaf->indexArray[i + 1]].position,
-								   mesh->vertexArray[leaf->indexArray[i + 2]].position, tempDist, u, v)
+							if(mesh.triangleIntersect(ray,
+								   mesh.vertexArray[leaf->indexArray[i]].position, mesh.vertexArray[leaf->indexArray[i + 1]].position,
+								   mesh.vertexArray[leaf->indexArray[i + 2]].position, tempDist, u, v)
 								&& tempDist > 0 && tempDist < distance)
 								{
 									distance = tempDist;

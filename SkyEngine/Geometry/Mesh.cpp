@@ -1,10 +1,22 @@
 ﻿
 #include "Mesh.h"
 
+Mesh::Mesh(unsigned int vertexCount, Vertex* vertices)
+{
+	numVertices = vertexCount;
+	vertexArray = vertices;
+}
+
 Mesh::Mesh(const Stream& stream)
 {
 	numVertices = stream.read<unsigned int>();
 	vertexArray = stream.read<Vertex>(numVertices);
+}
+
+Mesh::Mesh()
+{
+	numVertices = 0;
+	vertexArray = 0;
 }
 
 bool Mesh::intersect(const Ray& ray, float& distance, unsigned int& index, Vector2<float>& barycenter) const

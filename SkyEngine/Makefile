@@ -15,11 +15,11 @@ OBJECTS = $(SOURCES:.cpp=.o)
 
 # Main target linking
 $(TARGET): $(OBJECTS)
-	$(CC) $(OBJECTS) $(LD_FLAGS) -o $(TARGET)
+	$(CC) $(OBJECTS) $(LD_DEBUG) -o $(TARGET)
 
 # Compile source files
 %.o: %.cpp
-	$(CC) -c $(CC_FLAGS) $< -o $@
+	$(CC) -c $(CC_DEBUG) $< -o $@
 
 # Format code
 format:
