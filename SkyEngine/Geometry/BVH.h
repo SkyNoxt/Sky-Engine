@@ -15,8 +15,8 @@ class BVH
 
 public:
 	//Constructor
-	BVH(Mesh* mesh);
-	BVH(IndexedMesh* mesh);
+	BVH(const Mesh& mesh);
+	BVH(const IndexedMesh& mesh);
 
 	//Member function
 	bool intersect(const Mesh& mesh, const Ray& ray, T& distance, unsigned int& index, Vector2<T>& barycenter) const;

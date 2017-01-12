@@ -2,33 +2,33 @@
 #include "BVH.h"
 
 template <class T>
-BVH<T>::BVH(Mesh* mesh)
+BVH<T>::BVH(const Mesh& mesh)
 {
 }
 
 template <class T>
-BVH<T>::BVH(IndexedMesh* mesh)
+BVH<T>::BVH(const IndexedMesh& mesh)
 {
 	std::vector<BVHBox> workSet;
 	Vector3<T> bottom(maxBound);
 	Vector3<T> top(-maxBound);
 
-	for(unsigned int i = 0; i < mesh->numIndices; i += 3)
+	for(unsigned int i = 0; i < mesh.numIndices; i += 3)
 		{
 			BVHBox box;
 			box.bounds[0] = Vector3<T>(maxBound);
 			box.bounds[1] = Vector3<T>(-maxBound);
-			box.indices[0] = mesh->indexArray[i];
-			box.indices[1] = mesh->indexArray[i + 1];
-			box.indices[2] = mesh->indexArray[i + 2];
+			box.indices[0] = mesh.indexArray[i];
+			box.indices[1] = mesh.indexArray[i + 1];
+			box.indices[2] = mesh.indexArray[i + 2];
 
-			box.bounds[0] = Vector3<T>::minima(box.bounds[0], mesh->vertexArray[i].position);
-			box.bounds[0] = Vector3<T>::minima(box.bounds[0], mesh->vertexArray[i + 1].position);
-			box.bounds[0] = Vector3<T>::minima(box.bounds[0], mesh->vertexArray[i + 2].position);
+			box.bounds[0] = Vector3<T>::minima(box.bounds[0], mesh.vertexArray[i].position);
+			box.bounds[0] = Vector3<T>::minima(box.bounds[0], mesh.vertexArray[i + 1].position);
+			box.bounds[0] = Vector3<T>::minima(box.bounds[0], mesh.vertexArray[i + 2].position);
 
-			box.bounds[1] = Vector3<T>::maxima(box.bounds[1], mesh->vertexArray[i].position);
-			box.bounds[1] = Vector3<T>::maxima(box.bounds[1], mesh->vertexArray[i + 1].position);
-			box.bounds[1] = Vector3<T>::maxima(box.bounds[1], mesh->vertexArray[i + 2].position);
+			box.bounds[1] = Vector3<T>::maxima(box.bounds[1], mesh.vertexArray[i].position);
+			box.bounds[1] = Vector3<T>::maxima(box.bounds[1], mesh.vertexArray[i + 1].position);
+			box.bounds[1] = Vector3<T>::maxima(box.bounds[1], mesh.vertexArray[i + 2].position);
 
 			bottom = Vector3<T>::minima(bottom, box.bounds[0]);
 			top = Vector3<T>::maxima(top, box.bounds[1]);

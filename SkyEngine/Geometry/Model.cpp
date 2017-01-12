@@ -12,7 +12,7 @@ Model::Model(const Stream& stream)
 	numMeshes = stream.read<unsigned int>();
 	meshArray = new IndexedMesh[numMeshes];
 	for(unsigned int i = 0; i < numMeshes; ++i)
-		meshArray[i] = IndexedMesh(stream);
+		new(meshArray + i) IndexedMesh(stream);
 }
 
 void Model::serialize(const Stream& stream)

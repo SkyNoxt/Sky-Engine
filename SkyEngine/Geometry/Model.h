@@ -1,6 +1,8 @@
 
 #pragma once
 
+#include <new>
+
 #include <Streams/Stream.h>
 
 #include "IndexedMesh.h"

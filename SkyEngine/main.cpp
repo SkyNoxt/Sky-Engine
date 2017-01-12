@@ -58,7 +58,7 @@ static Vector3<float> castRay(Ray& ray, Camera& camera, unsigned int depth)
 	int meshIndex;
 
 	unsigned int numMeshes = model->numMeshes;
-	Mesh* meshes = model->meshArray;
+	IndexedMesh* meshes = model->meshArray;
 	for(unsigned int i = 0; i < numMeshes; ++i)
 		{
 			if(bvhs[i]->intersect(meshes[i], ray, tempDistance, tempIndex, tempUV) && tempDistance > 0 && tempDistance < distance)
@@ -101,7 +101,7 @@ static Vector3<float> castRay(Ray& ray, Camera& camera, unsigned int depth)
 	return hitColor;
 }
 
-/*static bool rasterVertex(Vector3<float>& raster, const Vector4<float>& vertex, unsigned int width, unsigned int height)
+static bool rasterVertex(Vector3<float>& raster, const Vector4<float>& vertex, unsigned int width, unsigned int height)
 {
 	raster = { vertex.x, vertex.y, -vertex.z };
 
@@ -119,7 +119,7 @@ static Vector3<float> castRay(Ray& ray, Camera& camera, unsigned int depth)
 	raster.y = ((1 - (raster.y + 1) * 0.5) * height);
 
 	return true;
-}*/
+}
 
 //std::ofstream ofs("/home/nelson/Desktop/SkyPipe", std::ios::out | std::ios::binary);
 
@@ -182,38 +182,34 @@ static void rasterize(Camera& camera, int width, int height)
 
 	Matrix4<float> transform = camera.projectionMatrix * camera.viewMatrix * *modelMatrix;
 
-	/*#pragma omp parallel for num_threads(64)
-	for(int m = 0; m < numMeshes; ++m)
-	{
-		#pragma omp parallel for num_threads(512)
-		for(int i = 0; i < meshes[m]->numElements(); ++i)
-		{
-			const Vector3<float>& v0 = meshes[m]->getVertex(i).position;
-
-			Vector4<float> currentVertex = Vector4<float>{ v0.x, v0.y, v0.z, 1.0 } * transform;
-
-			Vector3<float> v0Raster;
-
-			if(rasterVertex(v0Raster, currentVertex, width, height))
-				framebuffer[(int)v0Raster.y * width + (int)v0Raster.x] = 1.0;
-		}
-	}*/
-
-	unsigned int tris = 0;
 #pragma omp parallel for num_threads(64)
-	for(unsigned int o = 0; o < model->numMeshes; ++o)
+	for(unsigned int m = 0; m < model->numMeshes; ++m)
 		{
-			unsigned int numMeshes = model->numMeshes;
-			Mesh* meshes = model->meshArray;
-			for(unsigned int m = 0; m < numMeshes; ++m)
+#pragma omp parallel for num_threads(512)
+			for(unsigned int i = 0; i < model->meshArray[m].numElements(); ++i)
 				{
-					unsigned int numTriangles = meshes[m].numElements() / 3;
+					const Vector3<float>& v0 = model->meshArray[m].getVertex(i).position;
+
+					Vector4<float> currentVertex = Vector4<float>{ v0.x, v0.y, v0.z, 1.0 } * transform;
+
+					Vector3<float> v0Raster;
+
+					if(rasterVertex(v0Raster, currentVertex, width, height))
+						framebuffer[(int)v0Raster.y * width + (int)v0Raster.x] = 1.0;
+				}
+		}
+
+	/*unsigned int tris = 0;
+#pragma omp parallel for num_threads(64)
+			for(unsigned int m = 0; m < model->numMeshes; ++m)
+				{
+					unsigned int numTriangles = model->meshArray[m].numElements() / 3;
 #pragma omp parallel for num_threads(512)
 					for(unsigned int i = 0; i < numTriangles; ++i)
 						{
-							const Vector3<float>& v0 = meshes[m].getVertex(i * 3).position;
-							const Vector3<float>& v1 = meshes[m].getVertex(i * 3 + 1).position;
-							const Vector3<float>& v2 = meshes[m].getVertex(i * 3 + 2).position;
+							const Vector3<float>& v0 = model->meshArray[m].getVertex(i * 3).position;
+							const Vector3<float>& v1 = model->meshArray[m].getVertex(i * 3 + 1).position;
+							const Vector3<float>& v2 = model->meshArray[m].getVertex(i * 3 + 2).position;
 
 							Vector4<float> t0 = Vector4<float>{ v0.x, v0.y, v0.z, 1.0 } * transform;
 							Vector4<float> t1 = Vector4<float>{ v1.x, v1.y, v1.z, 1.0 } * transform;
@@ -298,16 +294,15 @@ static void rasterize(Camera& camera, int width, int height)
 													if(z < depthbuffer[y * width + x])
 														{
 															depthbuffer[y * width + x] = z;
-															framebuffer[y * width + x] = meshes[m].getVertex(i * 3).normal;
+															framebuffer[y * width + x] = model->meshArray[m].getVertex(i * 3).normal;
 														}
 												}
 										}
 								}
 						}
-				}
-		}
+				}*/
 
-	std::cout << tris << std::endl;
+	//std::cout << tris << std::endl;
 
 	cv::Mat img(height, width, CV_32FC3, framebuffer);
 	imshow("Sky Engine", img);
@@ -324,15 +319,6 @@ static void rasterize(Camera& camera, int width, int height)
 	delete[] depthbuffer;
 }
 
-IndexedMesh* loadMesh(int i)
-{
-	Stream* stream = new FileStream("/home/nelson/Desktop/cow.test");
-	IndexedMesh* mesh = new IndexedMesh(*stream);
-	stream->flush();
-	delete stream;
-	return mesh;
-}
-
 int main(int argc, char* argv[])
 {
 	int imgWidth = 1280;
@@ -341,22 +327,19 @@ int main(int argc, char* argv[])
 	//OpenCV window
 	namedWindow("Sky Engine", cv::WINDOW_AUTOSIZE);
 
-	Camera camera = Camera(1.0, 90, imgWidth / (float)imgHeight, 0.1, 100.0);
+	Camera camera = Camera(1.0, 90, imgWidth / (float)imgHeight, 0.1, 1000.0);
 	//FPS camera
 	FPS* fps;
 
-	IndexedMesh* meshes = new IndexedMesh[2];
-	bvhs = new BVH<float>*[2];
+	model = new Model(FileStream("/home/nelson/Desktop/light.test"));
+	bvhs = new BVH<float>*[model->numMeshes];
 
-	for(int i = 0; i < 2; ++i)
+	for(unsigned int i = 0; i < model->numMeshes; ++i)
 		{
-			std::cout << "Loading Mesh " << i << std::endl;
-			meshes[i] = *(loadMesh(i));
-			bvhs[i] = new BVH<float>(&meshes[i]);
+			std::cout << "Creating BVH " << i << std::endl;
+			bvhs[i] = new BVH<float>(model->meshArray[i]);
 		}
 
-	model = new Model(2, meshes);
-	delete model;
 	//Compute transformation matrix
 	modelMatrix = new Matrix4<float>();
 	//modelMatrix->scale(10, 10, 10);
