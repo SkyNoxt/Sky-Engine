@@ -45,7 +45,7 @@ static Vector3<float> castRay(Ray& ray, Camera& camera, unsigned int depth)
 
 	Vector3<float> hitColor = (ray.direction + Vector3<float>(1)) * 0.5;
 
-	float distance = Ray::maxLength;
+	float distance = Ray::MAX_LENGTH;
 	unsigned int index;
 	Vector2<float> uv;
 
@@ -310,10 +310,13 @@ int main(int argc, char* argv[])
 	namedWindow("Sky Engine", cv::WINDOW_AUTOSIZE);
 
 	Camera camera = Camera(1.0, 90, imgWidth / (float)imgHeight, 0.1, 1000.0);
-	//FPS camera
-	FPS* fps;
+	model = new Model(FileStream("/home/nelson/Desktop/treetest.skm"));
 
-	model = new Model(FileStream("/home/nelson/Desktop/cow.obj.bin"));
+	//Instance gamepad
+	gamepad = new LinuxGamepad();
+	LinuxGamepad::State state;
+
+	FPS* fps = new FPS(&camera, gamepad, 3.0, 3.0);
 
 	//Compute transformation matrix
 	modelMatrix = new Matrix4<float>();
@@ -337,18 +340,12 @@ int main(int argc, char* argv[])
 	lightDirection = new Vector3<float>();
 	*lightDirection = Vector3<float>{ 0.0, 0.0, -1.0 } * light->lightMatrix;
 
-	//Instance gamepad
-	gamepad = new LinuxGamepad();
-	LinuxGamepad::State state;
-
-	fps = new FPS(&camera, gamepad, 3.0, 3.0);
-
 	//Render
 	while(true)
 		{
 			clock_t begin = clock();
 
-			camera.viewMatrix = Matrix4<float>::identity;
+			camera.viewMatrix = Matrix4<float>::IDENTITY;
 
 			gamepad->poll();
 			fps->update();

@@ -30,7 +30,7 @@ public:
 		};
 	};
 
-	static const Matrix3<T> identity;
+	static const Matrix3<T> IDENTITY;
 
 	//Constructors
 	Matrix3<T>(T xxVal, T xyVal, T xzVal, T yxVal, T yyVal, T yzVal, T zxVal, T zyVal, T zzVal);

@@ -27,7 +27,7 @@ bool IndexedMesh::intersect(const Ray& ray, float& distance, unsigned int& index
 	bool intersect = false;
 	float tempDist, u, v;
 
-	distance = Ray::maxLength;
+	distance = Ray::MAX_LENGTH;
 	for(unsigned int i = 0; i < numIndices; i += 3)
 		{
 			if(triangleIntersect(ray,

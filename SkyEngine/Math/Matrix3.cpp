@@ -2,7 +2,7 @@
 #include "Matrix3.h"
 
 template <class T>
-const Matrix3<T> Matrix3<T>::identity = Matrix3<T>{ 1, 0, 0,
+const Matrix3<T> Matrix3<T>::IDENTITY = Matrix3<T>{ 1, 0, 0,
 	0, 1, 0,
 	0, 0, 1 };
 
@@ -43,7 +43,7 @@ Matrix3<T>::Matrix3(T value)
 template <class T>
 Matrix3<T>::Matrix3()
 {
-	*this = identity;
+	*this = IDENTITY;
 }
 
 template <class T>

@@ -39,7 +39,7 @@ public:
 		};
 	};
 
-	static const Matrix4<T> identity;
+	static const Matrix4<T> IDENTITY;
 
 	//Constructors
 	Matrix4<T>(T xxVal, T xyVal, T xzVal, T xwVal, T yxVal, T yyVal, T yzVal, T ywVal, T zxVal, T zyVal, T zzVal, T zwVal, T wxVal, T wyVal, T wzVal, T wwVal);

@@ -41,13 +41,13 @@ FPS::~FPS()
 
 void FPS::moveCamera(float distance, float direction)
 {
-	float radians = (direction - camYaw) * DEG_TO_RAD;
+	float radians = (direction - camYaw) * Camera::DEG_TO_RAD;
 	camX -= sin(radians) * distance;
 	camZ -= cos(radians) * distance;
 }
 
 void FPS::moveCameraUp(float distance, float direction)
 {
-	float radians = (direction - camPitch) * DEG_TO_RAD;
+	float radians = (direction - camPitch) * Camera::DEG_TO_RAD;
 	camY += sin(radians) * distance;
 }

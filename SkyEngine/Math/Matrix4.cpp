@@ -2,7 +2,7 @@
 #include "Matrix4.h"
 
 template <class T>
-const Matrix4<T> Matrix4<T>::identity = Matrix4<T>{ 1, 0, 0, 0,
+const Matrix4<T> Matrix4<T>::IDENTITY = Matrix4<T>{ 1, 0, 0, 0,
 	0, 1, 0, 0,
 	0, 0, 1, 0,
 	0, 0, 0, 1 };
@@ -58,7 +58,7 @@ Matrix4<T>::Matrix4(T value)
 template <class T>
 Matrix4<T>::Matrix4()
 {
-	*this = identity;
+	*this = IDENTITY;
 }
 
 template <class T>

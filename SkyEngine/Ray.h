@@ -9,7 +9,7 @@ class Ray
 {
 
 public:
-	static const float maxLength;
+	static const float MAX_LENGTH;
 
 	//Member variables
 	Vector3<float> origin;

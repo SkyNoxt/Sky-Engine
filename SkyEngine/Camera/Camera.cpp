@@ -1,6 +1,9 @@
 ﻿
 #include "Camera.h"
 
+const float Camera::DEG_TO_RAD = M_PI / 180;
+//const float Camera::RAD_TO_DEG = 180 / M_PI;
+
 Camera::Camera(float fLength, float fov, float targetRatio, float zNear, float zFar)
 {
 	focalLength = fLength;
