@@ -9,8 +9,6 @@
 
 #include <Streams/FileStream.h>
 
-#include <Geometry/BVH.h>
-#include <Geometry/Box.h>
 #include <Geometry/Model.h>
 
 #include <Shading/DeltaLight.h>
@@ -24,7 +22,7 @@
 #include <opencv2/highgui/highgui.hpp>
 
 Model* model;
-BVH<float>** bvhs;
+
 Matrix4<float>* modelMatrix;
 bool mode = true;
 
@@ -61,7 +59,7 @@ static Vector3<float> castRay(Ray& ray, Camera& camera, unsigned int depth)
 	IndexedMesh* meshes = model->meshArray;
 	for(unsigned int i = 0; i < numMeshes; ++i)
 		{
-			if(bvhs[i]->intersect(meshes[i], ray, tempDistance, tempIndex, tempUV) && tempDistance > 0 && tempDistance < distance)
+			if(meshes[i].intersect(ray, tempDistance, tempIndex, tempUV) && tempDistance > 0 && tempDistance < distance)
 				{
 					meshIndex = i;
 					distance = tempDistance;
@@ -121,8 +119,6 @@ static bool rasterVertex(Vector3<float>& raster, const Vector4<float>& vertex, u
 	return true;
 }
 
-//std::ofstream ofs("/home/nelson/Desktop/SkyPipe", std::ios::out | std::ios::binary);
-
 static void render(Camera& camera, unsigned int width, unsigned int height)
 {
 	float level = 0;
@@ -143,13 +139,6 @@ static void render(Camera& camera, unsigned int width, unsigned int height)
 	cv::Mat img(height, width, CV_32FC3, framebuffer);
 	imshow("Sky Engine", img);
 	cv::waitKey(1);
-
-	/*for (uint32_t i = 0; i < height * width; ++i) {
-        unsigned char r = (unsigned char)(255 * clamp(0, 1, framebuffer[i].x));
-        unsigned char g = (unsigned char)(255 * clamp(0, 1, framebuffer[i].y));
-        unsigned char b = (unsigned char)(255 * clamp(0, 1, framebuffer[i].z));
-        ofs << r << g << b;
-    }*/
 
 	delete[] framebuffer;
 }
@@ -308,13 +297,6 @@ static void rasterize(Camera& camera, int width, int height)
 	imshow("Sky Engine", img);
 	cv::waitKey(1);
 
-	/*for (uint32_t i = 0; i < height * width; ++i) {
-        unsigned char r = (unsigned char)(255 * clamp(0, 1, framebuffer[i].x));
-        unsigned char g = (unsigned char)(255 * clamp(0, 1, framebuffer[i].y));
-        unsigned char b = (unsigned char)(255 * clamp(0, 1, framebuffer[i].z));
-        ofs << r << g << b;
-    }*/
-
 	delete[] framebuffer;
 	delete[] depthbuffer;
 }
@@ -331,14 +313,7 @@ int main(int argc, char* argv[])
 	//FPS camera
 	FPS* fps;
 
-	model = new Model(FileStream("/home/nelson/Desktop/light.test"));
-	bvhs = new BVH<float>*[model->numMeshes];
-
-	for(unsigned int i = 0; i < model->numMeshes; ++i)
-		{
-			std::cout << "Creating BVH " << i << std::endl;
-			bvhs[i] = new BVH<float>(model->meshArray[i]);
-		}
+	model = new Model(FileStream("/home/nelson/Desktop/cow.obj.bin"));
 
 	//Compute transformation matrix
 	modelMatrix = new Matrix4<float>();
@@ -391,7 +366,6 @@ int main(int argc, char* argv[])
 			std::cout << "FPS: " << 1.0 / elapsed_secs << std::endl;
 		}
 
-	//ofs.close();
 	delete gamepad;
 
 	return 0;
