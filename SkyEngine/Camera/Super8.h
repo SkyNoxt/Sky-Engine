@@ -7,5 +7,5 @@ class Super8 : public Camera
 {
 
 public:
-	Super8(float targetWidth);
+	Super8(float targetRatio);
 };

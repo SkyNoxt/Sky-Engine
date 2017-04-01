@@ -309,8 +309,8 @@ int main(int argc, char* argv[])
 	//OpenCV window
 	namedWindow("Sky Engine", cv::WINDOW_AUTOSIZE);
 
-	Camera camera = Camera(1.0, 90, imgWidth / (float)imgHeight, 0.1, 1000.0);
-	model = new Model(FileStream("/home/nelson/Desktop/treetest.skm"));
+	Camera camera = Camera(1.0, 90, imgWidth / (float)imgHeight, 0.1, 100000000.0);
+	model = new Model(FileStream("/home/nelson/Desktop/light.test"));
 
 	//Instance gamepad
 	gamepad = new LinuxGamepad();
