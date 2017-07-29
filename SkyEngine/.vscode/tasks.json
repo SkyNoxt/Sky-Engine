@@ -29,8 +29,6 @@
 		},
 		{
 			"taskName": "clean",
-			// Make this the default build command.
-			"isTestCommand": true,
 			// Show the output window only if unrecognized errors occur.
 			"showOutput": "always",
 			// No args
