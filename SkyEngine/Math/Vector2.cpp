@@ -200,4 +200,4 @@ Vector2<T>::~Vector2()
 {
 }
 
-template class Vector2<float>;
+template class Vector2<>;

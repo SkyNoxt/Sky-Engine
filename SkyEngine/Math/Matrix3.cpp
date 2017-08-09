@@ -160,4 +160,4 @@ Matrix3<T>::~Matrix3()
 {
 }
 
-template class Matrix3<float>;
+template class Matrix3<>;

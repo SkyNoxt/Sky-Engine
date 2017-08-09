@@ -233,4 +233,4 @@ Vector3<T>::~Vector3()
 {
 }
 
-template class Vector3<float>;
+template class Vector3<>;

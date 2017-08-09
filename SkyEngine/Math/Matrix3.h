@@ -3,7 +3,7 @@
 
 #include "Vector3.h"
 
-template <class T>
+template <class T = float>
 class Matrix3
 {
 

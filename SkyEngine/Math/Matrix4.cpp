@@ -278,4 +278,4 @@ Matrix4<T>::~Matrix4()
 {
 }
 
-template class Matrix4<float>;
+template class Matrix4<>;

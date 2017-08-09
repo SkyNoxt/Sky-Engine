@@ -4,7 +4,7 @@
 #include "Vector3.h"
 #include "Vector4.h"
 
-template <class T>
+template <class T = float>
 class Matrix4
 {
 

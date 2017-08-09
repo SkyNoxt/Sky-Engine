@@ -3,7 +3,7 @@
 
 #include <math.h>
 
-template <class T>
+template <class T = float>
 class Vector2
 {
 
