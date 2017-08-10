@@ -2,24 +2,24 @@
 #include "Mesh.h"
 
 Mesh::Mesh(unsigned int vertexCount, Vertex* vertices)
+	: numVertices(vertexCount)
+	, vertexArray(vertices)
 {
-	numVertices = vertexCount;
-	vertexArray = vertices;
 }
 
 Mesh::Mesh(const Stream& stream)
+	: numVertices(stream.read<unsigned int>())
+	, vertexArray(stream.read<Vertex>(numVertices))
 {
-	numVertices = stream.read<unsigned int>();
-	vertexArray = stream.read<Vertex>(numVertices);
 }
 
 Mesh::Mesh()
+	: numVertices(0)
+	, vertexArray(0)
 {
-	numVertices = 0;
-	vertexArray = 0;
 }
 
-bool Mesh::intersect(const Ray& ray, float& distance, unsigned int& index, Vector2<float>& barycenter) const
+bool Mesh::intersect(const Ray& ray, float& distance, unsigned int& index, Vector2<>& barycenter) const
 {
 	bool intersect = false;
 	float tempDist, u, v;
@@ -64,13 +64,13 @@ Mesh::~Mesh()
 }
 
 bool Mesh::triangleIntersect(const Ray& ray,
-	const Vector3<float>& vertex0, const Vector3<float>& vertex1, const Vector3<float>& vertex2,
+	const Vector3<>& vertex0, const Vector3<>& vertex1, const Vector3<>& vertex2,
 	float& distance, float& u, float& v) const
 {
-	Vector3<float> edge1 = vertex1 - vertex0;
-	Vector3<float> edge2 = vertex2 - vertex0;
+	Vector3<> edge1 = vertex1 - vertex0;
+	Vector3<> edge2 = vertex2 - vertex0;
 
-	Vector3<float> pvec = ray.direction.cross(edge2);
+	Vector3<> pvec = ray.direction.cross(edge2);
 
 	float det = edge1.dot(pvec);
 
@@ -81,12 +81,12 @@ bool Mesh::triangleIntersect(const Ray& ray,
 
 	float invDet = 1 / det;
 
-	Vector3<float> tvec = ray.origin - vertex0;
+	Vector3<> tvec = ray.origin - vertex0;
 	u = tvec.dot(pvec) * invDet;
 	if(u < 0 || u > 1)
 		return false;
 
-	Vector3<float> qvec = tvec.cross(edge1);
+	Vector3<> qvec = tvec.cross(edge1);
 	v = ray.direction.dot(qvec) * invDet;
 	if(v < 0 || u + v > 1)
 		return false;

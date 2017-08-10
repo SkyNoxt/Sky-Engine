@@ -2,8 +2,8 @@
 #include "FileStream.h"
 
 FileStream::FileStream(const char* filePath)
+	: file(fdopen(open(filePath, O_RDWR | O_CREAT, 0666), "r+"))
 {
-	file = fdopen(open(filePath, O_RDWR | O_CREAT, 0666), "r+");
 }
 
 unsigned int FileStream::write(void* buffer, unsigned int size, unsigned int count) const

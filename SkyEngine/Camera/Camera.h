@@ -34,7 +34,7 @@ public:
 
 	float scale;
 
-	Matrix4<float> cameraMatrix;
-	Matrix4<float> viewMatrix;
-	Matrix4<float> projectionMatrix;
+	Matrix4<> cameraMatrix;
+	Matrix4<> viewMatrix;
+	Matrix4<> projectionMatrix;
 };

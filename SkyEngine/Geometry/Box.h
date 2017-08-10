@@ -5,7 +5,7 @@
 
 #include <Ray.h>
 
-template <class T>
+template <class T = float>
 class Box
 {
 

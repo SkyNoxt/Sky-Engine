@@ -12,8 +12,8 @@ public:
 	Shader();
 
 	//Member functions
-	Vector3<float> shade();
-	Vector4<float> shadeAlpha();
+	Vector3<> shade();
+	Vector4<> shadeAlpha();
 
 	//Destructor
 	~Shader();

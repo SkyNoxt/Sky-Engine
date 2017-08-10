@@ -3,26 +3,26 @@
 
 IndexedMesh::IndexedMesh(unsigned int vertexCount, Vertex* vertices, unsigned int indexCount, unsigned int* indices)
 	: Mesh(vertexCount, vertices)
+	, numIndices(indexCount)
+	, indexArray(indices)
 {
-	numIndices = indexCount;
-	indexArray = indices;
 }
 
 IndexedMesh::IndexedMesh(const Stream& stream)
 	: Mesh(stream)
+	, numIndices(stream.read<unsigned int>())
+	, indexArray(stream.read<unsigned int>(numIndices))
 {
-	numIndices = stream.read<unsigned int>();
-	indexArray = stream.read<unsigned int>(numIndices);
 }
 
 IndexedMesh::IndexedMesh()
 	: Mesh()
+	, numIndices(0)
+	, indexArray(0)
 {
-	numIndices = 0;
-	indexArray = 0;
 }
 
-bool IndexedMesh::intersect(const Ray& ray, float& distance, unsigned int& index, Vector2<float>& barycenter) const
+bool IndexedMesh::intersect(const Ray& ray, float& distance, unsigned int& index, Vector2<>& barycenter) const
 {
 	bool intersect = false;
 	float tempDist, u, v;

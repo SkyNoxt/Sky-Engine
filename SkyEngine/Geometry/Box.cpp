@@ -3,9 +3,8 @@
 
 template <class T>
 Box<T>::Box(const Vector3<T>& min, const Vector3<T>& max)
+	: bounds{ min, max }
 {
-	bounds[0] = min;
-	bounds[1] = max;
 }
 
 template <class T>
@@ -60,4 +59,4 @@ Box<T>::~Box()
 {
 }
 
-template class Box<float>;
+template class Box<>;

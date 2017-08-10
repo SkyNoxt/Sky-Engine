@@ -1,11 +1,11 @@
 ﻿
 #include "DeltaLight.h"
 
-DeltaLight::DeltaLight(const Vector3<float>& clr, float ntnst)
+DeltaLight::DeltaLight(const Vector3<>& clr, float ntnst)
+	: lightMatrix(Matrix4<>())
+	, color(clr)
+	, intensity(ntnst)
 {
-	lightMatrix = Matrix4<float>();
-	color = clr;
-	intensity = ntnst;
 }
 
 DeltaLight::~DeltaLight()

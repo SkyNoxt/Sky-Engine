@@ -24,7 +24,7 @@ public:
 	Mesh();
 
 	//Member functions
-	virtual bool intersect(const Ray& ray, float& distance, unsigned int& index, Vector2<float>& barycenter) const;
+	virtual bool intersect(const Ray& ray, float& distance, unsigned int& index, Vector2<>& barycenter) const;
 	virtual unsigned int numElements() const;
 
 	virtual const Vertex& getVertex(const int index) const;
@@ -37,6 +37,6 @@ public:
 protected:
 	//Protected member function
 	bool triangleIntersect(const Ray& ray,
-		const Vector3<float>& vertex0, const Vector3<float>& vertex1, const Vector3<float>& vertex2,
+		const Vector3<>& vertex0, const Vector3<>& vertex1, const Vector3<>& vertex2,
 		float& distance, float& u, float& v) const;
 };

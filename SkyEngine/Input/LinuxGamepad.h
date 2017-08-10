@@ -20,9 +20,9 @@ public:
 private:
 	static const float AXIS_MAP;
 
-	int joyFile;
 	int stickDeadzone;
 	int triggerDeadzone;
+	int joyFile;
 
 	float mapCenteredAxis(int valueS16, int deadi);
 	float mapAxis(int valueS16, int deadi);

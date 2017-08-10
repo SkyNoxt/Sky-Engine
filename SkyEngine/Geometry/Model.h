@@ -19,7 +19,7 @@ public:
 	Model(const Stream& stream);
 
 	//Member functions
-	//virtual bool intersect(const Ray& ray, float& distance, unsigned int& index, Vector2<float>& barycenter) const;
+	//virtual bool intersect(const Ray& ray, float& distance, unsigned int& index, Vector2<>& barycenter) const;
 
 	void serialize(const Stream& stream);
 

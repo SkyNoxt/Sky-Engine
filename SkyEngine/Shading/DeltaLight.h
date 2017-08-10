@@ -8,12 +8,12 @@ class DeltaLight
 {
 
 public:
-	Matrix4<float> lightMatrix;
-	Vector3<float> color;
+	Matrix4<> lightMatrix;
+	Vector3<> color;
 	float intensity;
 
 	//Constructor
-	DeltaLight(const Vector3<float>& clr, float ntnst);
+	DeltaLight(const Vector3<>& clr, float ntnst);
 
 	//Member functions
 
