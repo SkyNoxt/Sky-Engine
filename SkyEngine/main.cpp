@@ -23,7 +23,7 @@
 
 Model* model;
 
-Matrix4<float>* modelMatrix;
+Matrix4<>* modelMatrix;
 bool mode = true;
 
 Gamepad* gamepad;
@@ -34,24 +34,24 @@ static inline float clamp(const float& lo, const float& hi, const float& v)
 }
 
 DeltaLight* light;
-Vector3<float>* lightDirection;
+Vector3<>* lightDirection;
 
-static Vector3<float> castRay(Ray& ray, Camera& camera, unsigned int depth)
+static Vector3<> castRay(Ray& ray, Camera& camera, unsigned int depth)
 {
 	//Inverse Ray Transform
-	/*Matrix4<float> rayMatrix = modelMatrix->inverse();
-	Vector4<float> rayOrigin = Vector4<float>(ray.origin.x, ray.origin.y, ray.origin.z, 1.0) * rayMatrix;
-	ray = Ray(Vector3<float>(rayOrigin.x, rayOrigin.y, rayOrigin.z), ray.direction * rayMatrix);*/
+	/*Matrix4<> rayMatrix = modelMatrix->inverse();
+	Vector4<> rayOrigin = Vector4<>{ray.origin.x, ray.origin.y, ray.origin.z, 1.0} * rayMatrix;
+	ray = Ray(Vector3<>{rayOrigin.x, rayOrigin.y, rayOrigin.z}, ray.direction * rayMatrix);*/
 
-	Vector3<float> hitColor = (ray.direction + Vector3<float>(1)) * 0.5;
+	Vector3<> hitColor = (ray.direction + Vector3<>{1}) * 0.5;
 
 	float distance = Ray::MAX_LENGTH;
 	unsigned int index;
-	Vector2<float> uv;
+	Vector2<> uv;
 
 	float tempDistance;
 	unsigned int tempIndex = -1;
-	Vector2<float> tempUV;
+	Vector2<> tempUV;
 	bool intersect = false;
 	int meshIndex;
 
@@ -72,34 +72,34 @@ static Vector3<float> castRay(Ray& ray, Camera& camera, unsigned int depth)
 	if(intersect)
 		{
 			//std::cout << index << std::endl;
-			Vector3<float> hitPoint = ray.origin + ray.direction * distance;
+			Vector3<> hitPoint = ray.origin + ray.direction * distance;
 
-			Vector3<float> n0 = meshes[meshIndex].vertexArray[index].normal;
-			Vector3<float> n1 = meshes[meshIndex].vertexArray[index + 1].normal;
-			Vector3<float> n2 = meshes[meshIndex].vertexArray[index + 2].normal;
+			Vector3<> n0 = meshes[meshIndex].vertexArray[index].normal;
+			Vector3<> n1 = meshes[meshIndex].vertexArray[index + 1].normal;
+			Vector3<> n2 = meshes[meshIndex].vertexArray[index + 2].normal;
 
-			/*Vector3<float> v0 = meshes[meshIndex]->vertexArray[index    ].position; 
-    		Vector3<float> v1 = meshes[meshIndex]->vertexArray[index + 1].position; 
-    		Vector3<float> v2 = meshes[meshIndex]->vertexArray[index + 2].position;*/
+			/*Vector3<> v0 = meshes[meshIndex]->vertexArray[index    ].position; 
+    		Vector3<> v1 = meshes[meshIndex]->vertexArray[index + 1].position; 
+    		Vector3<> v2 = meshes[meshIndex]->vertexArray[index + 2].position;*/
 
 			//Face and vertex Normals
-			//Vector3<float> fN = (v1 - v0).cross(v2 - v0).normalize();
-			Vector3<float> vN = (1 - uv.x - uv.y) * n0 + uv.x * n1 + uv.y * n2;
+			//Vector3<> fN = (v1 - v0).cross(v2 - v0).normalize();
+			Vector3<> vN = (1 - uv.x - uv.y) * n0 + uv.x * n1 + uv.y * n2;
 
 			//Light direction (inverse ray transformed)
-			//Vector3<float> L = -(*lightDirection * modelMatrix->inverse());
+			//Vector3<> L = -(*lightDirection * modelMatrix->inverse());
 
 			//Face ratio
 			hitColor = std::max(0.f, vN.dot(-ray.direction));
 
 			//Diffuse shading
-			//hitColor = Vector3<float>(0.18) * (1.0/M_PI) * light->intensity * light->color * std::max(0.f, vN.dot(L));
+			//hitColor = Vector3<>{0.18} * (1.0/M_PI) * light->intensity * light->color * std::max(0.f, vN.dot(L));
 		}
 
 	return hitColor;
 }
 
-static bool rasterVertex(Vector3<float>& raster, const Vector4<float>& vertex, unsigned int width, unsigned int height)
+static bool rasterVertex(Vector3<>& raster, const Vector4<>& vertex, unsigned int width, unsigned int height)
 {
 	raster = { vertex.x, vertex.y, -vertex.z };
 
@@ -123,7 +123,7 @@ static void render(Camera& camera, unsigned int width, unsigned int height)
 {
 	float level = 0;
 
-	Vector3<float>* framebuffer = new Vector3<float>[width * height];
+	Vector3<>* framebuffer = new Vector3<>[width * height];
 
 #pragma omp parallel for num_threads(32)
 	for(unsigned int j = 0; j < height; ++j)
@@ -153,23 +153,23 @@ float max3(const float& a, const float& b, const float& c)
 	return std::max(a, std::max(b, c));
 }
 
-float frontFace(const Vector3<float>& a, const Vector3<float>& b, const Vector3<float>& c)
+float frontFace(const Vector3<>& a, const Vector3<>& b, const Vector3<>& c)
 {
 	return (c.x - a.x) * (b.y - a.y) - (c.y - a.y) * (b.x - a.x);
 }
 
-float backFace(const Vector3<float>& a, const Vector3<float>& b, const Vector3<float>& c)
+float backFace(const Vector3<>& a, const Vector3<>& b, const Vector3<>& c)
 {
 	return (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x);
 }
 
 static void rasterize(Camera& camera, int width, int height)
 {
-	Vector3<float>* framebuffer = new Vector3<float>[width * height];
+	Vector3<>* framebuffer = new Vector3<>[width * height];
 	float* depthbuffer = new float[width * height];
 	memset(depthbuffer, camera.farPlane, width * height * sizeof(float));
 
-	Matrix4<float> transform = camera.projectionMatrix * camera.viewMatrix * *modelMatrix;
+	Matrix4<> transform = camera.projectionMatrix * camera.viewMatrix * *modelMatrix;
 
 #pragma omp parallel for num_threads(64)
 	for(unsigned int m = 0; m < model->numMeshes; ++m)
@@ -177,11 +177,11 @@ static void rasterize(Camera& camera, int width, int height)
 #pragma omp parallel for num_threads(512)
 			for(unsigned int i = 0; i < model->meshArray[m].numElements(); ++i)
 				{
-					const Vector3<float>& v0 = model->meshArray[m].getVertex(i).position;
+					const Vector3<>& v0 = model->meshArray[m].getVertex(i).position;
 
-					Vector4<float> currentVertex = Vector4<float>{ v0.x, v0.y, v0.z, 1.0 } * transform;
+					Vector4<> currentVertex = Vector4<>{ v0.x, v0.y, v0.z, 1.0 } * transform;
 
-					Vector3<float> v0Raster;
+					Vector3<> v0Raster;
 
 					if(rasterVertex(v0Raster, currentVertex, width, height))
 						framebuffer[(int)v0Raster.y * width + (int)v0Raster.x] = 1.0;
@@ -196,13 +196,13 @@ static void rasterize(Camera& camera, int width, int height)
 #pragma omp parallel for num_threads(512)
 					for(unsigned int i = 0; i < numTriangles; ++i)
 						{
-							const Vector3<float>& v0 = model->meshArray[m].getVertex(i * 3).position;
-							const Vector3<float>& v1 = model->meshArray[m].getVertex(i * 3 + 1).position;
-							const Vector3<float>& v2 = model->meshArray[m].getVertex(i * 3 + 2).position;
+							const Vector3<>& v0 = model->meshArray[m].getVertex(i * 3).position;
+							const Vector3<>& v1 = model->meshArray[m].getVertex(i * 3 + 1).position;
+							const Vector3<>& v2 = model->meshArray[m].getVertex(i * 3 + 2).position;
 
-							Vector4<float> t0 = Vector4<float>{ v0.x, v0.y, v0.z, 1.0 } * transform;
-							Vector4<float> t1 = Vector4<float>{ v1.x, v1.y, v1.z, 1.0 } * transform;
-							Vector4<float> t2 = Vector4<float>{ v2.x, v2.y, v2.z, 1.0 } * transform;
+							Vector4<> t0 = Vector4<>{ v0.x, v0.y, v0.z, 1.0 } * transform;
+							Vector4<> t1 = Vector4<>{ v1.x, v1.y, v1.z, 1.0 } * transform;
+							Vector4<> t2 = Vector4<>{ v2.x, v2.y, v2.z, 1.0 } * transform;
 
 							//if(t0.w <= 0.0 || t1.w <= 0.0 || t2.w <= 0.0)
 							{
@@ -218,15 +218,15 @@ static void rasterize(Camera& camera, int width, int height)
 							if(t0.z > camera.farPlane && t1.z > camera.farPlane && t2.z > camera.farPlane)
 								continue;
 
-							Vector3<float> v0Raster = { t0.x, t0.y, -t0.z };
+							Vector3<> v0Raster = { t0.x, t0.y, -t0.z };
 							v0Raster *= (1 / t0.w);
 							v0Raster.x = ((v0Raster.x + 1) * 0.5 * width);
 							v0Raster.y = ((1 - (v0Raster.y + 1) * 0.5) * height);
-							Vector3<float> v1Raster = { t1.x, t1.y, -t1.z };
+							Vector3<> v1Raster = { t1.x, t1.y, -t1.z };
 							v1Raster *= (1 / t1.w);
 							v1Raster.x = ((v1Raster.x + 1) * 0.5 * width);
 							v1Raster.y = ((1 - (v1Raster.y + 1) * 0.5) * height);
-							Vector3<float> v2Raster = { t2.x, t2.y, -t2.z };
+							Vector3<> v2Raster = { t2.x, t2.y, -t2.z };
 							v2Raster *= (1 / t2.w);
 							v2Raster.x = ((v2Raster.x + 1) * 0.5 * width);
 							v2Raster.y = ((1 - (v2Raster.y + 1) * 0.5) * height);
@@ -251,7 +251,7 @@ static void rasterize(Camera& camera, int width, int height)
 							if(ymin < 0)
 								ymin = 0;
 
-							float (*edgeFunction)(const Vector3<float>&, const Vector3<float>&, const Vector3<float>&) = &frontFace;
+							float (*edgeFunction)(const Vector3<>&, const Vector3<>&, const Vector3<>&) = &frontFace;
 							float area = edgeFunction(v0Raster, v1Raster, v2Raster);
 							if(area < 0)
 								{
@@ -265,7 +265,7 @@ static void rasterize(Camera& camera, int width, int height)
 								{
 									for(uint32_t x = xmin; x <= xmax; ++x)
 										{
-											Vector3<float> pixelSample(x + 0.5, y + 0.5, 0);
+											Vector3<> pixelSample(x + 0.5, y + 0.5, 0);
 											float w0 = edgeFunction(v1Raster, v2Raster, pixelSample);
 											float w1 = edgeFunction(v2Raster, v0Raster, pixelSample);
 											float w2 = edgeFunction(v0Raster, v1Raster, pixelSample);
@@ -319,9 +319,9 @@ int main(int argc, char* argv[])
 	FPS* fps = new FPS(&camera, gamepad, 3.0, 3.0);
 
 	//Compute transformation matrix
-	modelMatrix = new Matrix4<float>();
+	modelMatrix = new Matrix4<>();
 	//modelMatrix->scale(10, 10, 10);
-	Matrix4<float> normalMatrix = modelMatrix->inverse().transpose();
+	Matrix4<> normalMatrix = modelMatrix->inverse().transpose();
 
 	/*//Forward Mesh Transformation
 	for(unsigned int i = 0; i < mesh->numVertices; ++i)
@@ -334,18 +334,18 @@ int main(int argc, char* argv[])
 	camera.viewMatrix = camera.cameraMatrix.inverse();
 
 	//Compute light
-	light = new DeltaLight(Vector3<float>{ 1.0, 0.0, 0.0 }, 15);
+	light = new DeltaLight(Vector3<>{ 1.0, 0.0, 0.0 }, 15);
 	light->lightMatrix.translate(0.0, 0.0, 0.0); //Point light transform
 	//light->lightMatrix.rotate(45, 1.0, 0.0, 0.0);
-	lightDirection = new Vector3<float>();
-	*lightDirection = Vector3<float>{ 0.0, 0.0, -1.0 } * light->lightMatrix;
+	lightDirection = new Vector3<>();
+	*lightDirection = Vector3<>{ 0.0, 0.0, -1.0 } * light->lightMatrix;
 
 	//Render
 	while(true)
 		{
 			clock_t begin = clock();
 
-			camera.viewMatrix = Matrix4<float>::IDENTITY;
+			camera.viewMatrix = Matrix4<>::IDENTITY;
 
 			gamepad->poll();
 			fps->update();
@@ -356,7 +356,7 @@ int main(int argc, char* argv[])
 				rasterize(camera, imgWidth, imgHeight);
 
 			/*light->lightMatrix.rotate(1, 0.0, 1.0, 0.0);
-			*lightDirection = Vector3<float> { 0.0, 0.0, -1.0 } * light->lightMatrix;*/
+			*lightDirection = Vector3<> { 0.0, 0.0, -1.0 } * light->lightMatrix;*/
 
 			clock_t end = clock();
 			double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
