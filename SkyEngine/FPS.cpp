@@ -2,12 +2,12 @@
 #include "FPS.h"
 
 FPS::FPS(Camera* cam, const Gamepad* pad, float moveVel, float rotationVel)
+	: camera(cam)
+	, gamepad(pad)
+	, moveVelocity(moveVel)
+	, rotationVelocity(rotationVel)
 {
-	camera = cam;
-	gamepad = pad;
-
-	moveVelocity = moveVel;
-	rotationVelocity = rotationVel;
+	
 }
 
 void FPS::update()

@@ -9,50 +9,65 @@ const Matrix4<T> Matrix4<T>::IDENTITY = Matrix4<T>{ 1, 0, 0, 0,
 
 template <class T>
 Matrix4<T>::Matrix4(T xxVal, T xyVal, T xzVal, T xwVal, T yxVal, T yyVal, T yzVal, T ywVal, T zxVal, T zyVal, T zzVal, T zwVal, T wxVal, T wyVal, T wzVal, T wwVal)
+	: xx(xxVal)
+	, xy(xyVal)
+	, xz(xzVal)
+	, xw(xwVal)
+	, yx(yxVal)
+	, yy(yyVal)
+	, yz(yzVal)
+	, yw(ywVal)
+	, zx(zxVal)
+	, zy(zyVal)
+	, zz(zzVal)
+	, zw(zwVal)
+	, wx(wxVal)
+	, wy(wyVal)
+	, wz(wzVal)
+	, ww(wwVal)
 {
-	xx = xxVal;
-	xy = xyVal;
-	xz = xzVal;
-	xw = xwVal;
-	yx = yxVal;
-	yy = yyVal;
-	yz = yzVal;
-	yw = ywVal;
-	zx = zxVal;
-	zy = zyVal;
-	zz = zzVal;
-	zw = zwVal;
-	wx = wxVal;
-	wy = wyVal;
-	wz = wzVal;
-	ww = wwVal;
 }
 
 template <class T>
 Matrix4<T>::Matrix4(T matrix[16])
+	: xx(matrix[0])
+	, xy(matrix[1])
+	, xz(matrix[2])
+	, xw(matrix[3])
+	, yx(matrix[4])
+	, yy(matrix[5])
+	, yz(matrix[6])
+	, yw(matrix[7])
+	, zx(matrix[8])
+	, zy(matrix[9])
+	, zz(matrix[10])
+	, zw(matrix[11])
+	, wx(matrix[12])
+	, wy(matrix[13])
+	, wz(matrix[14])
+	, ww(matrix[15])
 {
-	xx = matrix[0];
-	xy = matrix[1];
-	xz = matrix[2];
-	xw = matrix[3];
-	yx = matrix[4];
-	yy = matrix[5];
-	yz = matrix[6];
-	yw = matrix[7];
-	zx = matrix[8];
-	zy = matrix[9];
-	zz = matrix[10];
-	zw = matrix[11];
-	wx = matrix[12];
-	wy = matrix[13];
-	wz = matrix[14];
-	ww = matrix[15];
 }
 
 template <class T>
 Matrix4<T>::Matrix4(T value)
+	: xx(value)
+	, xy(value)
+	, xz(value)
+	, xw(value)
+	, yx(value)
+	, yy(value)
+	, yz(value)
+	, yw(value)
+	, zx(value)
+	, zy(value)
+	, zz(value)
+	, zw(value)
+	, wx(value)
+	, wy(value)
+	, wz(value)
+	, ww(value)
 {
-	xx = xy = xz = xw = yx = yy = yz = yw = zx = zy = zz = zw = wx = wy = wz = ww = value;
 }
 
 template <class T>
@@ -63,20 +78,20 @@ Matrix4<T>::Matrix4()
 
 template <class T>
 Matrix4<T>::Matrix4(const Vector4<T>& xVec, const Vector4<T>& yVec, const Vector4<T>& zVec, const Vector4<T>& wVec)
+	: x(xVec)
+	, y(yVec)
+	, z(zVec)
+	, w(wVec)
 {
-	x = xVec;
-	y = yVec;
-	z = zVec;
-	w = wVec;
 }
 
 template <class T>
 Matrix4<T>::Matrix4(const Vector4<T> vec[4])
+	: x(vec[0])
+	, y(vec[1])
+	, z(vec[2])
+	, w(vec[3])
 {
-	x = vec[0];
-	y = vec[1];
-	z = vec[2];
-	w = vec[3];
 }
 
 template <class T>
@@ -88,17 +103,18 @@ T Matrix4<T>::determinant() const
 template <class T>
 Matrix4<T> Matrix4<T>::transpose() const
 {
-	return Matrix4<T>(
+	return Matrix4<T>{
 		xx, yx, zx, wx,
 		xy, yy, zy, wy,
 		xz, yz, zz, wz,
-		xw, yw, zw, ww);
+		xw, yw, zw, ww
+	};
 }
 
 template <class T>
 Matrix4<T> Matrix4<T>::inverse() const
 {
-	Matrix4<T> inverse = Matrix4(
+	Matrix4<T> inverse = Matrix4<T>{
 		yy * zz * ww - yy * zw * wz - zy * yz * ww + zy * yw * wz + wy * yz * zw - wy * yw * zz,
 		-xy * zz * ww + xy * zw * wz + zy * xz * ww - zy * xw * wz - wy * xz * zw + wy * xw * zz,
 		xy * yz * ww - xy * yw * wz - yy * xz * ww + yy * xw * wz + wy * xz * yw - wy * xw * yz,
@@ -117,7 +133,8 @@ Matrix4<T> Matrix4<T>::inverse() const
 		-yx * zy * wz + yx * zz * wy + zx * yy * wz - zx * yz * wy - wx * yy * zz + wx * yz * zy,
 		xx * zy * wz - xx * zz * wy - zx * xy * wz + zx * xz * wy + wx * xy * zz - wx * xz * zy,
 		-xx * yy * wz + xx * yz * wy + yx * xy * wz - yx * xz * wy - wx * xy * yz + wx * xz * yy,
-		xx * yy * zz - xx * yz * zy - yx * xy * zz + yx * xz * zy + zx * xy * yz - zx * xz * yy);
+		xx * yy * zz - xx * yz * zy - yx * xy * zz + yx * xz * zy + zx * xy * yz - zx * xz * yy
+	};
 
 	return inverse * (1 / (xx * inverse.xx + xy * inverse.yx + xz * inverse.zx + xw * inverse.wx));
 }
@@ -245,7 +262,7 @@ bool Matrix4<T>::operator!=(const Matrix4<T>& matrix) const
 template <class T>
 Matrix4<T> Matrix4<T>::operator*(const Matrix4<T>& matrix) const
 {
-	return Matrix4<T>(
+	return Matrix4<T>{
 		xx * matrix.xx + yx * matrix.xy + zx * matrix.xz + wx * matrix.xw,
 		xy * matrix.xx + yy * matrix.xy + zy * matrix.xz + wy * matrix.xw,
 		xz * matrix.xx + yz * matrix.xy + zz * matrix.xz + wz * matrix.xw,
@@ -264,13 +281,14 @@ Matrix4<T> Matrix4<T>::operator*(const Matrix4<T>& matrix) const
 		xx * matrix.wx + yx * matrix.wy + zx * matrix.wz + wx * matrix.ww,
 		xy * matrix.wx + yy * matrix.wy + zy * matrix.wz + wy * matrix.ww,
 		xz * matrix.wx + yz * matrix.wy + zz * matrix.wz + wz * matrix.ww,
-		xw * matrix.wx + yw * matrix.wy + zw * matrix.wz + ww * matrix.ww);
+		xw * matrix.wx + yw * matrix.wy + zw * matrix.wz + ww * matrix.ww
+	};
 }
 
 template <class T>
 Matrix4<T> Matrix4<T>::operator*(const T value) const
 {
-	return Matrix4<T>(x * value, y * value, z * value, w * value);
+	return Matrix4<T>{ x * value, y * value, z * value, w * value };
 }
 
 template <class T>

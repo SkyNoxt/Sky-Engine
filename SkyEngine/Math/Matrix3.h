@@ -81,8 +81,9 @@ void operator*=(Vector3<T>& vector, const Matrix3<T>& matrix)
 template <class T>
 Vector3<T> operator*(const Vector3<T>& vector, const Matrix3<T>& matrix)
 {
-	return Vector3<T>(
+	return Vector3<T>{
 		vector.x * matrix.xx + vector.y * matrix.yx + vector.z * matrix.zx,
 		vector.x * matrix.xy + vector.y * matrix.yy + vector.z * matrix.zy,
-		vector.x * matrix.xz + vector.y * matrix.yz + vector.z * matrix.zz);
+		vector.x * matrix.xz + vector.y * matrix.yz + vector.z * matrix.zz
+	};
 }

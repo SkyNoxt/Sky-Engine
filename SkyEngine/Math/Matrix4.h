@@ -107,10 +107,11 @@ Vector3<T> operator*(const Vector3<T>& vector, const Matrix4<T>& matrix)
 		vector.x * matrix.xz + vector.y * matrix.yz + vector.z * matrix.zz + matrix.wz * w
 	);*/
 
-	return Vector3<T>(
+	return Vector3<T>{
 		vector.x * matrix.xx + vector.y * matrix.yx + vector.z * matrix.zx,
 		vector.x * matrix.xy + vector.y * matrix.yy + vector.z * matrix.zy,
-		vector.x * matrix.xz + vector.y * matrix.yz + vector.z * matrix.zz);
+		vector.x * matrix.xz + vector.y * matrix.yz + vector.z * matrix.zz
+	};
 }
 
 template <class T>
@@ -122,9 +123,10 @@ void operator*=(Vector4<T>& vector, const Matrix4<T>& matrix)
 template <class T>
 Vector4<T> operator*(const Vector4<T>& vector, const Matrix4<T>& matrix)
 {
-	return Vector4<T>(
+	return Vector4<T>{
 		vector.x * matrix.xx + vector.y * matrix.yx + vector.z * matrix.zx + vector.w * matrix.wx,
 		vector.x * matrix.xy + vector.y * matrix.yy + vector.z * matrix.zy + vector.w * matrix.wy,
 		vector.x * matrix.xz + vector.y * matrix.yz + vector.z * matrix.zz + vector.w * matrix.wz,
-		vector.x * matrix.xw + vector.y * matrix.yw + vector.z * matrix.zw + vector.w * matrix.ww);
+		vector.x * matrix.xw + vector.y * matrix.yw + vector.z * matrix.zw + vector.w * matrix.ww
+	};
 }

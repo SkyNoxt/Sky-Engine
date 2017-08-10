@@ -12,14 +12,14 @@ public:
 	static const float MAX_LENGTH;
 
 	//Member variables
-	Vector3<float> origin;
-	Vector3<float> direction;
+	Vector3<> origin;
+	Vector3<> direction;
 
-	Vector3<float> inverseDirection;
+	Vector3<> inverseDirection;
 	int sign[3];
 
 	//Constructor
-	Ray(const Vector3<float>& org, const Vector3<float>& dir);
+	Ray(const Vector3<>& org, const Vector3<>& dir);
 
 	//Destructor
 	~Ray();
