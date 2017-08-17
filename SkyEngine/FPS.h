@@ -9,7 +9,7 @@ class FPS
 
 public:
 	//Constructor
-	FPS(Camera* cam, const Gamepad* pad, float moveVel = 1.0, float rotationVel = 1.0);
+	FPS(Camera* cam, Gamepad* pad, float moveVel = 1.0, float rotationVel = 1.0);
 
 	//Member function
 	void update();
@@ -19,7 +19,7 @@ public:
 
 private:
 	Camera* camera;
-	const Gamepad* gamepad;
+	Gamepad* gamepad;
 
 	float camX = 0, camY = 0, camZ = 0;
 	float camPitch = 0;

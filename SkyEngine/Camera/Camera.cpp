@@ -29,7 +29,7 @@ Camera::Camera(float fLength, float fov, float targetRatio, float zNear, float z
 	//fieldOfView = atan((aperture / 2) / focalLength) * 2 * RAD_TO_DEG;
 }
 
-Ray Camera::castRay(unsigned int width, unsigned int height, unsigned int x, unsigned int y)
+Ray Camera::castRay(unsigned int width, unsigned int height, unsigned int x, unsigned int y) const
 {
 	float dirX = (2 * (x + 0.5) / (float)width - 1) * aspectRatio * scale;
 	float dirY = (1 - 2 * (y + 0.5) / (float)height) * scale;

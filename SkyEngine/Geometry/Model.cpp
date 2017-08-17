@@ -15,7 +15,7 @@ Model::Model(const Stream& stream)
 		new(meshArray + i) IndexedMesh(stream);
 }
 
-void Model::serialize(const Stream& stream)
+void Model::serialize(const Stream& stream) const
 {
 	stream.write<unsigned int>(numMeshes);
 	for(unsigned int i = 0; i < numMeshes; ++i)

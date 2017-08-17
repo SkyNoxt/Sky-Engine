@@ -13,7 +13,7 @@ Box<T>::Box()
 }
 
 template <class T>
-bool Box<T>::intersect(const Ray& ray, T& distance)
+bool Box<T>::intersect(const Ray& ray, T& distance) const
 {
 	T xMin, xMax, yMin, yMax, zMin, zMax;
 
@@ -42,14 +42,9 @@ bool Box<T>::intersect(const Ray& ray, T& distance)
 	if(zMax < xMax)
 		xMax = zMax;
 
-	distance = xMin;
-
+	distance = xMin >= 0 ? xMin : xMax;
 	if(distance < 0)
-		{
-			distance = xMax;
-			if(distance < 0)
-				return false;
-		}
+		return false;
 
 	return true;
 }

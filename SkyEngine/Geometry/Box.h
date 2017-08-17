@@ -17,7 +17,7 @@ public:
 	Box();
 
 	//Member function
-	bool intersect(const Ray& ray, T& distance);
+	bool intersect(const Ray& ray, T& distance) const;
 
 	//Destructor
 	~Box();

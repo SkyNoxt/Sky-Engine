@@ -54,7 +54,7 @@ public:
 	void operator*=(const T value);
 
 	//Subsript operator
-	Vector3<T>& operator[](const int index);
+	Vector3<T>& operator[](int index);
 
 	//Binary operators
 	bool operator==(const Matrix3<T>& matrix) const;

@@ -242,7 +242,7 @@ void Matrix4<T>::operator*=(const T value)
 }
 
 template <class T>
-Vector4<T>& Matrix4<T>::operator[](const int index)
+Vector4<T>& Matrix4<T>::operator[](int index)
 {
 	return *(((Vector4<T>*)this) + index);
 }

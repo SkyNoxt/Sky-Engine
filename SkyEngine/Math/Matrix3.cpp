@@ -125,7 +125,7 @@ void Matrix3<T>::operator*=(const T value)
 }
 
 template <class T>
-Vector3<T>& Matrix3<T>::operator[](const int index)
+Vector3<T>& Matrix3<T>::operator[](int index)
 {
 	return *(((Vector3<T>*)this) + index);
 }

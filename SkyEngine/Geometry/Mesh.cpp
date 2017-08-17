@@ -47,12 +47,12 @@ unsigned int Mesh::numElements() const
 	return numVertices;
 }
 
-const Vertex& Mesh::getVertex(const int index) const
+const Vertex& Mesh::getVertex(int index) const
 {
 	return vertexArray[index];
 }
 
-void Mesh::serialize(const Stream& stream)
+void Mesh::serialize(const Stream& stream) const
 {
 	stream.write<unsigned int>(numVertices);
 	stream.write<Vertex>(vertexArray, numVertices);

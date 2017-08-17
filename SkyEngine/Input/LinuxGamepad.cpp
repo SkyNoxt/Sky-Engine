@@ -37,7 +37,7 @@ bool LinuxGamepad::poll()
 		return mask;
 	evCount /= sizeof(js_event);
 
-	for(int i = 0; i < evCount; i++)
+	for(int i = 0; i < evCount; ++i)
 		{
 			const struct js_event& ev = evBuf[i];
 
@@ -82,13 +82,13 @@ bool LinuxGamepad::poll()
 						}
 
 					mask |= true;
-					state.timestamp++;
+					++state.timestamp;
 				}
 
 			if(ev.type & JS_EVENT_BUTTON && updateButtonMask(ev.value, state.buttons, linuxButton(ev.number)))
 				{
 					mask |= true;
-					state.timestamp++;
+					++state.timestamp;
 				}
 		}
 

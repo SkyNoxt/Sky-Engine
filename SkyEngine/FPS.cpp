@@ -1,7 +1,7 @@
 ﻿
 #include "FPS.h"
 
-FPS::FPS(Camera* cam, const Gamepad* pad, float moveVel, float rotationVel)
+FPS::FPS(Camera* cam, Gamepad* pad, float moveVel, float rotationVel)
 	: camera(cam)
 	, gamepad(pad)
 	, moveVelocity(moveVel)

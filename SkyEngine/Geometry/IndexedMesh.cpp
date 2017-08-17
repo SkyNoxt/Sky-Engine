@@ -50,12 +50,12 @@ unsigned int IndexedMesh::numElements() const
 	return numIndices;
 }
 
-const Vertex& IndexedMesh::getVertex(const int index) const
+const Vertex& IndexedMesh::getVertex(int index) const
 {
 	return vertexArray[indexArray[index]];
 }
 
-void IndexedMesh::serialize(const Stream& stream)
+void IndexedMesh::serialize(const Stream& stream) const
 {
 	Mesh::serialize(stream);
 	stream.write<unsigned int>(numIndices);

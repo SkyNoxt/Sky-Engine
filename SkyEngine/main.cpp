@@ -166,8 +166,8 @@ float backFace(const Vector3<>& a, const Vector3<>& b, const Vector3<>& c)
 static void rasterize(Camera& camera, int width, int height)
 {
 	Vector3<>* framebuffer = new Vector3<>[width * height];
-	float* depthbuffer = new float[width * height];
-	memset(depthbuffer, camera.farPlane, width * height * sizeof(float));
+	//float* depthbuffer = new float[width * height];
+	//memset(depthbuffer, camera.farPlane, width * height * sizeof(float));
 
 	Matrix4<> transform = camera.projectionMatrix * camera.viewMatrix * *modelMatrix;
 
@@ -259,7 +259,7 @@ static void rasterize(Camera& camera, int width, int height)
 									edgeFunction = &backFace;
 								}
 
-							tris++;
+							++tris;
 
 							for(uint32_t y = ymin; y <= ymax; ++y)
 								{
@@ -298,7 +298,7 @@ static void rasterize(Camera& camera, int width, int height)
 	cv::waitKey(1);
 
 	delete[] framebuffer;
-	delete[] depthbuffer;
+	//delete[] depthbuffer;
 }
 
 int main(int argc, char* argv[])

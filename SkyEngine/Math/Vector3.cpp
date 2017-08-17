@@ -179,7 +179,7 @@ void Vector3<T>::operator*=(const T value)
 }
 
 template <class T>
-T& Vector3<T>::operator[](const int index)
+T& Vector3<T>::operator[](int index)
 {
 	return vector[index];
 }

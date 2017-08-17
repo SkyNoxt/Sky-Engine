@@ -18,7 +18,7 @@ public:
 	Camera(float fLength, float fov, float targetRatio, float zNear = 0, float zFar = Ray::MAX_LENGTH);
 
 	//Member functions
-	Ray castRay(unsigned int width, unsigned int height, unsigned int x, unsigned int y);
+	Ray castRay(unsigned int width, unsigned int height, unsigned int x, unsigned int y) const;
 
 	//destructor
 	~Camera();

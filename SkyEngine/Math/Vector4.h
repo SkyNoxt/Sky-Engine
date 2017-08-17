@@ -52,7 +52,7 @@ public:
 	void operator*=(const T value);
 
 	//Subscript operator
-	T& operator[](const int index);
+	T& operator[](int index);
 
 	//Binary operators
 	bool operator==(const Vector4<T>& vector) const;
@@ -75,7 +75,7 @@ private:
 //Inline heterogeneous opeartors
 
 template <class T>
-Vector4<T> operator*(const T& value, const Vector4<T>& vector)
+Vector4<T> operator*(const T value, const Vector4<T>& vector)
 {
 	return vector * value;
 }

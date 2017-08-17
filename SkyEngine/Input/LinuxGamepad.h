@@ -11,11 +11,11 @@ public:
 	LinuxGamepad();
 
 	//Member functions
-	virtual bool isReady();
-	virtual bool poll();
+	bool isReady();
+	bool poll();
 
 	//Destructor
-	virtual ~LinuxGamepad();
+	~LinuxGamepad();
 
 private:
 	static const float AXIS_MAP;
@@ -24,9 +24,9 @@ private:
 	int triggerDeadzone;
 	int joyFile;
 
-	float mapCenteredAxis(int valueS16, int deadi);
-	float mapAxis(int valueS16, int deadi);
+	static float mapCenteredAxis(int valueS16, int deadi);
+	static float mapAxis(int valueS16, int deadi);
 
-	bool updateButtonMask(bool down, unsigned int& currentMask, unsigned int flag);
-	unsigned int linuxButton(unsigned int btn);
+	static bool updateButtonMask(bool down, unsigned int& currentMask, unsigned int flag);
+	static unsigned int linuxButton(unsigned int btn);
 };

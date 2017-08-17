@@ -27,9 +27,9 @@ public:
 	virtual bool intersect(const Ray& ray, float& distance, unsigned int& index, Vector2<>& barycenter) const;
 	virtual unsigned int numElements() const;
 
-	virtual const Vertex& getVertex(const int index) const;
+	virtual const Vertex& getVertex(int index) const;
 
-	virtual void serialize(const Stream& stream);
+	virtual void serialize(const Stream& stream) const;
 
 	//Destructor
 	virtual ~Mesh();

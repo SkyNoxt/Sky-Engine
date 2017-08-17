@@ -144,7 +144,7 @@ void Vector2<T>::operator*=(const T value)
 }
 
 template <class T>
-T& Vector2<T>::operator[](const int index)
+T& Vector2<T>::operator[](int index)
 {
 	return vector[index];
 }
