@@ -78,7 +78,7 @@ bool Mesh::triangleIntersect(const Ray& ray,
 
 	if(culling && det <= 0)
 		return false;
-	if(fabs(det) == 0)
+	if(fabsf(det) == 0)
 		return false;
 
 	float invDet = 1 / det;
