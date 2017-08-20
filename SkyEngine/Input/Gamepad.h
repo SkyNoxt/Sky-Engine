@@ -35,7 +35,7 @@ public:
 	} state;
 
 	//Member functions
-	virtual bool isReady() = 0;
+	virtual bool isReady() const = 0;
 	virtual bool poll() = 0;
 
 	virtual ~Gamepad() = 0;
@@ -43,4 +43,4 @@ public:
 
 //Pure virtual destructor implementation
 
-inline Gamepad::~Gamepad() {}
+inline Gamepad::~Gamepad() = default;

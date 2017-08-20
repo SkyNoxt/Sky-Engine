@@ -95,56 +95,63 @@ Vector2<T> Vector2<T>::operator-() const
 }
 
 template <class T>
-void Vector2<T>::operator=(const Vector2<T>& vector)
+Vector2<T>& Vector2<T>::operator=(const Vector2<T>& vector)
 {
 	x = vector.x;
 	y = vector.y;
+	return *this;
 }
 
 template <class T>
-void Vector2<T>::operator+=(const Vector2<T>& vector)
+Vector2<T>& Vector2<T>::operator+=(const Vector2<T>& vector)
 {
 	x += vector.x;
 	y += vector.y;
+	return *this;
 }
 
 template <class T>
-void Vector2<T>::operator-=(const Vector2<T>& vector)
+Vector2<T>& Vector2<T>::operator-=(const Vector2<T>& vector)
 {
 	x -= vector.x;
 	y -= vector.y;
+	return *this;
 }
 
 template <class T>
-void Vector2<T>::operator*=(const Vector2<T>& vector)
+Vector2<T>& Vector2<T>::operator*=(const Vector2<T>& vector)
 {
 	x *= vector.x;
 	y *= vector.y;
+	return *this;
 }
 
 template <class T>
-void Vector2<T>::operator+=(const T value)
+Vector2<T>& Vector2<T>::operator+=(const T value)
 {
 	x += value;
 	y += value;
+	return *this;
 }
 
 template <class T>
-void Vector2<T>::operator-=(const T value)
+Vector2<T>& Vector2<T>::operator-=(const T value)
 {
 	x -= value;
 	y -= value;
+	return *this;
 }
 
 template <class T>
-void Vector2<T>::operator*=(const T value)
+Vector2<T>& Vector2<T>::operator*=(const T value)
 {
 	x *= value;
 	y *= value;
+	return *this;
 }
 
 template <class T>
-T& Vector2<T>::operator[](int index)
+T& Vector2<T>::operator[](const int index)
 {
 	return vector[index];
 }
@@ -195,11 +202,6 @@ template <class T>
 Vector2<T> Vector2<T>::operator*(const T value) const
 {
 	return Vector2<T>{ x * value, y * value };
-}
-
-template <class T>
-Vector2<T>::~Vector2()
-{
 }
 
 template class Vector2<>;

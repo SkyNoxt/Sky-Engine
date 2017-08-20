@@ -28,7 +28,7 @@ public:
 
 //Pure virtual destructor implementation
 
-inline Stream::~Stream() {}
+inline Stream::~Stream() = default;
 
 //Template method specific instantiation
 

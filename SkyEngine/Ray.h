@@ -22,5 +22,5 @@ public:
 	Ray(const Vector3<>& org, const Vector3<>& dir);
 
 	//Destructor
-	~Ray();
+	~Ray() = default;
 };

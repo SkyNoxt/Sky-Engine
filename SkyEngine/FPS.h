@@ -15,7 +15,7 @@ public:
 	void update();
 
 	//Destructor
-	~FPS();
+	~FPS() = default;
 
 private:
 	Camera* camera;

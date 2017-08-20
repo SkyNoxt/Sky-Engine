@@ -11,11 +11,11 @@ public:
 	LinuxGamepad();
 
 	//Member functions
-	bool isReady();
-	bool poll();
+	bool isReady() const override;
+	bool poll() override;
 
 	//Destructor
-	~LinuxGamepad();
+	~LinuxGamepad() override;
 
 private:
 	static const float AXIS_MAP;

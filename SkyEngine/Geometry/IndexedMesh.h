@@ -16,13 +16,13 @@ public:
 	IndexedMesh();
 
 	//Member functions
-	bool intersect(const Ray& ray, float& distance, unsigned int& index, Vector2<>& barycenter) const;
-	unsigned int numElements() const;
+	bool intersect(const Ray& ray, float& distance, unsigned int& index, Vector2<>& barycenter) const override;
+	unsigned int numElements() const override;
 
-	const Vertex& getVertex(int index) const;
+	const Vertex& getVertex(int index) const override;
 
-	void serialize(const Stream& stream) const;
+	void serialize(const Stream& stream) const override;
 
 	//Destructor
-	~IndexedMesh();
+	~IndexedMesh() override;
 };

@@ -1,7 +1,7 @@
 ﻿
 #pragma once
 
-#include <math.h>
+#include <cmath>
 
 template <class T = float>
 class Vector3
@@ -45,17 +45,17 @@ public:
 	//Unary operators
 	Vector3<T> operator-() const;
 
-	void operator=(const Vector3<T>& vector);
-	void operator+=(const Vector3<T>& vector);
-	void operator-=(const Vector3<T>& vector);
-	void operator*=(const Vector3<T>& vector);
+	Vector3<T>& operator=(const Vector3<T>& vector);
+	Vector3<T>& operator+=(const Vector3<T>& vector);
+	Vector3<T>& operator-=(const Vector3<T>& vector);
+	Vector3<T>& operator*=(const Vector3<T>& vector);
 
-	void operator+=(const T value);
-	void operator-=(const T value);
-	void operator*=(const T value);
+	Vector3<T>& operator+=(const T value);
+	Vector3<T>& operator-=(const T value);
+	Vector3<T>& operator*=(const T value);
 
 	//Subscript operator
-	T& operator[](int index);
+	T& operator[](const int index);
 
 	//Binary operators
 	bool operator==(const Vector3<T>& vector) const;
@@ -70,7 +70,7 @@ public:
 	Vector3<T> operator*(const T value) const;
 
 	//Destructor
-	~Vector3();
+	~Vector3() = default;
 
 private:
 };

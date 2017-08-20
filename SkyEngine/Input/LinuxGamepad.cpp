@@ -1,8 +1,8 @@
 ﻿
 #include <fcntl.h>
-#include <math.h>
-#include <stdio.h>
-#include <string.h>
+#include <cmath>
+#include <cstdio>
+#include <cstring>
 #include <unistd.h>
 
 #include <linux/input.h>
@@ -19,7 +19,7 @@ LinuxGamepad::LinuxGamepad()
 {
 }
 
-bool LinuxGamepad::isReady()
+bool LinuxGamepad::isReady() const
 {
 	return joyFile >= 0;
 }
@@ -27,7 +27,7 @@ bool LinuxGamepad::isReady()
 bool LinuxGamepad::poll()
 {
 	if(!isReady())
-		return 0;
+		return false;
 
 	bool mask = false;
 
@@ -110,10 +110,9 @@ float LinuxGamepad::mapCenteredAxis(int valueS16, int deadi)
 	const float deadZone = (deadi * AXIS_MAP);
 	if(value > deadZone)
 		return (value - deadZone) / (1.0f - deadZone);
-	else if(value < -deadZone)
+	if(value < -deadZone)
 		return (value + deadZone) / (1.0f - deadZone);
-	else
-		return 0.0f;
+	return 0.0f;
 }
 
 float LinuxGamepad::mapAxis(int valueS16, int deadi)
@@ -122,8 +121,7 @@ float LinuxGamepad::mapAxis(int valueS16, int deadi)
 	const float deadZone = (deadi * AXIS_MAP);
 	if(value > deadZone)
 		return (value - deadZone) / (1.0f - deadZone);
-	else
-		return 0.0f;
+	return 0.0f;
 }
 
 bool LinuxGamepad::updateButtonMask(bool down, unsigned int& currentMask, unsigned int flag)
@@ -137,7 +135,7 @@ bool LinuxGamepad::updateButtonMask(bool down, unsigned int& currentMask, unsign
 	else
 		currentMask &= (~flag);
 
-	return (oldMask != currentMask) ? true : false;
+	return oldMask != currentMask;
 }
 
 unsigned int LinuxGamepad::linuxButton(unsigned int btn)

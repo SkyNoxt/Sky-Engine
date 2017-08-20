@@ -66,13 +66,13 @@ public:
 	void scale(const Vector3<T>& scaling);
 
 	//Unary operators
-	void operator=(const Matrix4<T>& matrix);
-	void operator*=(const Matrix4<T>& matrix);
+	Matrix4<T>& operator=(const Matrix4<T>& matrix);
+	Matrix4<T>& operator*=(const Matrix4<T>& matrix);
 
-	void operator*=(const T value);
+	Matrix4<T>& operator*=(const T value);
 
 	//Subsript operator
-	Vector4<T>& operator[](int index);
+	Vector4<T>& operator[](const int index);
 
 	//Binary operators
 	bool operator==(const Matrix4<T>& matrix) const;
@@ -83,7 +83,7 @@ public:
 	Matrix4<T> operator*(const T value) const;
 
 	//Destructor
-	~Matrix4();
+	~Matrix4() = default;
 
 private:
 };
@@ -91,9 +91,9 @@ private:
 //Inline heterogeneous opeartors
 
 template <class T>
-void operator*=(Vector3<T>& vector, const Matrix4<T>& matrix)
+Vector3<T>& operator*=(Vector3<T>& vector, const Matrix4<T>& matrix)
 {
-	vector = vector * matrix;
+	return vector = vector * matrix;
 }
 
 template <class T>
@@ -115,9 +115,9 @@ Vector3<T> operator*(const Vector3<T>& vector, const Matrix4<T>& matrix)
 }
 
 template <class T>
-void operator*=(Vector4<T>& vector, const Matrix4<T>& matrix)
+Vector4<T>& operator*=(Vector4<T>& vector, const Matrix4<T>& matrix)
 {
-	vector = vector * matrix;
+	return vector = vector * matrix;
 }
 
 template <class T>

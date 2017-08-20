@@ -38,7 +38,3 @@ Ray Camera::castRay(unsigned int width, unsigned int height, unsigned int x, uns
 
 	return Ray(Vector3<>{ cameraMatrix.wx, cameraMatrix.wy, cameraMatrix.wz }, dir);
 }
-
-Camera::~Camera()
-{
-}

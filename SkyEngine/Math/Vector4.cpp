@@ -103,70 +103,77 @@ Vector4<T> Vector4<T>::operator-() const
 }
 
 template <class T>
-void Vector4<T>::operator=(const Vector4<T>& vector)
+Vector4<T>& Vector4<T>::operator=(const Vector4<T>& vector)
 {
 	x = vector.x;
 	y = vector.y;
 	z = vector.z;
 	w = vector.w;
+	return *this;
 }
 
 template <class T>
-void Vector4<T>::operator+=(const Vector4<T>& vector)
+Vector4<T>& Vector4<T>::operator+=(const Vector4<T>& vector)
 {
 	x += vector.x;
 	y += vector.y;
 	z += vector.z;
 	w += vector.w;
+	return *this;
 }
 
 template <class T>
-void Vector4<T>::operator-=(const Vector4<T>& vector)
+Vector4<T>& Vector4<T>::operator-=(const Vector4<T>& vector)
 {
 	x -= vector.x;
 	y -= vector.y;
 	z -= vector.z;
 	w -= vector.w;
+	return *this;
 }
 
 template <class T>
-void Vector4<T>::operator*=(const Vector4<T>& vector)
+Vector4<T>& Vector4<T>::operator*=(const Vector4<T>& vector)
 {
 	x *= vector.x;
 	y *= vector.y;
 	z *= vector.z;
 	w *= vector.w;
+	return *this;
 }
 
 template <class T>
-void Vector4<T>::operator+=(const T value)
+Vector4<T>& Vector4<T>::operator+=(const T value)
 {
 	x += value;
 	y += value;
 	z += value;
 	w += value;
+	return *this;
 }
 
 template <class T>
-void Vector4<T>::operator-=(const T value)
+Vector4<T>& Vector4<T>::operator-=(const T value)
 {
 	x -= value;
 	y -= value;
 	z -= value;
 	w -= value;
+	return *this;
 }
 
 template <class T>
-void Vector4<T>::operator*=(const T value)
+Vector4<T>& Vector4<T>::operator*=(const T value)
 {
 	x *= value;
 	y *= value;
 	z *= value;
 	w *= value;
+	return *this;
 }
 
 template <class T>
-T& Vector4<T>::operator[](int index)
+T& Vector4<T>::operator[](const int index)
 {
 	return vector[index];
 }
@@ -217,11 +224,6 @@ template <class T>
 Vector4<T> Vector4<T>::operator*(const T value) const
 {
 	return Vector4<T>{ x * value, y * value, z * value, w * value };
-}
-
-template <class T>
-Vector4<T>::~Vector4()
-{
 }
 
 template class Vector4<>;

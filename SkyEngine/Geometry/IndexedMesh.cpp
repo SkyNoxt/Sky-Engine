@@ -16,9 +16,8 @@ IndexedMesh::IndexedMesh(const Stream& stream)
 }
 
 IndexedMesh::IndexedMesh()
-	: Mesh()
-	, numIndices(0)
-	, indexArray(0)
+	: numIndices(0)
+	, indexArray(nullptr)
 {
 }
 

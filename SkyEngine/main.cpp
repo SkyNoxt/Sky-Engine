@@ -339,7 +339,8 @@ int main(int argc, char* argv[])
 	//light->lightMatrix.rotate(45, 1.0, 0.0, 0.0);
 	lightDirection = new Vector3<>();
 	*lightDirection = Vector3<>{ 0.0, 0.0, -1.0 } * light->lightMatrix;
-
+	double totalFPS = 0;
+	unsigned int numFrames = 0;
 	//Render
 	while(true)
 		{
@@ -360,7 +361,11 @@ int main(int argc, char* argv[])
 
 			clock_t end = clock();
 			double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-			std::cout << "FPS: " << 1.0 / elapsed_secs << std::endl;
+			++numFrames;
+			double fps = 1.0 / elapsed_secs;
+			std::cout << "FPS: " << fps << std::endl;
+			totalFPS += fps;
+			std::cout << "MEAN: " << totalFPS / numFrames << std::endl;
 		}
 
 	delete gamepad;

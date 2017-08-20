@@ -10,7 +10,3 @@ Ray::Ray(const Vector3<>& org, const Vector3<>& dir)
 	, sign{ (inverseDirection.x < 0), (inverseDirection.y < 0), (inverseDirection.z < 0) }
 {
 }
-
-Ray::~Ray()
-{
-}

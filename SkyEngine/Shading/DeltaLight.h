@@ -18,5 +18,5 @@ public:
 	//Member functions
 
 	//Destructor
-	~DeltaLight();
+	~DeltaLight() = default;
 };

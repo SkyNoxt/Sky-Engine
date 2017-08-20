@@ -157,8 +157,8 @@ void Matrix4<T>::translate(const Vector3<T>& translation)
 template <class T>
 void Matrix4<T>::rotate(T angle, T x, T y, T z)
 {
-	T s = sinf(angle * M_PI / 180),
-	  c = cosf(angle * M_PI / 180),
+	T s = std::sin(angle * M_PI / 180),
+	  c = std::cos(angle * M_PI / 180),
 	  xx,
 	  yy,
 	  zz,
@@ -221,28 +221,29 @@ void Matrix4<T>::scale(const Vector3<T>& scaling)
 }
 
 template <class T>
-void Matrix4<T>::operator=(const Matrix4<T>& matrix)
+Matrix4<T>& Matrix4<T>::operator=(const Matrix4<T>& matrix)
 {
 	x = matrix.x;
 	y = matrix.y;
 	z = matrix.z;
 	w = matrix.w;
+	return *this;
 }
 
 template <class T>
-void Matrix4<T>::operator*=(const Matrix4<T>& matrix)
+Matrix4<T>& Matrix4<T>::operator*=(const Matrix4<T>& matrix)
 {
-	*this = *this * matrix;
+	return *this = *this * matrix;
 }
 
 template <class T>
-void Matrix4<T>::operator*=(const T value)
+Matrix4<T>& Matrix4<T>::operator*=(const T value)
 {
-	*this = *this * value;
+	return *this = *this * value;
 }
 
 template <class T>
-Vector4<T>& Matrix4<T>::operator[](int index)
+Vector4<T>& Matrix4<T>::operator[](const int index)
 {
 	return *(((Vector4<T>*)this) + index);
 }
@@ -289,11 +290,6 @@ template <class T>
 Matrix4<T> Matrix4<T>::operator*(const T value) const
 {
 	return Matrix4<T>{ x * value, y * value, z * value, w * value };
-}
-
-template <class T>
-Matrix4<T>::~Matrix4()
-{
 }
 
 template class Matrix4<>;

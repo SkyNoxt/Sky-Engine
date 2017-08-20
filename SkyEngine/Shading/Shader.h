@@ -9,12 +9,12 @@ class Shader
 
 public:
 	//Constructor
-	Shader();
+	Shader() = default;
 
 	//Member functions
 	Vector3<> shade();
 	Vector4<> shadeAlpha();
 
 	//Destructor
-	~Shader();
+	~Shader() = default;
 };

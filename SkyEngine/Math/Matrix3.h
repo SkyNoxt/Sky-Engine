@@ -48,13 +48,13 @@ public:
 	Matrix3<T> inverse() const;
 
 	//Unary operators
-	void operator=(const Matrix3<T>& matrix);
-	void operator*=(const Matrix3<T>& matrix);
+	Matrix3<T>& operator=(const Matrix3<T>& matrix);
+	Matrix3<T>& operator*=(const Matrix3<T>& matrix);
 
-	void operator*=(const T value);
+	Matrix3<T>& operator*=(const T value);
 
 	//Subsript operator
-	Vector3<T>& operator[](int index);
+	Vector3<T>& operator[](const int index);
 
 	//Binary operators
 	bool operator==(const Matrix3<T>& matrix) const;
@@ -65,7 +65,7 @@ public:
 	Matrix3<T> operator*(const T value) const;
 
 	//Destructor
-	~Matrix3();
+	~Matrix3() = default;
 
 private:
 };
@@ -73,9 +73,9 @@ private:
 //Inline heterogeneous opeartors
 
 template <class T>
-void operator*=(Vector3<T>& vector, const Matrix3<T>& matrix)
+Vector3<T>& operator*=(Vector3<T>& vector, const Matrix3<T>& matrix)
 {
-	vector = vector * matrix;
+	return vector = vector * matrix;
 }
 
 template <class T>

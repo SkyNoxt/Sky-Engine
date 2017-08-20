@@ -1,7 +1,7 @@
 ﻿
 #pragma once
 
-#include <math.h>
+#include <cmath>
 
 #include <Math/Matrix4.h>
 
@@ -21,7 +21,7 @@ public:
 	Ray castRay(unsigned int width, unsigned int height, unsigned int x, unsigned int y) const;
 
 	//destructor
-	~Camera();
+	~Camera() = default;
 
 	//private:
 

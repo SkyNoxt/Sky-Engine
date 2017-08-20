@@ -15,7 +15,7 @@ Mesh::Mesh(const Stream& stream)
 
 Mesh::Mesh()
 	: numVertices(0)
-	, vertexArray(0)
+	, vertexArray(nullptr)
 {
 }
 
@@ -76,7 +76,7 @@ bool Mesh::triangleIntersect(const Ray& ray,
 
 	if(culling && det <= 0)
 		return false;
-	else if(fabs(det) == 0)
+	if(fabs(det) == 0)
 		return false;
 
 	float invDet = 1 / det;

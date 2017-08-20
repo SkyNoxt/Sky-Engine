@@ -7,7 +7,3 @@ DeltaLight::DeltaLight(const Vector3<>& clr, float ntnst)
 	, intensity(ntnst)
 {
 }
-
-DeltaLight::~DeltaLight()
-{
-}

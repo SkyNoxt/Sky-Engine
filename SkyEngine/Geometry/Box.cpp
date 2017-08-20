@@ -8,11 +8,6 @@ Box<T>::Box(const Vector3<T>& min, const Vector3<T>& max)
 }
 
 template <class T>
-Box<T>::Box()
-{
-}
-
-template <class T>
 bool Box<T>::intersect(const Ray& ray, T& distance) const
 {
 	T xMin, xMax, yMin, yMax, zMin, zMax;
@@ -43,15 +38,7 @@ bool Box<T>::intersect(const Ray& ray, T& distance) const
 		xMax = zMax;
 
 	distance = xMin >= 0 ? xMin : xMax;
-	if(distance < 0)
-		return false;
-
-	return true;
-}
-
-template <class T>
-Box<T>::~Box()
-{
+	return !(distance < 0);
 }
 
 template class Box<>;

@@ -105,27 +105,28 @@ Matrix3<T> Matrix3<T>::inverse() const
 }
 
 template <class T>
-void Matrix3<T>::operator=(const Matrix3<T>& matrix)
+Matrix3<T>& Matrix3<T>::operator=(const Matrix3<T>& matrix)
 {
 	x = matrix.x;
 	y = matrix.y;
 	z = matrix.z;
+	return *this;
 }
 
 template <class T>
-void Matrix3<T>::operator*=(const Matrix3<T>& matrix)
+Matrix3<T>& Matrix3<T>::operator*=(const Matrix3<T>& matrix)
 {
-	*this = *this * matrix;
+	return *this = *this * matrix;
 }
 
 template <class T>
-void Matrix3<T>::operator*=(const T value)
+Matrix3<T>& Matrix3<T>::operator*=(const T value)
 {
-	*this = *this * value;
+	return *this = *this * value;
 }
 
 template <class T>
-Vector3<T>& Matrix3<T>::operator[](int index)
+Vector3<T>& Matrix3<T>::operator[](const int index)
 {
 	return *(((Vector3<T>*)this) + index);
 }
@@ -164,11 +165,6 @@ template <class T>
 Matrix3<T> Matrix3<T>::operator*(const T value) const
 {
 	return Matrix3<T>{ x * value, y * value, z * value };
-}
-
-template <class T>
-Matrix3<T>::~Matrix3()
-{
 }
 
 template class Matrix3<>;

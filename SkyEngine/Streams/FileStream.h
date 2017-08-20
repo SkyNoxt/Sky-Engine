@@ -2,7 +2,7 @@
 #pragma once
 
 #include <fcntl.h>
-#include <stdio.h>
+#include <cstdio>
 
 #include "Stream.h"
 
@@ -14,12 +14,12 @@ public:
 	FileStream(const char* filePath);
 
 	//Member functions
-	unsigned int write(void* buffer, unsigned int size, unsigned int count) const;
-	unsigned int read(void* buffer, unsigned int size, unsigned int count) const;
-	void flush() const;
+	unsigned int write(void* buffer, unsigned int size, unsigned int count) const override;
+	unsigned int read(void* buffer, unsigned int size, unsigned int count) const override;
+	void flush() const override;
 
 	//Destructor
-	~FileStream();
+	~FileStream() override;
 
 private:
 	FILE* file;

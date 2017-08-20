@@ -35,19 +35,15 @@ void FPS::update()
 	camera->cameraMatrix = camera->viewMatrix.inverse();
 }
 
-FPS::~FPS()
-{
-}
-
 void FPS::moveCamera(float distance, float direction)
 {
 	float radians = (direction - camYaw) * Camera::DEG_TO_RAD;
-	camX -= sin(radians) * distance;
-	camZ -= cos(radians) * distance;
+	camX -= std::sin(radians) * distance;
+	camZ -= std::cos(radians) * distance;
 }
 
 void FPS::moveCameraUp(float distance, float direction)
 {
 	float radians = (direction - camPitch) * Camera::DEG_TO_RAD;
-	camY += sin(radians) * distance;
+	camY += std::sin(radians) * distance;
 }
