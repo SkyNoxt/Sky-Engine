@@ -38,9 +38,5 @@ public:
 	virtual bool isReady() const = 0;
 	virtual bool poll() = 0;
 
-	virtual ~Gamepad() = 0;
+	virtual ~Gamepad() = default;
 };
-
-//Pure virtual destructor implementation
-
-inline Gamepad::~Gamepad() = default;

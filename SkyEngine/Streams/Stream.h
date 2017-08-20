@@ -23,12 +23,8 @@ public:
 	void write(T* value, unsigned int count) const;
 
 	//Destructor
-	virtual ~Stream() = 0;
+	virtual ~Stream() = default;
 };
-
-//Pure virtual destructor implementation
-
-inline Stream::~Stream() = default;
 
 //Template method specific instantiation
 
