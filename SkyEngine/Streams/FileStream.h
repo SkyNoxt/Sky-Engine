@@ -1,9 +1,6 @@
 
 #pragma once
 
-#include <fcntl.h>
-#include <cstdio>
-
 #include "Stream.h"
 
 class FileStream : public Stream

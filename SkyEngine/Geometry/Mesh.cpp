@@ -1,4 +1,6 @@
 ﻿
+#include <cmath>
+
 #include "Mesh.h"
 
 Mesh::Mesh(unsigned int vertexCount, Vertex* vertices)

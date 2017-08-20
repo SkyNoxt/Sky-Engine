@@ -1,8 +1,6 @@
 ﻿
 #pragma once
 
-#include <limits>
-
 #include <Math/Vector3.h>
 
 class Ray

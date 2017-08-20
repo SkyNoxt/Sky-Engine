@@ -1,4 +1,6 @@
 ﻿
+#include <limits>
+
 #include "Ray.h"
 
 const float Ray::MAX_LENGTH = std::numeric_limits<float>::max();

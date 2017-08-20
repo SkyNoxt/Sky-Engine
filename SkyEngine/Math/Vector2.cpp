@@ -1,4 +1,6 @@
 ﻿
+#include <cmath>
+
 #include "Vector2.h"
 
 template <class T>

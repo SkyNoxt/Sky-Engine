@@ -1,4 +1,6 @@
 ﻿
+#include <cmath>
+
 #include "Matrix4.h"
 
 template <class T>

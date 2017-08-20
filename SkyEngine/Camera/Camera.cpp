@@ -1,4 +1,6 @@
 ﻿
+#include <cmath>
+
 #include "Camera.h"
 
 const float Camera::DEG_TO_RAD = M_PI / 180;

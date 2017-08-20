@@ -43,7 +43,7 @@ static Vector3<> castRay(Ray& ray, Camera& camera, unsigned int depth)
 	Vector4<> rayOrigin = Vector4<>{ray.origin.x, ray.origin.y, ray.origin.z, 1.0} * rayMatrix;
 	ray = Ray(Vector3<>{rayOrigin.x, rayOrigin.y, rayOrigin.z}, ray.direction * rayMatrix);*/
 
-	Vector3<> hitColor = (ray.direction + Vector3<>{1}) * 0.5;
+	Vector3<> hitColor = (ray.direction + Vector3<>{ 1 }) * 0.5;
 
 	float distance = Ray::MAX_LENGTH;
 	unsigned int index;

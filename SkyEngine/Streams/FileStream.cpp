@@ -1,4 +1,7 @@
 
+#include <cstdio>
+#include <fcntl.h>
+
 #include "FileStream.h"
 
 FileStream::FileStream(const char* filePath)

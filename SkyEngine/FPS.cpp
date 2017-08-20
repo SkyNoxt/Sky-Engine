@@ -1,4 +1,6 @@
 ﻿
+#include <cmath>
+
 #include "FPS.h"
 
 FPS::FPS(Camera* cam, Gamepad* pad, float moveVel, float rotationVel)
@@ -7,7 +9,6 @@ FPS::FPS(Camera* cam, Gamepad* pad, float moveVel, float rotationVel)
 	, moveVelocity(moveVel)
 	, rotationVelocity(rotationVel)
 {
-	
 }
 
 void FPS::update()

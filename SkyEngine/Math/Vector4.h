@@ -1,8 +1,6 @@
 ﻿
 #pragma once
 
-#include <cmath>
-
 template <class T = float>
 class Vector4
 {

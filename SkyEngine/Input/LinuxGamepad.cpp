@@ -1,8 +1,8 @@
 ﻿
-#include <fcntl.h>
 #include <cmath>
 #include <cstdio>
 #include <cstring>
+#include <fcntl.h>
 #include <unistd.h>
 
 #include <linux/input.h>

@@ -1,8 +1,6 @@
 ﻿
 #pragma once
 
-#include <cmath>
-
 #include <Math/Matrix4.h>
 
 #include <Ray.h>
