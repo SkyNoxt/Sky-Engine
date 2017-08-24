@@ -50,6 +50,8 @@ public:
 	Matrix4<T>(const Vector4<T>& xVec, const Vector4<T>& yVec, const Vector4<T>& zVec, const Vector4<T>& wVec);
 	Matrix4<T>(const Vector4<T> vec[4]);
 
+	Matrix4<T>(const Vector3<T>& eye, const Vector3<T>& center, const Vector3<T>& up = { 0, 1, 0 });
+
 	//Member functions
 	T determinant() const;
 

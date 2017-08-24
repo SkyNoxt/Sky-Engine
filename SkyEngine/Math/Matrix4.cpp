@@ -97,6 +97,19 @@ Matrix4<T>::Matrix4(const Vector4<T> vec[4])
 }
 
 template <class T>
+Matrix4<T>::Matrix4(const Vector3<T>& eye, const Vector3<T>& center, const Vector3<T>& up)
+{
+	Vector3<T> zVec = (eye - center).normalize();
+	Vector3<T> xVec = up.normalize().cross(zVec);
+	Vector3<T> yVec = zVec.cross(xVec);
+
+	x = { xVec.x, xVec.y, xVec.z, 0 };
+	y = { yVec.x, yVec.y, yVec.z, 0 };
+	z = { zVec.x, zVec.y, zVec.z, 0 };
+	w = { eye.x, eye.y, eye.z, 1 };
+}
+
+template <class T>
 T Matrix4<T>::determinant() const
 {
 	return xw * yz * zy * wx - xz * yw * zy * wx - xw * yy * zz * wx + xy * yw * zz * wx + xz * yy * zw * wx - xy * yz * zw * wx - xw * yz * zx * wy + xz * yw * zx * wy + xw * yx * zz * wy - xx * yw * zz * wy - xz * yx * zw * wy + xx * yz * zw * wy + xw * yy * zx * wz - xy * yw * zx * wz - xw * yx * zy * wz + xx * yw * zy * wz + xy * yx * zw * wz - xx * yy * zw * wz - xz * yy * zx * ww + xy * yz * zx * ww + xz * yx * zy * ww - xx * yz * zy * ww - xy * yx * zz * ww + xx * yy * zz * ww;
