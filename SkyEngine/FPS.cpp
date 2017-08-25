@@ -3,61 +3,50 @@
 
 #include "FPS.h"
 
-FPS::FPS(Camera* cam, Gamepad* pad, float moveVel, float rotationVel)
+FPS::FPS(Camera* cam, Gamepad* pad, float moveSpd, float rotationSpd)
 	: camera(cam)
 	, gamepad(pad)
-	, rightVector({ 1, 0, 0 })
-	, upVector({ 0, 1, 0 })
-	, viewDir({ 0, 0, 1 })
+	, right({ 1, 0, 0 })
+	, up({ 0, 1, 0 })
+	, view({ 0, 0, 1 })
 	, position({ 0, 0, 0 })
-	, moveVelocity(moveVel)
-	, rotationVelocity(rotationVel)
+	, moveSpeed(moveSpd)
+	, rotationSpeed(rotationSpd)
 {
 }
 
 void FPS::update()
 {
-	float pitchAngle = rotationVelocity * -gamepad->state.rightThumbY;
-	float yawAngle = rotationVelocity * gamepad->state.rightThumbX;
-	float rollAngle = rotationVelocity * (gamepad->state.leftTrigger - gamepad->state.rightTrigger);
+	float pitchAngle = rotationSpeed * -gamepad->state.rightThumbY;
+	float yawAngle = rotationSpeed * gamepad->state.rightThumbX;
+	float rollAngle = rotationSpeed * (gamepad->state.leftTrigger - gamepad->state.rightTrigger);
 
-	float zMovement = moveVelocity * -gamepad->state.leftThumbY;
+	float zMovement = moveSpeed * -gamepad->state.leftThumbY;
 	float yMovement = 0;
-	float xMovement = moveVelocity * gamepad->state.leftThumbX;
+	float xMovement = moveSpeed * gamepad->state.leftThumbX;
 
 	//Pitch
-	viewDir = (viewDir * std::cos(pitchAngle * Camera::DEG_TO_RAD) -
-		upVector * std::sin(pitchAngle * Camera::DEG_TO_RAD)
-	 ).normalize();
-  
-	 upVector = viewDir.cross(rightVector);
+	view = (view * std::cos(pitchAngle * Camera::DEG_TO_RAD) - up * std::sin(pitchAngle * Camera::DEG_TO_RAD)).normalize();
+	up = view.cross(right);
 	//
 
 	//Yaw
-	viewDir = (viewDir * std::cos(yawAngle * Camera::DEG_TO_RAD) -
-		rightVector * std::sin(yawAngle * Camera::DEG_TO_RAD)
-	 ).normalize();
-  
-	 rightVector = -viewDir.cross(upVector);
+	view = (view * std::cos(yawAngle * Camera::DEG_TO_RAD) - right * std::sin(yawAngle * Camera::DEG_TO_RAD)).normalize();
+	right = -view.cross(up);
 	//
 
 	//Roll
-	rightVector = (rightVector * std::cos(rollAngle * Camera::DEG_TO_RAD) -
-		upVector * std::sin(rollAngle * Camera::DEG_TO_RAD)
-	 ).normalize();
-  
-	 upVector = viewDir.cross(rightVector);
+	right = (right * std::cos(rollAngle * Camera::DEG_TO_RAD) - up * std::sin(rollAngle * Camera::DEG_TO_RAD)).normalize();
+	up = view.cross(right);
 	//
 
 	//Move
-	position += (rightVector * xMovement);
-	position += (upVector * yMovement);
-	position -= (viewDir * zMovement);
+	position += (right * xMovement);
+	position += (up * yMovement);
+	position -= (view * zMovement);
 	//
-	
-	Vector3<> viewPoint = position - viewDir;
-		   
-	camera->cameraMatrix = Matrix4<>(position, viewPoint, upVector);
-	camera->viewMatrix = camera->cameraMatrix.inverse();
 
+	Vector3<> viewPoint = position - view;
+	camera->cameraMatrix = Matrix4<>(position, viewPoint, up);
+	camera->viewMatrix = camera->cameraMatrix.inverse();
 }

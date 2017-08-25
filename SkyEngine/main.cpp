@@ -346,8 +346,6 @@ int main(int argc, char* argv[])
 		{
 			clock_t begin = clock();
 
-			camera.viewMatrix = Matrix4<>::IDENTITY;
-
 			gamepad->poll();
 			fps->update();
 
