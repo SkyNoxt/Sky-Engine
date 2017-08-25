@@ -21,13 +21,11 @@ private:
 	Camera* camera;
 	Gamepad* gamepad;
 
-	float camX = 0, camY = 0, camZ = 0;
-	float camPitch = 0;
-	float camYaw = 0;
+	Vector3<> rightVector;
+	Vector3<> upVector;
+	Vector3<> viewDir;
+	Vector3<> position;
 
 	float moveVelocity;
 	float rotationVelocity;
-
-	void moveCamera(float distance, float direction);
-	void moveCameraUp(float distance, float direction);
 };

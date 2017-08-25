@@ -6,6 +6,10 @@
 FPS::FPS(Camera* cam, Gamepad* pad, float moveVel, float rotationVel)
 	: camera(cam)
 	, gamepad(pad)
+	, rightVector({ 1, 0, 0 })
+	, upVector({ 0, 1, 0 })
+	, viewDir({ 0, 0, 1 })
+	, position({ 0, 0, 0 })
 	, moveVelocity(moveVel)
 	, rotationVelocity(rotationVel)
 {
@@ -13,38 +17,47 @@ FPS::FPS(Camera* cam, Gamepad* pad, float moveVel, float rotationVel)
 
 void FPS::update()
 {
-	camYaw += rotationVelocity * (gamepad->state.rightThumbX);
-	camPitch += rotationVelocity * (gamepad->state.rightThumbY);
+	float pitchAngle = rotationVelocity * -gamepad->state.rightThumbY;
+	float yawAngle = rotationVelocity * gamepad->state.rightThumbX;
+	float rollAngle = rotationVelocity * (gamepad->state.leftTrigger - gamepad->state.rightTrigger);
 
-	if(camPitch > 90)
-		camPitch = 90;
-	else if(camPitch < -90)
-		camPitch = -90;
-	if(camYaw < 0.0)
-		camYaw += 360;
-	else if(camYaw > 360.0)
-		camYaw -= 360;
+	float zMovement = moveVelocity * -gamepad->state.leftThumbY;
+	float yMovement = 0;
+	float xMovement = moveVelocity * gamepad->state.leftThumbX;
 
-	moveCamera(moveVelocity * gamepad->state.leftThumbY, 0.0);
-	moveCameraUp(moveVelocity * gamepad->state.leftThumbY, 0.0);
-	moveCamera(moveVelocity * gamepad->state.leftThumbX, 90.0);
+	//Pitch
+	viewDir = (viewDir * std::cos(pitchAngle * Camera::DEG_TO_RAD) -
+		upVector * std::sin(pitchAngle * Camera::DEG_TO_RAD)
+	 ).normalize();
+  
+	 upVector = viewDir.cross(rightVector);
+	//
 
-	camera->viewMatrix.rotate(camPitch, 1.0, 0.0, 0.0);
-	camera->viewMatrix.rotate(camYaw, 0.0, 1.0, 0.0);
-	camera->viewMatrix.translate(camX, camY, camZ);
+	//Yaw
+	viewDir = (viewDir * std::cos(yawAngle * Camera::DEG_TO_RAD) -
+		rightVector * std::sin(yawAngle * Camera::DEG_TO_RAD)
+	 ).normalize();
+  
+	 rightVector = -viewDir.cross(upVector);
+	//
 
-	camera->cameraMatrix = camera->viewMatrix.inverse();
-}
+	//Roll
+	rightVector = (rightVector * std::cos(rollAngle * Camera::DEG_TO_RAD) -
+		upVector * std::sin(rollAngle * Camera::DEG_TO_RAD)
+	 ).normalize();
+  
+	 upVector = viewDir.cross(rightVector);
+	//
 
-void FPS::moveCamera(float distance, float direction)
-{
-	float radians = (direction - camYaw) * Camera::DEG_TO_RAD;
-	camX -= std::sin(radians) * distance;
-	camZ -= std::cos(radians) * distance;
-}
+	//Move
+	position += (rightVector * xMovement);
+	position += (upVector * yMovement);
+	position -= (viewDir * zMovement);
+	//
+	
+	Vector3<> viewPoint = position - viewDir;
+		   
+	camera->cameraMatrix = Matrix4<>(position, viewPoint, upVector);
+	camera->viewMatrix = camera->cameraMatrix.inverse();
 
-void FPS::moveCameraUp(float distance, float direction)
-{
-	float radians = (direction - camPitch) * Camera::DEG_TO_RAD;
-	camY += std::sin(radians) * distance;
 }
