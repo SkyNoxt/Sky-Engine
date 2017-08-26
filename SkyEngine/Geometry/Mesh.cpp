@@ -30,7 +30,7 @@ bool Mesh::intersect(const Ray& ray, float& distance, unsigned int& index, Vecto
 	for(unsigned int i = 0; i < numVertices; i += 3)
 		{
 			if(triangleIntersect(ray,
-				   vertexArray[i].position, vertexArray[i + 1].position, vertexArray[i + 2].position,
+				   getVertex(i).position, getVertex(i + 1).position, getVertex(i + 2).position,
 				   tempDist, u, v)
 				&& tempDist > 0 && tempDist < distance)
 				{

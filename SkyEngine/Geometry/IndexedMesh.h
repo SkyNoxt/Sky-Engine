@@ -16,7 +16,6 @@ public:
 	IndexedMesh();
 
 	//Member functions
-	bool intersect(const Ray& ray, float& distance, unsigned int& index, Vector2<>& barycenter) const override;
 	unsigned int numElements() const override;
 
 	const Vertex& getVertex(int index) const override;
