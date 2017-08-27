@@ -20,7 +20,7 @@ Camera::Camera(float fLength, float fov, float targetRatio, float zNear, float z
 	float invScale = 1.0 / scale;
 	float distance = farPlane - nearPlane;
 
-	projectionMatrix = Matrix4<>{
+	projectionMatrix = {
 		invScale / aspectRatio, 0, 0, 0,
 		0, invScale, 0, 0,
 		0, 0, -farPlane / distance, -1,
@@ -38,5 +38,5 @@ Ray Camera::castRay(unsigned int width, unsigned int height, unsigned int x, uns
 
 	Vector3<> dir = (Vector3<>{ dirX, dirY, -1.0 } * cameraMatrix).normalize();
 
-	return Ray(Vector3<>{ cameraMatrix.wx, cameraMatrix.wy, cameraMatrix.wz }, dir);
+	return Ray({ cameraMatrix.wx, cameraMatrix.wy, cameraMatrix.wz }, dir);
 }

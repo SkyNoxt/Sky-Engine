@@ -41,7 +41,7 @@ static Vector3<> castRay(Ray& ray, Camera& camera, unsigned int depth)
 	//Inverse Ray Transform
 	/*Matrix4<> rayMatrix = modelMatrix->inverse();
 	Vector4<> rayOrigin = Vector4<>{ray.origin.x, ray.origin.y, ray.origin.z, 1.0} * rayMatrix;
-	ray = Ray(Vector3<>{rayOrigin.x, rayOrigin.y, rayOrigin.z}, ray.direction * rayMatrix);*/
+	ray = Ray({rayOrigin.x, rayOrigin.y, rayOrigin.z}, ray.direction * rayMatrix);*/
 
 	Vector3<> hitColor = (ray.direction + Vector3<>{ 1 }) * 0.5;
 
@@ -334,7 +334,7 @@ int main(int argc, char* argv[])
 	camera.viewMatrix = camera.cameraMatrix.inverse();
 
 	//Compute light
-	light = new DeltaLight(Vector3<>{ 1.0, 0.0, 0.0 }, 15);
+	light = new DeltaLight({ 1.0, 0.0, 0.0 }, 15);
 	light->lightMatrix.translate(0.0, 0.0, 0.0); //Point light transform
 	//light->lightMatrix.rotate(45, 1.0, 0.0, 0.0);
 	lightDirection = new Vector3<>();
