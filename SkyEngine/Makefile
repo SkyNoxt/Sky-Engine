@@ -8,14 +8,15 @@ CC_DEBUG = -std=c++14 -g -fopenmp -I . -Wall
 LD_DEBUG = -fopenmp -lopencv_core -lopencv_imgproc -lopencv_highgui
 
 # File names
-TARGET = SkyEngine.out
+TARGET = SkyEngine
+EXECUTABLE = $(TARGET).out
 HEADERS = $(shell find . -name "*.h")
 SOURCES = $(shell find . -name "*.cpp")
 OBJECTS = $(SOURCES:.cpp=.o)
 
 # Main target linking
 $(TARGET): $(OBJECTS)
-	$(CC) $(OBJECTS) $(LD_FLAGS) -o $(TARGET)
+	$(CC) $(OBJECTS) $(LD_FLAGS) -o $(EXECUTABLE)
 
 # Compile source files
 %.o: %.cpp
@@ -27,4 +28,4 @@ format:
 
 # Clean generated files
 clean:
-	rm -f $(TARGET) $(OBJECTS)
+	rm -f $(EXECUTABLE) $(OBJECTS)
