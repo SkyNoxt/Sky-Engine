@@ -9,14 +9,13 @@ LD_DEBUG = -fopenmp -lopencv_core -lopencv_imgproc -lopencv_highgui
 
 # File names
 TARGET = SkyEngine
-EXECUTABLE = $(TARGET).out
 HEADERS = $(shell find . -name "*.h")
 SOURCES = $(shell find . -name "*.cpp")
 OBJECTS = $(SOURCES:.cpp=.o)
 
 # Main target linking
 $(TARGET): $(OBJECTS)
-	$(CC) $(OBJECTS) $(LD_FLAGS) -o $(EXECUTABLE)
+	$(CC) $(OBJECTS) $(LD_FLAGS) -o $(TARGET)
 
 # Compile source files
 %.o: %.cpp
@@ -28,4 +27,4 @@ format:
 
 # Clean generated files
 clean:
-	rm -f $(EXECUTABLE) $(OBJECTS)
+	rm -f $(TARGET) $(OBJECTS)
