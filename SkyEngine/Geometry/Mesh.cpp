@@ -3,24 +3,39 @@
 
 #include "Mesh.h"
 
+Mesh::Mesh(unsigned int vertexCount, unsigned int indexCount, Vertex* vertices, unsigned int* indices)
+	: numVertices(vertexCount)
+	, numIndices(indexCount)
+	, vertexArray(vertices)
+	, indexArray(indices)
+{
+}
+
 Mesh::Mesh(unsigned int vertexCount, Vertex* vertices)
 	: numVertices(vertexCount)
+	, numIndices(0)
 	, vertexArray(vertices)
+	, indexArray(nullptr)
 {
 }
 
 Mesh::Mesh(const Stream& stream)
 	: numVertices(stream.read<unsigned int>())
+	, numIndices(stream.read<unsigned int>())
 	, vertexArray(stream.read<Vertex>(numVertices))
+	, indexArray(stream.read<unsigned int>(numIndices))
 {
 }
 
 Mesh::Mesh()
 	: numVertices(0)
+	, numIndices(0)
 	, vertexArray(nullptr)
+	, indexArray(nullptr)
 {
 }
 
+//TODO: Revise for IndexedMesh refactor
 bool Mesh::intersect(const Ray& ray, float& distance, unsigned int& index, Vector2<>& barycenter) const
 {
 	bool intersect = false;
@@ -44,25 +59,32 @@ bool Mesh::intersect(const Ray& ray, float& distance, unsigned int& index, Vecto
 	return intersect;
 }
 
+//TODO: Revise for IndexedMesh refactor
 unsigned int Mesh::numElements() const
 {
+	if(indexArray) return numIndices;
 	return numVertices;
 }
 
+//TODO: Revise for IndexedMesh refactor
 const Vertex& Mesh::getVertex(int index) const
 {
+	if(indexArray) return vertexArray[indexArray[index]];
 	return vertexArray[index];
 }
 
 void Mesh::serialize(const Stream& stream) const
 {
 	stream.write<unsigned int>(numVertices);
+	stream.write<unsigned int>(numIndices);
 	stream.write<Vertex>(vertexArray, numVertices);
+	stream.write<unsigned int>(indexArray, numIndices);
 }
 
 Mesh::~Mesh()
 {
 	delete[] vertexArray;
+	delete[] indexArray;
 }
 
 bool Mesh::triangleIntersect(const Ray& ray,

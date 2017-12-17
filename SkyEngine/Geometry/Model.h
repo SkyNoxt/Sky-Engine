@@ -5,17 +5,17 @@
 
 #include <Streams/Stream.h>
 
-#include "IndexedMesh.h"
+#include "Mesh.h"
 
 class Model
 {
 
 public:
 	unsigned int numMeshes;
-	IndexedMesh* meshArray;
+	Mesh* meshArray;
 
 	//Constructors
-	Model(unsigned int meshCount, IndexedMesh* meshes);
+	Model(unsigned int meshCount, Mesh* meshes);
 	Model(const Stream& stream);
 
 	//Member functions

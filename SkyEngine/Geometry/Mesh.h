@@ -15,23 +15,26 @@ class Mesh
 public:
 	bool culling = false;
 	unsigned int numVertices;
+	unsigned int numIndices;
 	Vertex* vertexArray;
+	unsigned int* indexArray;
 
 	//Constructors
+	Mesh(unsigned int vertexCount, unsigned int indexCount, Vertex* vertices, unsigned int* indices);
 	Mesh(unsigned int vertexCount, Vertex* vertices);
 	Mesh(const Stream& stream);
 	Mesh();
 
 	//Member functions
-	virtual bool intersect(const Ray& ray, float& distance, unsigned int& index, Vector2<>& barycenter) const;
-	virtual unsigned int numElements() const;
+	bool intersect(const Ray& ray, float& distance, unsigned int& index, Vector2<>& barycenter) const;
+	unsigned int numElements() const;
 
-	virtual const Vertex& getVertex(int index) const;
+	const Vertex& getVertex(int index) const;
 
-	virtual void serialize(const Stream& stream) const;
+	void serialize(const Stream& stream) const;
 
 	//Destructor
-	virtual ~Mesh();
+	~Mesh();
 
 protected:
 	//Protected member function

@@ -10,7 +10,7 @@
 
 #include "LinuxGamepad.h"
 
-char joyDevPath[16] = "/dev/input/js0";
+char joyDevPath[16] = "/dev/input/js1";
 
 LinuxGamepad::LinuxGamepad()
 	: stickDeadzone(8000)

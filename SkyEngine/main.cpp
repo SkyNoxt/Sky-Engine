@@ -56,7 +56,7 @@ static Vector3<> castRay(Ray& ray, Camera& camera, unsigned int depth)
 	int meshIndex;
 
 	unsigned int numMeshes = model->numMeshes;
-	IndexedMesh* meshes = model->meshArray;
+	Mesh* meshes = model->meshArray;
 	for(unsigned int i = 0; i < numMeshes; ++i)
 		{
 			if(meshes[i].intersect(ray, tempDistance, tempIndex, tempUV) && tempDistance > 0 && tempDistance < distance)
