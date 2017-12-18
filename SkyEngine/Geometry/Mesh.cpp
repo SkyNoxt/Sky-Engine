@@ -44,9 +44,7 @@ bool Mesh::intersect(const Ray& ray, float& distance, unsigned int& index, Vecto
 	distance = Ray::MAX_LENGTH;
 	for(unsigned int i = 0; i < numVertices; i += 3)
 		{
-			if(triangleIntersect(ray,
-				   getVertex(i).position, getVertex(i + 1).position, getVertex(i + 2).position,
-				   tempDist, u, v)
+			if(triangleIntersect(ray, get(i).position, get(i + 1).position, get(i + 2).position, tempDist, u, v)
 				&& tempDist > 0 && tempDist < distance)
 				{
 					distance = tempDist;
@@ -59,15 +57,13 @@ bool Mesh::intersect(const Ray& ray, float& distance, unsigned int& index, Vecto
 	return intersect;
 }
 
-//TODO: Revise for IndexedMesh refactor
 unsigned int Mesh::numElements() const
 {
 	if(indexArray) return numIndices;
 	return numVertices;
 }
 
-//TODO: Revise for IndexedMesh refactor
-const Vertex& Mesh::getVertex(int index) const
+const Vertex& Mesh::get(int index) const
 {
 	if(indexArray) return vertexArray[indexArray[index]];
 	return vertexArray[index];
