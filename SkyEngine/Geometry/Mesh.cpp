@@ -35,7 +35,6 @@ Mesh::Mesh()
 {
 }
 
-//TODO: Revise for IndexedMesh refactor
 bool Mesh::intersect(const Ray& ray, float& distance, unsigned int& index, Vector2<>& barycenter) const
 {
 	bool intersect = false;
@@ -59,13 +58,15 @@ bool Mesh::intersect(const Ray& ray, float& distance, unsigned int& index, Vecto
 
 unsigned int Mesh::numElements() const
 {
-	if(indexArray) return numIndices;
+	if(indexArray)
+		return numIndices;
 	return numVertices;
 }
 
 const Vertex& Mesh::get(int index) const
 {
-	if(indexArray) return vertexArray[indexArray[index]];
+	if(indexArray)
+		return vertexArray[indexArray[index]];
 	return vertexArray[index];
 }
 
