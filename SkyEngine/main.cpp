@@ -177,7 +177,7 @@ static void rasterize(Camera& camera, int width, int height)
 #pragma omp parallel for num_threads(512)
 			for(unsigned int i = 0; i < model->meshArray[m].numElements(); ++i)
 				{
-					const Vector3<>& v0 = model->meshArray[m].getVertex(i).position;
+					const Vector3<>& v0 = model->meshArray[m].get(i).position;
 
 					Vector4<> currentVertex = Vector4<>{ v0.x, v0.y, v0.z, 1.0 } * transform;
 
