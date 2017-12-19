@@ -99,7 +99,7 @@ static Vector3<> castRay(Ray& ray, Camera& camera, unsigned int depth)
 	return hitColor;
 }
 
-static bool rasterVertex(Vector3<>& raster, const Vector4<>& vertex, unsigned int width, unsigned int height)
+/*static bool rasterVertex(Vector3<>& raster, const Vector4<>& vertex, unsigned int width, unsigned int height)
 {
 	raster = { vertex.x, vertex.y, -vertex.z };
 
@@ -117,7 +117,7 @@ static bool rasterVertex(Vector3<>& raster, const Vector4<>& vertex, unsigned in
 	raster.y = ((1 - (raster.y + 1) * 0.5) * height);
 
 	return true;
-}
+}*/
 
 static void render(Camera& camera, unsigned int width, unsigned int height)
 {
@@ -166,139 +166,114 @@ float backFace(const Vector3<>& a, const Vector3<>& b, const Vector3<>& c)
 static void rasterize(Camera& camera, int width, int height)
 {
 	Vector3<>* framebuffer = new Vector3<>[width * height];
-	//float* depthbuffer = new float[width * height];
-	//memset(depthbuffer, camera.farPlane, width * height * sizeof(float));
+	float* depthbuffer = new float[width * height];
+	for(int i = 0; i < width * height; ++i) depthbuffer[i] = camera.farPlane;
 
 	Matrix4<> transform = camera.projectionMatrix * camera.viewMatrix * *modelMatrix;
 
-#pragma omp parallel for num_threads(64)
 	for(unsigned int m = 0; m < model->numMeshes; ++m)
 		{
-#pragma omp parallel for num_threads(512)
-			for(unsigned int i = 0; i < model->meshArray[m].numElements(); ++i)
+			unsigned int numTriangles = model->meshArray[m].numElements() / 3;
+			for(unsigned int i = 0; i < numTriangles; ++i)
 				{
-					const Vector3<>& v0 = model->meshArray[m].get(i).position;
+					const Vector3<>& v0 = model->meshArray[m].get(i * 3).position;
+					const Vector3<>& v1 = model->meshArray[m].get(i * 3 + 1).position;
+					const Vector3<>& v2 = model->meshArray[m].get(i * 3 + 2).position;
 
-					Vector4<> currentVertex = Vector4<>{ v0.x, v0.y, v0.z, 1.0 } * transform;
+					Vector4<> t0 = Vector4<>{ v0.x, v0.y, v0.z, 1.0 } * transform;
+					Vector4<> t1 = Vector4<>{ v1.x, v1.y, v1.z, 1.0 } * transform;
+					Vector4<> t2 = Vector4<>{ v2.x, v2.y, v2.z, 1.0 } * transform;
 
-					Vector3<> v0Raster;
+					/*if(t0.w <= 0.0 && t1.w <= 0.0 && t2.w <= 0.0)
+						continue;*/
+					if(!(t0.w > 0.0 && t1.w > 0.0 && t2.w > 0.0 && abs(t0.z) < t0.w && abs(t1.z) < t1.w && abs(t2.z) < t2.w))
+						continue;
 
-					if(rasterVertex(v0Raster, currentVertex, width, height))
-						framebuffer[(int)v0Raster.y * width + (int)v0Raster.x] = 1.0;
-				}
-		}
+					/*if(t0.z < camera.nearPlane && t1.z < camera.nearPlane && t2.z < camera.nearPlane)
+						continue;
+					if(t0.z > camera.farPlane && t1.z > camera.farPlane && t2.z > camera.farPlane)
+						continue;*/
 
-	/*unsigned int tris = 0;
-#pragma omp parallel for num_threads(64)
-			for(unsigned int m = 0; m < model->numMeshes; ++m)
-				{
-					unsigned int numTriangles = model->meshArray[m].numElements() / 3;
-#pragma omp parallel for num_threads(512)
-					for(unsigned int i = 0; i < numTriangles; ++i)
+					Vector3<> v0Raster = { t0.x, t0.y, -t0.z };
+					v0Raster *= (1 / t0.w);
+					v0Raster.x = ((v0Raster.x + 1) * 0.5 * width);
+					v0Raster.y = ((1 - (v0Raster.y + 1) * 0.5) * height);
+
+					Vector3<> v1Raster = { t1.x, t1.y, -t1.z };
+					v1Raster *= (1 / t1.w);
+					v1Raster.x = ((v1Raster.x + 1) * 0.5 * width);
+					v1Raster.y = ((1 - (v1Raster.y + 1) * 0.5) * height);
+
+					Vector3<> v2Raster = { t2.x, t2.y, -t2.z };
+					v2Raster *= (1 / t2.w);
+					v2Raster.x = ((v2Raster.x + 1) * 0.5 * width);
+					v2Raster.y = ((1 - (v2Raster.y + 1) * 0.5) * height);
+
+					float xmin = min3(v0Raster.x, v1Raster.x, v2Raster.x);
+					float ymin = min3(v0Raster.y, v1Raster.y, v2Raster.y);
+					float xmax = max3(v0Raster.x, v1Raster.x, v2Raster.x);
+					float ymax = max3(v0Raster.y, v1Raster.y, v2Raster.y);
+
+					//Partial triangle clipping
+					if(xmin >= width || xmax < 0 || ymin >= height || ymax < 0) continue;
+					//Full triangle clipping
+					//if (xmin < 0 || xmax >= width || ymin < 0 || ymax >= height) continue;
+
+					if(xmax >= width)
+						xmax = width - 1;
+					if(ymax >= height)
+						ymax = height - 1;
+					if(xmin < 0)
+						xmin = 0;
+					if(ymin < 0)
+						ymin = 0;
+
+					float (*edgeFunction)(const Vector3<>&, const Vector3<>&, const Vector3<>&) = &frontFace;
+					float area = edgeFunction(v0Raster, v1Raster, v2Raster);
+					if(area < 0)
 						{
-							const Vector3<>& v0 = model->meshArray[m].getVertex(i * 3).position;
-							const Vector3<>& v1 = model->meshArray[m].getVertex(i * 3 + 1).position;
-							const Vector3<>& v2 = model->meshArray[m].getVertex(i * 3 + 2).position;
+							area = -area;
+							edgeFunction = &backFace;
+						}
 
-							Vector4<> t0 = Vector4<>{ v0.x, v0.y, v0.z, 1.0 } * transform;
-							Vector4<> t1 = Vector4<>{ v1.x, v1.y, v1.z, 1.0 } * transform;
-							Vector4<> t2 = Vector4<>{ v2.x, v2.y, v2.z, 1.0 } * transform;
-
-							//if(t0.w <= 0.0 || t1.w <= 0.0 || t2.w <= 0.0)
-							{
-								if(t0.w <= 0)
-									t0.w = 0.0001;
-								if(t1.w <= 0)
-									t1.w = 0.0001;
-								if(t2.w <= 0)
-									t2.w = 0.0001;
-							}
-							if(t0.z < camera.nearPlane && t1.z < camera.nearPlane && t2.z < camera.nearPlane)
-								continue;
-							if(t0.z > camera.farPlane && t1.z > camera.farPlane && t2.z > camera.farPlane)
-								continue;
-
-							Vector3<> v0Raster = { t0.x, t0.y, -t0.z };
-							v0Raster *= (1 / t0.w);
-							v0Raster.x = ((v0Raster.x + 1) * 0.5 * width);
-							v0Raster.y = ((1 - (v0Raster.y + 1) * 0.5) * height);
-							Vector3<> v1Raster = { t1.x, t1.y, -t1.z };
-							v1Raster *= (1 / t1.w);
-							v1Raster.x = ((v1Raster.x + 1) * 0.5 * width);
-							v1Raster.y = ((1 - (v1Raster.y + 1) * 0.5) * height);
-							Vector3<> v2Raster = { t2.x, t2.y, -t2.z };
-							v2Raster *= (1 / t2.w);
-							v2Raster.x = ((v2Raster.x + 1) * 0.5 * width);
-							v2Raster.y = ((1 - (v2Raster.y + 1) * 0.5) * height);
-
-							float xmin = min3(v0Raster.x, v1Raster.x, v2Raster.x);
-							float ymin = min3(v0Raster.y, v1Raster.y, v2Raster.y);
-							float xmax = max3(v0Raster.x, v1Raster.x, v2Raster.x);
-							float ymax = max3(v0Raster.y, v1Raster.y, v2Raster.y);
-
-							//Partial triangle clipping
-							if(xmin >= width || xmax < 0 || ymin >= height || ymax < 0)
-								continue;
-							//Full triangle clipping
-							//if (xmin < 0 || xmax >= width || ymin < 0 || ymax >= height) continue;
-
-							if(xmax >= width)
-								xmax = width - 1;
-							if(ymax >= height)
-								ymax = height - 1;
-							if(xmin < 0)
-								xmin = 0;
-							if(ymin < 0)
-								ymin = 0;
-
-							float (*edgeFunction)(const Vector3<>&, const Vector3<>&, const Vector3<>&) = &frontFace;
-							float area = edgeFunction(v0Raster, v1Raster, v2Raster);
-							if(area < 0)
+					for(uint32_t y = ymin; y <= ymax; ++y)
+						{
+							for(uint32_t x = xmin; x <= xmax; ++x)
 								{
-									area = -area;
-									edgeFunction = &backFace;
-								}
+									Vector3<> pixelSample(x + 0.5, y + 0.5, 0);
+									float w0 = edgeFunction(v1Raster, v2Raster, pixelSample);
+									float w1 = edgeFunction(v2Raster, v0Raster, pixelSample);
+									float w2 = edgeFunction(v0Raster, v1Raster, pixelSample);
 
-							++tris;
-
-							for(uint32_t y = ymin; y <= ymax; ++y)
-								{
-									for(uint32_t x = xmin; x <= xmax; ++x)
+									if(w0 >= 0 && w1 >= 0 && w2 >= 0)
 										{
-											Vector3<> pixelSample(x + 0.5, y + 0.5, 0);
-											float w0 = edgeFunction(v1Raster, v2Raster, pixelSample);
-											float w1 = edgeFunction(v2Raster, v0Raster, pixelSample);
-											float w2 = edgeFunction(v0Raster, v1Raster, pixelSample);
-
-											if(w0 >= 0 && w1 >= 0 && w2 >= 0)
+											w0 /= area;
+											w1 /= area;
+											w2 /= area;
+											
+											float oneOverZ = v0Raster.z * w0 + v1Raster.z * w1 + v2Raster.z * w2;
+											float z = -(oneOverZ);
+											
+											if(z < -1 || z > 1)
+												continue;
+												
+											if(z < depthbuffer[y * width + x])
 												{
-													w0 /= area;
-													w1 /= area;
-													w2 /= area;
-
-													float oneOverZ = v0Raster.z * w0 + v1Raster.z * w1 + v2Raster.z * w2;
-													float z = -(oneOverZ);
-													if(z < -1 || z > 1)
-														continue;
-													if(z < depthbuffer[y * width + x])
-														{
-															depthbuffer[y * width + x] = z;
-															framebuffer[y * width + x] = model->meshArray[m].getVertex(i * 3).normal;
-														}
+													depthbuffer[y * width + x] = z;
+													framebuffer[y * width + x] = model->meshArray[m].get(i * 3).normal;
 												}
 										}
 								}
 						}
-				}*/
-
-	//std::cout << tris << std::endl;
+				}
+		}
 
 	cv::Mat img(height, width, CV_32FC3, framebuffer);
 	imshow("Sky Engine", img);
 	cv::waitKey(1);
 
 	delete[] framebuffer;
-	//delete[] depthbuffer;
+	delete[] depthbuffer;
 }
 
 int main(int argc, char* argv[])
@@ -309,7 +284,7 @@ int main(int argc, char* argv[])
 	//OpenCV window
 	namedWindow("Sky Engine", cv::WINDOW_AUTOSIZE);
 
-	Camera camera = Camera(1.0, 90, imgWidth / (float)imgHeight, 0.1, 100000000.0);
+	Camera camera = Camera(1.0, 90, imgWidth / (float)imgHeight, 0.1, 150.0);
 	model = new Model(FileStream("/home/nelson/Desktop/light.test"));
 
 	//Instance gamepad
