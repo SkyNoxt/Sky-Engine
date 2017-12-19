@@ -170,7 +170,7 @@ static void rasterize(Camera& camera, int width, int height)
 	for(int i = 0; i < width * height; ++i) depthbuffer[i] = camera.farPlane;
 
 	Matrix4<> transform = camera.projectionMatrix * camera.viewMatrix * *modelMatrix;
-
+	unsigned int tris = 0;
 	for(unsigned int m = 0; m < model->numMeshes; ++m)
 		{
 			unsigned int numTriangles = model->meshArray[m].numElements() / 3;
@@ -184,15 +184,10 @@ static void rasterize(Camera& camera, int width, int height)
 					Vector4<> t1 = Vector4<>{ v1.x, v1.y, v1.z, 1.0 } * transform;
 					Vector4<> t2 = Vector4<>{ v2.x, v2.y, v2.z, 1.0 } * transform;
 
-					/*if(t0.w <= 0.0 && t1.w <= 0.0 && t2.w <= 0.0)
-						continue;*/
-					if(!(t0.w > 0.0 && t1.w > 0.0 && t2.w > 0.0 && abs(t0.z) < t0.w && abs(t1.z) < t1.w && abs(t2.z) < t2.w))
+					if(t0.w < 0.0 || t1.w < 0.0 || t2.w < 0.0)
 						continue;
-
-					/*if(t0.z < camera.nearPlane && t1.z < camera.nearPlane && t2.z < camera.nearPlane)
+					if(t0.z > t0.w && t1.z > t1.w && t2.z > t2.w)
 						continue;
-					if(t0.z > camera.farPlane && t1.z > camera.farPlane && t2.z > camera.farPlane)
-						continue;*/
 
 					Vector3<> v0Raster = { t0.x, t0.y, -t0.z };
 					v0Raster *= (1 / t0.w);
@@ -265,9 +260,11 @@ static void rasterize(Camera& camera, int width, int height)
 										}
 								}
 						}
+				++tris;
 				}
 		}
 
+	std::cout << "Tris: " << tris << std::endl;
 	cv::Mat img(height, width, CV_32FC3, framebuffer);
 	imshow("Sky Engine", img);
 	cv::waitKey(1);
