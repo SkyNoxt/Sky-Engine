@@ -186,7 +186,7 @@ static void rasterize(Camera& camera, int width, int height)
 
 					if(t0.w < 0.0 || t1.w < 0.0 || t2.w < 0.0)
 						continue;
-					if(t0.z > t0.w && t1.z > t1.w && t2.z > t2.w)
+					if(t0.z > t0.w || t1.z > t1.w || t2.z > t2.w)
 						continue;
 
 					Vector3<> v0Raster = { t0.x, t0.y, -t0.z };
@@ -249,8 +249,8 @@ static void rasterize(Camera& camera, int width, int height)
 											float oneOverZ = v0Raster.z * w0 + v1Raster.z * w1 + v2Raster.z * w2;
 											float z = -(oneOverZ);
 											
-											if(z < -1 || z > 1)
-												continue;
+											/*if(z < -1 || z > 1)
+												continue;*/
 												
 											if(z < depthbuffer[y * width + x])
 												{
