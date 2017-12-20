@@ -167,13 +167,16 @@ static void rasterize(Camera& camera, int width, int height)
 {
 	Vector3<>* framebuffer = new Vector3<>[width * height];
 	float* depthbuffer = new float[width * height];
-	for(int i = 0; i < width * height; ++i) depthbuffer[i] = camera.farPlane;
+	for(int i = 0; i < width * height; ++i)
+		depthbuffer[i] = camera.farPlane;
 
 	Matrix4<> transform = camera.projectionMatrix * camera.viewMatrix * *modelMatrix;
-	unsigned int tris = 0;
+
+#pragma omp parallel for num_threads(2)
 	for(unsigned int m = 0; m < model->numMeshes; ++m)
 		{
 			unsigned int numTriangles = model->meshArray[m].numElements() / 3;
+#pragma omp parallel for num_threads(2)
 			for(unsigned int i = 0; i < numTriangles; ++i)
 				{
 					const Vector3<>& v0 = model->meshArray[m].get(i * 3).position;
@@ -210,7 +213,8 @@ static void rasterize(Camera& camera, int width, int height)
 					float ymax = max3(v0Raster.y, v1Raster.y, v2Raster.y);
 
 					//Partial triangle clipping
-					if(xmin >= width || xmax < 0 || ymin >= height || ymax < 0) continue;
+					if(xmin >= width || xmax < 0 || ymin >= height || ymax < 0)
+						continue;
 					//Full triangle clipping
 					//if (xmin < 0 || xmax >= width || ymin < 0 || ymax >= height) continue;
 
@@ -223,35 +227,36 @@ static void rasterize(Camera& camera, int width, int height)
 					if(ymin < 0)
 						ymin = 0;
 
-					float (*edgeFunction)(const Vector3<>&, const Vector3<>&, const Vector3<>&) = &frontFace;
-					float area = edgeFunction(v0Raster, v1Raster, v2Raster);
-					if(area < 0)
+					float area = frontFace(v0Raster, v1Raster, v2Raster);
+					//float (*edgeFunction)(const Vector3<>&, const Vector3<>&, const Vector3<>&) = &frontFace;
+					//float area = edgeFunction(v0Raster, v1Raster, v2Raster);
+					/*if(area < 0)
 						{
 							area = -area;
 							edgeFunction = &backFace;
-						}
+						}*/
 
-					for(uint32_t y = ymin; y <= ymax; ++y)
+					for(unsigned int y = ymin; y <= ymax; ++y)
 						{
-							for(uint32_t x = xmin; x <= xmax; ++x)
+							for(unsigned int x = xmin; x <= xmax; ++x)
 								{
 									Vector3<> pixelSample(x + 0.5, y + 0.5, 0);
-									float w0 = edgeFunction(v1Raster, v2Raster, pixelSample);
-									float w1 = edgeFunction(v2Raster, v0Raster, pixelSample);
-									float w2 = edgeFunction(v0Raster, v1Raster, pixelSample);
+									float w0 = frontFace(v1Raster, v2Raster, pixelSample);
+									float w1 = frontFace(v2Raster, v0Raster, pixelSample);
+									float w2 = frontFace(v0Raster, v1Raster, pixelSample);
 
 									if(w0 >= 0 && w1 >= 0 && w2 >= 0)
 										{
 											w0 /= area;
 											w1 /= area;
 											w2 /= area;
-											
+
 											float oneOverZ = v0Raster.z * w0 + v1Raster.z * w1 + v2Raster.z * w2;
-											float z = -(oneOverZ);
-											
+											float z = 1 / oneOverZ;
+
 											/*if(z < -1 || z > 1)
 												continue;*/
-												
+
 											if(z < depthbuffer[y * width + x])
 												{
 													depthbuffer[y * width + x] = z;
@@ -260,11 +265,9 @@ static void rasterize(Camera& camera, int width, int height)
 										}
 								}
 						}
-				++tris;
 				}
 		}
 
-	std::cout << "Tris: " << tris << std::endl;
 	cv::Mat img(height, width, CV_32FC3, framebuffer);
 	imshow("Sky Engine", img);
 	cv::waitKey(1);
@@ -281,7 +284,7 @@ int main(int argc, char* argv[])
 	//OpenCV window
 	namedWindow("Sky Engine", cv::WINDOW_AUTOSIZE);
 
-	Camera camera = Camera(1.0, 90, imgWidth / (float)imgHeight, 0.1, 150.0);
+	Camera camera = Camera(1.0, 90, imgWidth / (float)imgHeight, 1.0, 200.0);
 	model = new Model(FileStream("/home/nelson/Desktop/light.test"));
 
 	//Instance gamepad
