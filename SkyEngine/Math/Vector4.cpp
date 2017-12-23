@@ -229,3 +229,4 @@ Vector4<T> Vector4<T>::operator*(const T value) const
 }
 
 template class Vector4<>;
+template class Vector4<unsigned char>;

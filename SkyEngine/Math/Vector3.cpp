@@ -226,3 +226,4 @@ Vector3<T> Vector3<T>::operator*(const T value) const
 }
 
 template class Vector3<>;
+template class Vector3<unsigned char>;
