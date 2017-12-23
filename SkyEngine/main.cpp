@@ -23,7 +23,7 @@
 #include <opencv2/highgui/highgui.hpp>
 
 Model* model;
-Texture* texture;
+Texture<>* texture;
 
 Matrix4<>* modelMatrix;
 bool mode = true;
@@ -99,8 +99,8 @@ static Vector3<> castRay(Ray& ray, Camera& camera, unsigned int depth)
 			unsigned int xx = txc.x * texture->width;
 			unsigned int yy = txc.y * texture->height;
 
-			unsigned char* texel = texture->pixels + (yy * texture->width * 4 + xx * 4);
-			hitColor = Vector3<> { *(texel + 2) / 255.0f, *(texel + 1) / 255.0f, *(texel) / 255.0f };
+			Vector4<unsigned char>* texel = texture->pixels + (yy * texture->width + xx);
+			hitColor = Vector3<> { texel->z / 255.0f, texel->y / 255.0f, texel->x / 255.0f };
 
 			//Face ratio
 			//hitColor = std::max(0.f, vN.dot(-ray.direction));
@@ -289,8 +289,8 @@ static void rasterize(Camera& camera, int width, int height)
 													unsigned int xx = uv.x * texture->width;
 													unsigned int yy = uv.y * texture->height;
 
-													unsigned char* texel = texture->pixels + (yy * texture->width * 4 + xx * 4);
-													framebuffer[y * width + x] = Vector3<> { *(texel + 2) / 255.0f, *(texel + 1) / 255.0f, *(texel) / 255.0f };
+													Vector4<unsigned char>* texel = texture->pixels + (yy * texture->width + xx);
+													framebuffer[y * width + x] = Vector3<> { texel->z / 255.0f, texel->y / 255.0f, texel->x / 255.0f };
 												}
 										}
 								}
@@ -316,7 +316,7 @@ int main(int argc, char* argv[])
 
 	Camera camera = Camera(1.0, 90, imgWidth / (float)imgHeight, 0.1, 200.0);
 	model = new Model(FileStream("/home/nelson/Desktop/Light.dat"));
-	texture = new Texture(FileStream("/home/nelson/Desktop/Light.tex"));
+	texture = new Texture<>(FileStream("/home/nelson/Desktop/Light.tex"));
 
 	//Instance gamepad
 	gamepad = new LinuxGamepad();

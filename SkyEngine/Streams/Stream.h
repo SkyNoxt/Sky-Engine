@@ -10,16 +10,16 @@ public:
 	virtual unsigned int read(void* buffer, unsigned int size, unsigned int count) const = 0;
 	virtual void flush() const = 0;
 
-	template <typename T>
+	template <class T>
 	T read() const;
 
-	template <typename T>
+	template <class T>
 	T* read(unsigned int count) const;
 
-	template <typename T>
+	template <class T>
 	void write(T value) const;
 
-	template <typename T>
+	template <class T>
 	void write(T* value, unsigned int count) const;
 
 	//Destructor
@@ -28,7 +28,7 @@ public:
 
 //Template method specific instantiation
 
-template <typename T>
+template <class T>
 T Stream::read() const
 {
 	T value;
@@ -36,7 +36,7 @@ T Stream::read() const
 	return value;
 }
 
-template <typename T>
+template <class T>
 T* Stream::read(unsigned int count) const
 {
 	T* value = new T[count];
@@ -44,13 +44,13 @@ T* Stream::read(unsigned int count) const
 	return value;
 }
 
-template <typename T>
+template <class T>
 void Stream::write(T value) const
 {
 	write(&value, sizeof(T), 1);
 }
 
-template <typename T>
+template <class T>
 void Stream::write(T* value, unsigned int count) const
 {
 	write(value, sizeof(T), count);

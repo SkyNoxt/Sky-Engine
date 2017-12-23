@@ -1,8 +1,11 @@
 
 #pragma once
 
+#include <Math/Vector4.h>
+
 #include <Streams/Stream.h>
 
+template <class T = Vector4<unsigned char>>
 class Texture
 {
 
@@ -13,10 +16,10 @@ public:
     unsigned int height;
     unsigned int channelDepth;
     unsigned int channelCount;
-    unsigned char* pixels;
+    T* pixels;
 
 	//Constructor
-	Texture(unsigned int texWidth, unsigned int texHeight, unsigned int chDepth, unsigned int chCount, unsigned char* data);
+	Texture(unsigned int texWidth, unsigned int texHeight, unsigned int chDepth, unsigned int chCount, T* data);
     Texture(const Stream& stream);
 
     //Member functions
