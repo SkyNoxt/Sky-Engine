@@ -10,6 +10,7 @@
 #include <Streams/FileStream.h>
 
 #include <Geometry/Model.h>
+#include <Shading/Texture.h>
 
 #include <Shading/DeltaLight.h>
 
@@ -22,6 +23,7 @@
 #include <opencv2/highgui/highgui.hpp>
 
 Model* model;
+Texture* texture;
 
 Matrix4<>* modelMatrix;
 bool mode = true;
@@ -84,13 +86,24 @@ static Vector3<> castRay(Ray& ray, Camera& camera, unsigned int depth)
 
 			//Face and vertex Normals
 			//Vector3<> fN = (v1 - v0).cross(v2 - v0).normalize();
-			Vector3<> vN = (1 - uv.x - uv.y) * n0 + uv.x * n1 + uv.y * n2;
+			//Vector3<> vN = (1 - uv.x - uv.y) * n0 + uv.x * n1 + uv.y * n2;
+			Vector2<> txc = (1 - uv.x - uv.y) * meshes[meshIndex].vertexArray[index].texCoord + 
+				uv.x * meshes[meshIndex].vertexArray[index + 1].texCoord + uv.y * meshes[meshIndex].vertexArray[index + 2].texCoord;
 
 			//Light direction (inverse ray transformed)
 			//Vector3<> L = -(*lightDirection * modelMatrix->inverse());
 
+			//Texture mapping
+			txc.y = txc.y - (int)txc.y;
+
+			unsigned int xx = txc.x * texture->width;
+			unsigned int yy = txc.y * texture->height;
+
+			unsigned char* texel = texture->pixels + (yy * texture->width * 4 + xx * 4);
+			hitColor = Vector3<> { *(texel + 2) / 255.0f, *(texel + 1) / 255.0f, *(texel) / 255.0f };
+
 			//Face ratio
-			hitColor = std::max(0.f, vN.dot(-ray.direction));
+			//hitColor = std::max(0.f, vN.dot(-ray.direction));
 
 			//Diffuse shading
 			//hitColor = Vector3<>{0.18} * (1.0/M_PI) * light->intensity * light->color * std::max(0.f, vN.dot(L));
@@ -192,17 +205,17 @@ static void rasterize(Camera& camera, int width, int height)
 					if(t0.z > t0.w || t1.z > t1.w || t2.z > t2.w)
 						continue;
 
-					Vector3<> v0Raster = { t0.x, t0.y, -t0.z };
+					Vector3<> v0Raster = { t0.x, t0.y, t0.z };
 					v0Raster *= (1 / t0.w);
 					v0Raster.x = ((v0Raster.x + 1) * 0.5 * width);
 					v0Raster.y = ((1 - (v0Raster.y + 1) * 0.5) * height);
 
-					Vector3<> v1Raster = { t1.x, t1.y, -t1.z };
+					Vector3<> v1Raster = { t1.x, t1.y, t1.z };
 					v1Raster *= (1 / t1.w);
 					v1Raster.x = ((v1Raster.x + 1) * 0.5 * width);
 					v1Raster.y = ((1 - (v1Raster.y + 1) * 0.5) * height);
 
-					Vector3<> v2Raster = { t2.x, t2.y, -t2.z };
+					Vector3<> v2Raster = { t2.x, t2.y, t2.z };
 					v2Raster *= (1 / t2.w);
 					v2Raster.x = ((v2Raster.x + 1) * 0.5 * width);
 					v2Raster.y = ((1 - (v2Raster.y + 1) * 0.5) * height);
@@ -251,8 +264,11 @@ static void rasterize(Camera& camera, int width, int height)
 											w1 /= area;
 											w2 /= area;
 
-											float oneOverZ = v0Raster.z * w0 + v1Raster.z * w1 + v2Raster.z * w2;
-											float z = 1 / oneOverZ;
+											float z = v0Raster.z * w0 + v1Raster.z * w1 + v2Raster.z * w2;
+
+											Vector3<> persp = { w0 /= t0.w, w1 /= t1.w, w2 /= t2.w };
+											persp = (1.0f / (persp.x + persp.y + persp.z)) * persp;
+											w0 = persp.x; w1 = persp.y; w2 = persp.z;
 
 											/*if(z < -1 || z > 1)
 												continue;*/
@@ -260,7 +276,20 @@ static void rasterize(Camera& camera, int width, int height)
 											if(z < depthbuffer[y * width + x])
 												{
 													depthbuffer[y * width + x] = z;
-													framebuffer[y * width + x] = model->meshArray[m].get(i * 3).normal;
+
+													Vector2<> uv0 = model->meshArray[m].get(i * 3).texCoord;
+													Vector2<> uv1 = model->meshArray[m].get(i * 3 + 1).texCoord;
+													Vector2<> uv2 = model->meshArray[m].get(i * 3 + 2).texCoord;
+
+													Vector2<> uv = uv0 * w0 + uv1 * w1 + uv2 * w2;
+
+													uv.y = uv.y - (int)uv.y;
+
+													unsigned int xx = uv.x * texture->width;
+													unsigned int yy = uv.y * texture->height;
+
+													unsigned char* texel = texture->pixels + (yy * texture->width * 4 + xx * 4);
+													framebuffer[y * width + x] = Vector3<> { *(texel + 2) / 255.0f, *(texel + 1) / 255.0f, *(texel) / 255.0f };
 												}
 										}
 								}
@@ -284,8 +313,9 @@ int main(int argc, char* argv[])
 	//OpenCV window
 	namedWindow("Sky Engine", cv::WINDOW_AUTOSIZE);
 
-	Camera camera = Camera(1.0, 90, imgWidth / (float)imgHeight, 1.0, 200.0);
-	model = new Model(FileStream("/home/nelson/Desktop/light.test"));
+	Camera camera = Camera(1.0, 90, imgWidth / (float)imgHeight, 0.1, 200.0);
+	model = new Model(FileStream("/home/nelson/Desktop/Light.dat"));
+	texture = new Texture(FileStream("/home/nelson/Desktop/Light.tex"));
 
 	//Instance gamepad
 	gamepad = new LinuxGamepad();
