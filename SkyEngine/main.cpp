@@ -241,6 +241,7 @@ static void rasterize(Camera& camera, int width, int height)
 						ymin = 0;
 
 					float area = frontFace(v0Raster, v1Raster, v2Raster);
+					if(area <= 0) continue;
 					//float (*edgeFunction)(const Vector3<>&, const Vector3<>&, const Vector3<>&) = &frontFace;
 					//float area = edgeFunction(v0Raster, v1Raster, v2Raster);
 					/*if(area < 0)
