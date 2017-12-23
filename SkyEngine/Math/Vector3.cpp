@@ -91,22 +91,6 @@ Vector3<T> Vector3<T>::cross(const Vector3<T>& vector) const
 }
 
 template <class T>
-Vector3<T> Vector3<T>::reflect(const Vector3<T>& normal) const
-{
-	return *this - 2 * this->dot(normal) * normal;
-}
-
-template <class T>
-Vector3<T> Vector3<T>::refract(const Vector3<T>& normal, float index) const
-{
-	T dot = normal.dot(*this);
-	T k = 1 - index * index * (1 - dot * dot);
-	if(k < 0)
-		return Vector3<T>{ 0.0 };
-	return index * *this - (index * dot + (T)sqrt(k)) * normal;
-}
-
-template <class T>
 Vector3<T> Vector3<T>::minima(const Vector3<T>& aVec, const Vector3<T>& bVec)
 {
 	return Vector3<T>{ aVec.x < bVec.x ? aVec.x : bVec.x, aVec.y < bVec.y ? aVec.y : bVec.y, aVec.z < bVec.z ? aVec.z : bVec.z };
