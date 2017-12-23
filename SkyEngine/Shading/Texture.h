@@ -14,12 +14,10 @@ public:
 	//Member variables
     unsigned int width;
     unsigned int height;
-    unsigned int channelDepth;
-    unsigned int channelCount;
     T* pixels;
 
 	//Constructor
-	Texture(unsigned int texWidth, unsigned int texHeight, unsigned int chDepth, unsigned int chCount, T* data);
+	Texture(unsigned int texWidth, unsigned int texHeight, T* data);
     Texture(const Stream& stream);
 
     //Member functions

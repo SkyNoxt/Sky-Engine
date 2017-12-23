@@ -319,7 +319,7 @@ int main(int argc, char* argv[])
 	gamepad = new LinuxGamepad();
 	LinuxGamepad::State state;
 
-	FPS* fps = new FPS(&camera, gamepad, 3.0, 3.0);
+	FPS* fps = new FPS(&camera, gamepad);
 
 	//Compute transformation matrix
 	modelMatrix = new Matrix4<>();
