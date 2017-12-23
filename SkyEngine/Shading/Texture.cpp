@@ -22,6 +22,18 @@ Texture<T>::Texture(const Stream& stream)
 }
 
 template <class T>
+const T& Texture<T>::texel(unsigned int x, unsigned int y) const
+{
+    return pixels[y * width + x];
+}
+
+template <class T>
+T& Texture<T>::texel(unsigned int x, unsigned int y)
+{
+    return pixels[y * width + x];
+}
+
+template <class T>
 void Texture<T>::serialize(const Stream& stream) const
 {
     stream.write<unsigned int>(width);

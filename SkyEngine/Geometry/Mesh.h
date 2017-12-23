@@ -29,7 +29,8 @@ public:
 	bool intersect(const Ray& ray, float& distance, unsigned int& index, Vector2<>& barycenter) const;
 	unsigned int numElements() const;
 
-	const Vertex& get(int index) const;
+	const Vertex& vertex(unsigned int index) const;
+	Vertex& vertex(unsigned int index);
 
 	void serialize(const Stream& stream) const;
 

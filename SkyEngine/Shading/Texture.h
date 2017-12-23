@@ -23,6 +23,9 @@ public:
     Texture(const Stream& stream);
 
     //Member functions
+    const T& texel(unsigned int x, unsigned int y) const;
+    T& texel(unsigned int x, unsigned int y);
+
     void serialize(const Stream& stream) const;
 
 	//Destructor

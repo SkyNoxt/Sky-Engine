@@ -192,9 +192,9 @@ static void rasterize(Camera& camera, int width, int height)
 #pragma omp parallel for num_threads(2)
 			for(unsigned int i = 0; i < numTriangles; ++i)
 				{
-					const Vector3<>& v0 = model->meshArray[m].get(i * 3).position;
-					const Vector3<>& v1 = model->meshArray[m].get(i * 3 + 1).position;
-					const Vector3<>& v2 = model->meshArray[m].get(i * 3 + 2).position;
+					const Vector3<>& v0 = model->meshArray[m].vertex(i * 3).position;
+					const Vector3<>& v1 = model->meshArray[m].vertex(i * 3 + 1).position;
+					const Vector3<>& v2 = model->meshArray[m].vertex(i * 3 + 2).position;
 
 					Vector4<> t0 = Vector4<>{ v0.x, v0.y, v0.z, 1.0 } * transform;
 					Vector4<> t1 = Vector4<>{ v1.x, v1.y, v1.z, 1.0 } * transform;
@@ -278,19 +278,16 @@ static void rasterize(Camera& camera, int width, int height)
 												{
 													depthbuffer[y * width + x] = z;
 
-													Vector2<> uv0 = model->meshArray[m].get(i * 3).texCoord;
-													Vector2<> uv1 = model->meshArray[m].get(i * 3 + 1).texCoord;
-													Vector2<> uv2 = model->meshArray[m].get(i * 3 + 2).texCoord;
+													Vector2<> uv0 = model->meshArray[m].vertex(i * 3).texCoord;
+													Vector2<> uv1 = model->meshArray[m].vertex(i * 3 + 1).texCoord;
+													Vector2<> uv2 = model->meshArray[m].vertex(i * 3 + 2).texCoord;
 
 													Vector2<> uv = uv0 * w0 + uv1 * w1 + uv2 * w2;
 
 													uv.y = uv.y - (int)uv.y;
 
-													unsigned int xx = uv.x * texture->width;
-													unsigned int yy = uv.y * texture->height;
-
-													Vector4<unsigned char>* texel = texture->pixels + (yy * texture->width + xx);
-													framebuffer[y * width + x] = Vector3<> { texel->z / 255.0f, texel->y / 255.0f, texel->x / 255.0f };
+													const Vector4<unsigned char>& texel = texture->texel(uv.x * texture->width, uv.y * texture->height);
+													framebuffer[y * width + x] = Vector3<> { texel.z / 255.0f, texel.y / 255.0f, texel.x / 255.0f };
 												}
 										}
 								}
