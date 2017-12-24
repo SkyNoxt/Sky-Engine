@@ -87,8 +87,7 @@ static Vector3<> castRay(Ray& ray, Camera& camera, unsigned int depth)
 			//Face and vertex Normals
 			//Vector3<> fN = (v1 - v0).cross(v2 - v0).normalize();
 			//Vector3<> vN = (1 - uv.x - uv.y) * n0 + uv.x * n1 + uv.y * n2;
-			Vector2<> txc = (1 - uv.x - uv.y) * meshes[meshIndex].vertexArray[index].texCoord + 
-				uv.x * meshes[meshIndex].vertexArray[index + 1].texCoord + uv.y * meshes[meshIndex].vertexArray[index + 2].texCoord;
+			Vector2<> txc = (1 - uv.x - uv.y) * meshes[meshIndex].vertexArray[index].texCoord + uv.x * meshes[meshIndex].vertexArray[index + 1].texCoord + uv.y * meshes[meshIndex].vertexArray[index + 2].texCoord;
 
 			//Light direction (inverse ray transformed)
 			//Vector3<> L = -(*lightDirection * modelMatrix->inverse());
@@ -100,7 +99,7 @@ static Vector3<> castRay(Ray& ray, Camera& camera, unsigned int depth)
 			unsigned int yy = txc.y * texture->height;
 
 			Vector4<unsigned char>* texel = texture->pixels + (yy * texture->width + xx);
-			hitColor = Vector3<> { texel->z / 255.0f, texel->y / 255.0f, texel->x / 255.0f };
+			hitColor = Vector3<>{ texel->z / 255.0f, texel->y / 255.0f, texel->x / 255.0f };
 
 			//Face ratio
 			//hitColor = std::max(0.f, vN.dot(-ray.direction));
@@ -192,38 +191,42 @@ static void rasterize(Camera& camera, int width, int height)
 #pragma omp parallel for num_threads(2)
 			for(unsigned int i = 0; i < numTriangles; ++i)
 				{
-					const Vector3<>& v0 = model->meshArray[m].vertex(i * 3).position;
-					const Vector3<>& v1 = model->meshArray[m].vertex(i * 3 + 1).position;
-					const Vector3<>& v2 = model->meshArray[m].vertex(i * 3 + 2).position;
+					const Vertex& v0 = model->meshArray[m].vertex(i * 3);
+					const Vertex& v1 = model->meshArray[m].vertex(i * 3 + 1);
+					const Vertex& v2 = model->meshArray[m].vertex(i * 3 + 2);
 
-					Vector4<> t0 = Vector4<>{ v0.x, v0.y, v0.z, 1.0 } * transform;
-					Vector4<> t1 = Vector4<>{ v1.x, v1.y, v1.z, 1.0 } * transform;
-					Vector4<> t2 = Vector4<>{ v2.x, v2.y, v2.z, 1.0 } * transform;
+					const Vector3<>& p0 = v0.position;
+					const Vector3<>& p1 = v1.position;
+					const Vector3<>& p2 = v2.position;
+
+					Vector4<> t0 = Vector4<>{ p0.x, p0.y, p0.z, 1.0 } * transform;
+					Vector4<> t1 = Vector4<>{ p1.x, p1.y, p1.z, 1.0 } * transform;
+					Vector4<> t2 = Vector4<>{ p2.x, p2.y, p2.z, 1.0 } * transform;
 
 					if(t0.w < 0.0 || t1.w < 0.0 || t2.w < 0.0)
 						continue;
 					if(t0.z > t0.w || t1.z > t1.w || t2.z > t2.w)
 						continue;
 
-					Vector3<> v0Raster = { t0.x, t0.y, t0.z };
-					v0Raster *= (1 / t0.w);
-					v0Raster.x = ((v0Raster.x + 1) * 0.5 * width);
-					v0Raster.y = ((1 - (v0Raster.y + 1) * 0.5) * height);
+					Vector3<> r0 = { t0.x, t0.y, t0.z };
+					r0 *= (1 / t0.w);
+					r0.x = ((r0.x + 1) * 0.5 * width);
+					r0.y = ((1 - (r0.y + 1) * 0.5) * height);
 
-					Vector3<> v1Raster = { t1.x, t1.y, t1.z };
-					v1Raster *= (1 / t1.w);
-					v1Raster.x = ((v1Raster.x + 1) * 0.5 * width);
-					v1Raster.y = ((1 - (v1Raster.y + 1) * 0.5) * height);
+					Vector3<> r1 = { t1.x, t1.y, t1.z };
+					r1 *= (1 / t1.w);
+					r1.x = ((r1.x + 1) * 0.5 * width);
+					r1.y = ((1 - (r1.y + 1) * 0.5) * height);
 
-					Vector3<> v2Raster = { t2.x, t2.y, t2.z };
-					v2Raster *= (1 / t2.w);
-					v2Raster.x = ((v2Raster.x + 1) * 0.5 * width);
-					v2Raster.y = ((1 - (v2Raster.y + 1) * 0.5) * height);
+					Vector3<> r2 = { t2.x, t2.y, t2.z };
+					r2 *= (1 / t2.w);
+					r2.x = ((r2.x + 1) * 0.5 * width);
+					r2.y = ((1 - (r2.y + 1) * 0.5) * height);
 
-					float xmin = min3(v0Raster.x, v1Raster.x, v2Raster.x);
-					float ymin = min3(v0Raster.y, v1Raster.y, v2Raster.y);
-					float xmax = max3(v0Raster.x, v1Raster.x, v2Raster.x);
-					float ymax = max3(v0Raster.y, v1Raster.y, v2Raster.y);
+					float xmin = min3(r0.x, r1.x, r2.x);
+					float ymin = min3(r0.y, r1.y, r2.y);
+					float xmax = max3(r0.x, r1.x, r2.x);
+					float ymax = max3(r0.y, r1.y, r2.y);
 
 					//Partial triangle clipping
 					if(xmin >= width || xmax < 0 || ymin >= height || ymax < 0)
@@ -240,10 +243,11 @@ static void rasterize(Camera& camera, int width, int height)
 					if(ymin < 0)
 						ymin = 0;
 
-					float area = frontFace(v0Raster, v1Raster, v2Raster);
-					if(area <= 0) continue;
+					float area = frontFace(r0, r1, r2);
+					if(area <= 0)
+						continue;
 					//float (*edgeFunction)(const Vector3<>&, const Vector3<>&, const Vector3<>&) = &frontFace;
-					//float area = edgeFunction(v0Raster, v1Raster, v2Raster);
+					//float area = edgeFunction(r0, r1, r2);
 					/*if(area < 0)
 						{
 							area = -area;
@@ -255,9 +259,9 @@ static void rasterize(Camera& camera, int width, int height)
 							for(unsigned int x = xmin; x <= xmax; ++x)
 								{
 									Vector3<> pixelSample(x + 0.5, y + 0.5, 0);
-									float w0 = frontFace(v1Raster, v2Raster, pixelSample);
-									float w1 = frontFace(v2Raster, v0Raster, pixelSample);
-									float w2 = frontFace(v0Raster, v1Raster, pixelSample);
+									float w0 = frontFace(r1, r2, pixelSample);
+									float w1 = frontFace(r2, r0, pixelSample);
+									float w2 = frontFace(r0, r1, pixelSample);
 
 									if(w0 >= 0 && w1 >= 0 && w2 >= 0)
 										{
@@ -265,11 +269,13 @@ static void rasterize(Camera& camera, int width, int height)
 											w1 /= area;
 											w2 /= area;
 
-											float z = v0Raster.z * w0 + v1Raster.z * w1 + v2Raster.z * w2;
+											float z = r0.z * w0 + r1.z * w1 + r2.z * w2;
 
 											Vector3<> persp = { w0 /= t0.w, w1 /= t1.w, w2 /= t2.w };
 											persp = (1.0f / (persp.x + persp.y + persp.z)) * persp;
-											w0 = persp.x; w1 = persp.y; w2 = persp.z;
+											w0 = persp.x;
+											w1 = persp.y;
+											w2 = persp.z;
 
 											/*if(z < -1 || z > 1)
 												continue;*/
@@ -278,16 +284,16 @@ static void rasterize(Camera& camera, int width, int height)
 												{
 													depthbuffer[y * width + x] = z;
 
-													Vector2<> uv0 = model->meshArray[m].vertex(i * 3).texCoord;
-													Vector2<> uv1 = model->meshArray[m].vertex(i * 3 + 1).texCoord;
-													Vector2<> uv2 = model->meshArray[m].vertex(i * 3 + 2).texCoord;
+													Vector2<> uv0 = v0.texCoord;
+													Vector2<> uv1 = v1.texCoord;
+													Vector2<> uv2 = v2.texCoord;
 
 													Vector2<> uv = uv0 * w0 + uv1 * w1 + uv2 * w2;
 
 													uv.y = uv.y - (int)uv.y;
 
 													const Vector4<unsigned char>& texel = texture->texel(uv.x * texture->width, uv.y * texture->height);
-													framebuffer[y * width + x] = Vector3<> { texel.z / 255.0f, texel.y / 255.0f, texel.x / 255.0f };
+													framebuffer[y * width + x] = Vector3<>{ texel.z / 255.0f, texel.y / 255.0f, texel.x / 255.0f };
 												}
 										}
 								}
