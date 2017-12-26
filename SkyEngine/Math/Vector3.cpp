@@ -93,13 +93,13 @@ Vector3<T> Vector3<T>::cross(const Vector3<T>& vector) const
 template <class T>
 Vector3<T> Vector3<T>::minima(const Vector3<T>& aVec, const Vector3<T>& bVec)
 {
-	return Vector3<T>{ aVec.x < bVec.x ? aVec.x : bVec.x, aVec.y < bVec.y ? aVec.y : bVec.y, aVec.z < bVec.z ? aVec.z : bVec.z };
+	return Vector3<T>{ bVec.x < aVec.x ? bVec.x : aVec.x, bVec.y < aVec.y ? bVec.y : aVec.y, bVec.z < aVec.z ? bVec.z : aVec.z };
 }
 
 template <class T>
 Vector3<T> Vector3<T>::maxima(const Vector3<T>& aVec, const Vector3<T>& bVec)
 {
-	return Vector3<T>{ aVec.x > bVec.x ? aVec.x : bVec.x, aVec.y > bVec.y ? aVec.y : bVec.y, aVec.z > bVec.z ? aVec.z : bVec.z };
+	return Vector3<T>{ aVec.x < bVec.x ? bVec.x : aVec.x, aVec.y < bVec.y ? bVec.y : aVec.y, aVec.z < bVec.z ? bVec.z : aVec.z };
 }
 
 template <class T>

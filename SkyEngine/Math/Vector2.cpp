@@ -81,13 +81,13 @@ Vector2<T> Vector2<T>::middle(const Vector2<T>& vector) const
 template <class T>
 Vector2<T> Vector2<T>::minima(const Vector2<T>& aVec, const Vector2<T>& bVec)
 {
-	return Vector2<T>{ aVec.x < bVec.x ? aVec.x : bVec.x, aVec.y < bVec.y ? aVec.y : bVec.y };
+	return Vector2<T>{ bVec.x < aVec.x ? bVec.x : aVec.x, bVec.y < aVec.y ? bVec.y : aVec.y };
 }
 
 template <class T>
 Vector2<T> Vector2<T>::maxima(const Vector2<T>& aVec, const Vector2<T>& bVec)
 {
-	return Vector2<T>{ aVec.x > bVec.x ? aVec.x : bVec.x, aVec.y > bVec.y ? aVec.y : bVec.y };
+	return Vector2<T>{ aVec.x < bVec.x ? bVec.x : aVec.x, aVec.y < bVec.y ? bVec.y : aVec.y };
 }
 
 template <class T>

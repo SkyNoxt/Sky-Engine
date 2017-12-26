@@ -89,13 +89,13 @@ Vector4<T> Vector4<T>::middle(const Vector4<T>& vector) const
 template <class T>
 Vector4<T> Vector4<T>::minima(const Vector4<T>& aVec, const Vector4<T>& bVec)
 {
-	return Vector4<T>{ aVec.x < bVec.x ? aVec.x : bVec.x, aVec.y < bVec.y ? aVec.y : bVec.y, aVec.z < bVec.z ? aVec.z : bVec.z, aVec.w < bVec.w ? aVec.w : bVec.w };
+	return Vector4<T>{ bVec.x < aVec.x ? bVec.x : aVec.x, bVec.y < aVec.y ? bVec.y : aVec.y, bVec.z < aVec.z ? bVec.z : aVec.z, bVec.w < aVec.w ? bVec.w : aVec.w };
 }
 
 template <class T>
 Vector4<T> Vector4<T>::maxima(const Vector4<T>& aVec, const Vector4<T>& bVec)
 {
-	return Vector4<T>{ aVec.x > bVec.x ? aVec.x : bVec.x, aVec.y > bVec.y ? aVec.y : bVec.y, aVec.z > bVec.z ? aVec.z : bVec.z, aVec.w > bVec.w ? aVec.w : bVec.w };
+	return Vector4<T>{ aVec.x < bVec.x ? bVec.x : aVec.x, aVec.y < bVec.y ? bVec.y : aVec.y, aVec.z < bVec.z ? bVec.z : aVec.z, aVec.w < bVec.w ? bVec.w : aVec.w };
 }
 
 template <class T>
