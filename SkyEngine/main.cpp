@@ -30,11 +30,6 @@ bool mode = true;
 
 Gamepad* gamepad;
 
-static inline float clamp(const float& lo, const float& hi, const float& v)
-{
-	return std::max(lo, std::min(hi, v));
-}
-
 DeltaLight* light;
 Vector3<>* lightDirection;
 
@@ -155,16 +150,6 @@ static void render(Camera& camera, unsigned int width, unsigned int height)
 	delete[] framebuffer;
 }
 
-float min3(const float& a, const float& b, const float& c)
-{
-	return std::min(a, std::min(b, c));
-}
-
-float max3(const float& a, const float& b, const float& c)
-{
-	return std::max(a, std::max(b, c));
-}
-
 float frontFace(const Vector3<>& a, const Vector3<>& b, const Vector3<>& c)
 {
 	return (c.x - a.x) * (b.y - a.y) - (c.y - a.y) * (b.x - a.x);
@@ -177,8 +162,8 @@ float backFace(const Vector3<>& a, const Vector3<>& b, const Vector3<>& c)
 
 static void rasterize(Camera& camera, int width, int height)
 {
-	Vector3<>* framebuffer = new Vector3<>[width * height];
-	float* depthbuffer = new float[width * height];
+	Texture<> framebuffer = Texture<>(width, height, new Vector4<unsigned char>[width * height]);
+	float depthbuffer[width * height];
 	for(int i = 0; i < width * height; ++i)
 		depthbuffer[i] = camera.farPlane;
 
@@ -223,10 +208,10 @@ static void rasterize(Camera& camera, int width, int height)
 					r2.x = ((r2.x + 1) * 0.5 * width);
 					r2.y = ((1 - (r2.y + 1) * 0.5) * height);
 
-					float xmin = min3(r0.x, r1.x, r2.x);
-					float ymin = min3(r0.y, r1.y, r2.y);
-					float xmax = max3(r0.x, r1.x, r2.x);
-					float ymax = max3(r0.y, r1.y, r2.y);
+					float xmin = std::min({ r0.x, r1.x, r2.x });
+					float ymin = std::min({ r0.y, r1.y, r2.y });
+					float xmax = std::max({ r0.x, r1.x, r2.x });
+					float ymax = std::max({ r0.y, r1.y, r2.y });
 
 					//Partial triangle clipping
 					if(xmin >= width || xmax < 0 || ymin >= height || ymax < 0)
@@ -293,7 +278,7 @@ static void rasterize(Camera& camera, int width, int height)
 													uv.y = uv.y - (int)uv.y;
 
 													const Vector4<unsigned char>& texel = texture->texel(uv.x * texture->width, uv.y * texture->height);
-													framebuffer[y * width + x] = Vector3<>{ texel.z / 255.0f, texel.y / 255.0f, texel.x / 255.0f };
+													framebuffer.texel(x, y) = Vector4<unsigned char>{ texel.z, texel.y, texel.x, 255 };
 												}
 										}
 								}
@@ -301,12 +286,9 @@ static void rasterize(Camera& camera, int width, int height)
 				}
 		}
 
-	cv::Mat img(height, width, CV_32FC3, framebuffer);
+	cv::Mat img(height, width, CV_8UC4, framebuffer.pixels);
 	imshow("Sky Engine", img);
 	cv::waitKey(1);
-
-	delete[] framebuffer;
-	delete[] depthbuffer;
 }
 
 int main(int argc, char* argv[])
