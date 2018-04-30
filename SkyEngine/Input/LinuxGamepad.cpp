@@ -1,4 +1,6 @@
 ﻿
+#ifdef LINUX
+
 #include <fcntl.h>
 #include <unistd.h>
 
@@ -164,3 +166,5 @@ unsigned int LinuxGamepad::linuxButton(unsigned int btn)
 				return 0;
 		}
 };
+
+#endif
