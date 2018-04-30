@@ -1,5 +1,5 @@
 ﻿
-#ifdef LINUX
+#if defined(LINUX)
 
 #include <fcntl.h>
 #include <unistd.h>
