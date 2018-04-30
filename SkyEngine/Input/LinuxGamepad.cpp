@@ -1,11 +1,7 @@
 ﻿
-#include <cmath>
-#include <cstdio>
-#include <cstring>
 #include <fcntl.h>
 #include <unistd.h>
 
-#include <linux/input.h>
 #include <linux/joystick.h>
 
 #include "LinuxGamepad.h"
