@@ -30,6 +30,7 @@
         "typeinfo": "cpp",
         "utility": "cpp",
         "ratio": "cpp",
-        "functional": "cpp"
+        "functional": "cpp",
+        "algorithm": "cpp"
     }
 }

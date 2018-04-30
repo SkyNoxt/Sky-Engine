@@ -10,7 +10,7 @@
 #include <Streams/FileStream.h>
 
 #include <Geometry/Model.h>
-#include <Shading/Texture.h>
+#include <Shading/Sampler.h>
 
 #include <Shading/DeltaLight.h>
 
@@ -23,7 +23,7 @@
 #include <opencv2/highgui/highgui.hpp>
 
 Model* model;
-Texture<>* texture;
+Sampler<>* texture;
 
 Matrix4<>* modelMatrix;
 bool mode = true;
@@ -93,7 +93,7 @@ static Vector3<> castRay(Ray& ray, Camera& camera, unsigned int depth)
 			unsigned int xx = txc.x * texture->width;
 			unsigned int yy = txc.y * texture->height;
 
-			Vector4<unsigned char>* texel = texture->pixels + (yy * texture->width + xx);
+			Vector4<unsigned char>* texel = texture->samples + (yy * texture->width + xx);
 			hitColor = Vector3<>{ texel->z / 255.0f, texel->y / 255.0f, texel->x / 255.0f };
 
 			//Face ratio
@@ -162,7 +162,7 @@ float backFace(const Vector3<>& a, const Vector3<>& b, const Vector3<>& c)
 
 static void rasterize(Camera& camera, int width, int height)
 {
-	Texture<> framebuffer = Texture<>(width, height, new Vector4<unsigned char>[width * height]);
+	Sampler<> framebuffer = Sampler<>(width, height, 1, 1, new Vector4<unsigned char>[width * height]);
 	float depthbuffer[width * height];
 	for(int i = 0; i < width * height; ++i)
 		depthbuffer[i] = camera.farPlane;
@@ -277,8 +277,8 @@ static void rasterize(Camera& camera, int width, int height)
 
 													uv.y = uv.y - (int)uv.y;
 
-													const Vector4<unsigned char>& texel = texture->texel(uv.x * texture->width, uv.y * texture->height);
-													framebuffer.texel(x, y) = Vector4<unsigned char>{ texel.z, texel.y, texel.x, 255 };
+													const Vector4<unsigned char>& texel = texture->sample(uv.x * texture->width, uv.y * texture->height);
+													framebuffer.sample(x, y) = Vector4<unsigned char>{ texel.z, texel.y, texel.x, 255 };
 												}
 										}
 								}
@@ -286,7 +286,7 @@ static void rasterize(Camera& camera, int width, int height)
 				}
 		}
 
-	cv::Mat img(height, width, CV_8UC4, framebuffer.pixels);
+	cv::Mat img(height, width, CV_8UC4, framebuffer.samples);
 	imshow("Sky Engine", img);
 	cv::waitKey(1);
 }
@@ -300,8 +300,8 @@ int main(int argc, char* argv[])
 	namedWindow("Sky Engine", cv::WINDOW_AUTOSIZE);
 
 	Camera camera = Camera(1.0, 90, imgWidth / (float)imgHeight, 0.1, 200.0);
-	model = new Model(FileStream("/home/nelson/Desktop/Light.dat"));
-	texture = new Texture<>(FileStream("/home/nelson/Desktop/Light.tex"));
+	model = new Model(FileStream("/home/sky/Desktop/Light.dat"));
+	texture = new Sampler<>(FileStream("/home/sky/Desktop/Light.tex"));
 
 	//Instance gamepad
 	gamepad = new LinuxGamepad();
