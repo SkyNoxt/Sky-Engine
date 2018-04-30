@@ -1,9 +1,9 @@
 ﻿
 #pragma once
 
-#include "Gamepad.h"
+#include "VirtualGamepad.h"
 
-class LinuxGamepad : public Gamepad
+class LinuxGamepad : public VirtualGamepad
 {
 
 public:

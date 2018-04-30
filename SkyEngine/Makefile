@@ -1,10 +1,12 @@
 
 # Declaration of variables
 CC = g++
-CC_FLAGS = -std=c++17 -flto -Ofast -fopenmp -I . -Wall -Wno-narrowing
+OS = LINUX
+
+CC_FLAGS = -std=c++17 -flto -Ofast -fopenmp -I . -D $(OS) -Wall -Wno-narrowing
 LD_FLAGS = -flto -Ofast -fopenmp -lopencv_core -lopencv_imgproc -lopencv_highgui
 
-CC_DEBUG = -std=c++17 -g -fopenmp -I . -Wall -Wno-narrowing
+CC_DEBUG = -std=c++17 -g -fopenmp -I . -D $(OS) -Wall -Wno-narrowing
 LD_DEBUG = -fopenmp -lopencv_core -lopencv_imgproc -lopencv_highgui
 
 # File names
