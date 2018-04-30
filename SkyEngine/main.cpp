@@ -14,7 +14,7 @@
 
 #include <Shading/DeltaLight.h>
 
-#include <Input/LinuxGamepad.h>
+#include <Input/Gamepad.h>
 
 #include <FPS.h>
 
@@ -304,8 +304,8 @@ int main(int argc, char* argv[])
 	texture = new Sampler<>(FileStream("/home/sky/Desktop/Light.tex"));
 
 	//Instance gamepad
-	gamepad = new LinuxGamepad();
-	LinuxGamepad::State state;
+	gamepad = new Gamepad();
+	Gamepad::State state;
 
 	FPS* fps = new FPS(&camera, gamepad);
 
