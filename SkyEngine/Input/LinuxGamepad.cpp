@@ -103,15 +103,12 @@ float LinuxGamepad::mapAxis(short rawValue, int deadi)
 void LinuxGamepad::updateButtonMask(bool down, unsigned int& currentMask, unsigned int flag)
 {
 	if(flag == 0)
-		return false;
+		return;
 
-	unsigned int oldMask = currentMask;
 	if(down)
 		currentMask |= flag;
 	else
 		currentMask &= (~flag);
-
-	return oldMask != currentMask;
 }
 
 unsigned int LinuxGamepad::linuxButton(unsigned int btn)
