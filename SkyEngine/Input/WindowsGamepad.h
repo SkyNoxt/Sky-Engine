@@ -12,9 +12,8 @@ public:
 	//Constructor
 	WindowsGamepad();
 
-	//Member functions
-	bool isReady() const override;
-	bool poll() override;
+	//Member function
+	void poll() override;
 
 	//Destructor
 	~WindowsGamepad() override;

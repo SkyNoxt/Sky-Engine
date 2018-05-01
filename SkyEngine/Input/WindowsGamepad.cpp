@@ -9,23 +9,12 @@ WindowsGamepad::WindowsGamepad()
 {
 }
 
-bool WindowsGamepad::isReady() const
+void WindowsGamepad::poll()
 {
-	return true;
-}
-
-bool WindowsGamepad::poll()
-{
-	bool mask = 0;
-
 	XINPUT_STATE newState;
 	XInputGetState(0, &newState);
-	if(newState.dwPacketNumber != state.timestamp)
-		mask = true;
 
 	update(state, newState);
-
-	return mask;
 }
 
 void WindowsGamepad::update(State& dest, const XINPUT_STATE& src)

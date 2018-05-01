@@ -17,22 +17,11 @@ LinuxGamepad::LinuxGamepad()
 {
 }
 
-bool LinuxGamepad::isReady() const
+void LinuxGamepad::poll()
 {
-	return joyFile >= 0;
-}
-
-bool LinuxGamepad::poll()
-{
-	if(!isReady())
-		return false;
-
-	bool mask = false;
-
 	struct js_event evBuf[255];
 	int evCount = read(joyFile, evBuf, sizeof(evBuf));
-	if(evCount <= 0)
-		return mask;
+
 	evCount /= sizeof(js_event);
 
 	for(int i = 0; i < evCount; ++i)
@@ -40,57 +29,44 @@ bool LinuxGamepad::poll()
 			const struct js_event& ev = evBuf[i];
 
 			if(ev.type & JS_EVENT_AXIS)
-				{
-					switch(ev.number)
-						{
-							case 0:
-								state.leftThumbX = mapCenteredAxis(ev.value, stickDeadzone);
-								break;
-							case 1:
-								state.leftThumbY = mapCenteredAxis(ev.value, stickDeadzone);
-								break;
-							case 2:
-								state.leftTrigger = mapAxis(ev.value, triggerDeadzone);
-								break;
-							case 3:
-								state.rightThumbX = mapCenteredAxis(ev.value, stickDeadzone);
-								break;
-							case 4:
-								state.rightThumbY = mapCenteredAxis(ev.value, stickDeadzone);
-								break;
-							case 5:
-								state.rightTrigger = mapAxis(ev.value, triggerDeadzone);
-								break;
-							case 6:
-								if(ev.value < -0.5)
-									state.buttons = (state.buttons & (~LinuxGamepad::BUTTON_DPAD_RIGHT)) | LinuxGamepad::BUTTON_DPAD_LEFT;
-								else if(ev.value > 0.5)
-									state.buttons = (state.buttons & (~LinuxGamepad::BUTTON_DPAD_LEFT)) | LinuxGamepad::BUTTON_DPAD_RIGHT;
-								else
-									state.buttons &= ~(LinuxGamepad::BUTTON_DPAD_LEFT | LinuxGamepad::BUTTON_DPAD_RIGHT);
-								break;
-							case 7:
-								if(ev.value < -0.5)
-									state.buttons = (state.buttons & (~LinuxGamepad::BUTTON_DPAD_DOWN)) | LinuxGamepad::BUTTON_DPAD_UP;
-								else if(ev.value > 0.5)
-									state.buttons = (state.buttons & (~LinuxGamepad::BUTTON_DPAD_UP)) | LinuxGamepad::BUTTON_DPAD_DOWN;
-								else
-									state.buttons &= ~(LinuxGamepad::BUTTON_DPAD_DOWN | LinuxGamepad::BUTTON_DPAD_UP);
-								break;
-						}
-
-					mask = true;
-					++state.timestamp;
-				}
-
-			if(ev.type & JS_EVENT_BUTTON && updateButtonMask(ev.value, state.buttons, linuxButton(ev.number)))
-				{
-					mask = true;
-					++state.timestamp;
-				}
+				switch(ev.number)
+					{
+						case 0:
+							state.leftThumbX = mapCenteredAxis(ev.value, stickDeadzone);
+							break;
+						case 1:
+							state.leftThumbY = mapCenteredAxis(ev.value, stickDeadzone);
+							break;
+						case 2:
+							state.leftTrigger = mapAxis(ev.value, triggerDeadzone);
+							break;
+						case 3:
+							state.rightThumbX = mapCenteredAxis(ev.value, stickDeadzone);
+							break;
+						case 4:
+							state.rightThumbY = mapCenteredAxis(ev.value, stickDeadzone);
+							break;
+						case 5:
+							state.rightTrigger = mapAxis(ev.value, triggerDeadzone);
+							break;
+						case 6:
+							if(ev.value < -0.5)
+								state.buttons = (state.buttons & (~LinuxGamepad::BUTTON_DPAD_RIGHT)) | LinuxGamepad::BUTTON_DPAD_LEFT;
+							else if(ev.value > 0.5)
+								state.buttons = (state.buttons & (~LinuxGamepad::BUTTON_DPAD_LEFT)) | LinuxGamepad::BUTTON_DPAD_RIGHT;
+							else
+								state.buttons &= ~(LinuxGamepad::BUTTON_DPAD_LEFT | LinuxGamepad::BUTTON_DPAD_RIGHT);
+							break;
+						case 7:
+							if(ev.value < -0.5)
+								state.buttons = (state.buttons & (~LinuxGamepad::BUTTON_DPAD_DOWN)) | LinuxGamepad::BUTTON_DPAD_UP;
+							else if(ev.value > 0.5)
+								state.buttons = (state.buttons & (~LinuxGamepad::BUTTON_DPAD_UP)) | LinuxGamepad::BUTTON_DPAD_DOWN;
+							else
+								state.buttons &= ~(LinuxGamepad::BUTTON_DPAD_DOWN | LinuxGamepad::BUTTON_DPAD_UP);
+							break;
+					}
 		}
-
-	return mask;
 }
 
 LinuxGamepad::~LinuxGamepad()

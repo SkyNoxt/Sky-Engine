@@ -24,7 +24,6 @@ public:
 
 	struct State
 	{
-		unsigned int timestamp = 0;
 		unsigned int buttons = 0;
 		float leftTrigger = 0.0;
 		float rightTrigger = 0.0;
@@ -34,9 +33,8 @@ public:
 		float rightThumbY = 0.0;
 	} state;
 
-	//Member functions
-	virtual bool isReady() const = 0;
-	virtual bool poll() = 0;
+	//Member function
+	virtual void poll() = 0;
 
 	virtual ~VirtualGamepad() = default;
 };
