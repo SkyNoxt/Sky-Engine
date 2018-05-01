@@ -65,7 +65,6 @@ void WindowsGamepad::update(State& dest, const XINPUT_STATE& src)
 	if(src.Gamepad.bRightTrigger > XINPUT_GAMEPAD_TRIGGER_THRESHOLD)
 		rt = float(src.Gamepad.bRightTrigger - XINPUT_GAMEPAD_TRIGGER_THRESHOLD) / (255 - XINPUT_GAMEPAD_TRIGGER_THRESHOLD);
 
-	dest.timestamp = src.dwPacketNumber;
 	dest.buttons = src.Gamepad.wButtons;
 	dest.leftThumbX = lx;
 	dest.leftThumbY = -ly; // flip to match Android
