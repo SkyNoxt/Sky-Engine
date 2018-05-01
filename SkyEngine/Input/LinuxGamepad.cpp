@@ -79,13 +79,13 @@ bool LinuxGamepad::poll()
 								break;
 						}
 
-					mask |= true;
+					mask = true;
 					++state.timestamp;
 				}
 
 			if(ev.type & JS_EVENT_BUTTON && updateButtonMask(ev.value, state.buttons, linuxButton(ev.number)))
 				{
-					mask |= true;
+					mask = true;
 					++state.timestamp;
 				}
 		}
