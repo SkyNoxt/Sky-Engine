@@ -66,6 +66,8 @@ void LinuxGamepad::poll()
 								state.buttons &= ~(LinuxGamepad::BUTTON_DPAD_DOWN | LinuxGamepad::BUTTON_DPAD_UP);
 							break;
 					}
+			if(ev.type & JS_EVENT_BUTTON)
+				updateButtonMask(ev.value, state.buttons, linuxButton(ev.number));
 		}
 }
 
@@ -98,7 +100,7 @@ float LinuxGamepad::mapAxis(short rawValue, int deadi)
 	return 0.0f;
 }
 
-bool LinuxGamepad::updateButtonMask(bool down, unsigned int& currentMask, unsigned int flag)
+void LinuxGamepad::updateButtonMask(bool down, unsigned int& currentMask, unsigned int flag)
 {
 	if(flag == 0)
 		return false;
