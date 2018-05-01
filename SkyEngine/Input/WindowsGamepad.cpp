@@ -1,6 +1,8 @@
 
 #if defined(WINDOWS)
 
+#include <cmath>
+
 #include "WindowsGamepad.h"
 
 WindowsGamepad::WindowsGamepad()
