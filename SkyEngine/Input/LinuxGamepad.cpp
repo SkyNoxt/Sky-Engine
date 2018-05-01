@@ -78,9 +78,9 @@ LinuxGamepad::~LinuxGamepad()
 
 const float LinuxGamepad::AXIS_MAP = 1.0 / 32767.0;
 
-float LinuxGamepad::mapCenteredAxis(int valueS16, int deadi)
+float LinuxGamepad::mapCenteredAxis(short rawValue, int deadi)
 {
-	const float value = (valueS16 * AXIS_MAP);
+	const float value = (rawValue * AXIS_MAP);
 	const float deadZone = (deadi * AXIS_MAP);
 	if(value > deadZone)
 		return (value - deadZone) / (1.0f - deadZone);
@@ -89,9 +89,9 @@ float LinuxGamepad::mapCenteredAxis(int valueS16, int deadi)
 	return 0.0f;
 }
 
-float LinuxGamepad::mapAxis(int valueS16, int deadi)
+float LinuxGamepad::mapAxis(short rawValue, int deadi)
 {
-	const float value = (valueS16 * AXIS_MAP);
+	const float value = (rawValue * AXIS_MAP);
 	const float deadZone = (deadi * AXIS_MAP);
 	if(value > deadZone)
 		return (value - deadZone) / (1.0f - deadZone);
