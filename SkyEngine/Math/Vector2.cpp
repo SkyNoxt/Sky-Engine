@@ -40,7 +40,7 @@ T Vector2<T>::dot() const
 template <class T>
 T Vector2<T>::length() const
 {
-	return sqrt(dot());
+	return std::sqrt(dot());
 }
 
 template <class T>

@@ -12,7 +12,7 @@ Camera::Camera(float fLength, float fov, float targetRatio, float zNear, float z
 	, aspectRatio(targetRatio)
 	, nearPlane(zNear)
 	, farPlane(zFar)
-	, scale(tan(fieldOfView * 0.5 * DEG_TO_RAD))
+	, scale(std::tan(fieldOfView * 0.5 * DEG_TO_RAD))
 	, cameraMatrix(Matrix4<>())
 	, viewMatrix(Matrix4<>())
 {

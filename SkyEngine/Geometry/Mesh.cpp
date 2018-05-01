@@ -104,7 +104,7 @@ bool Mesh::triangleIntersect(const Ray& ray,
 
 	if(culling && det <= 0)
 		return false;
-	if(fabsf(det) == 0)
+	if(std::abs(det) == 0)
 		return false;
 
 	float invDet = 1 / det;

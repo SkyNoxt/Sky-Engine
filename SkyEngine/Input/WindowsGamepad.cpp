@@ -1,8 +1,6 @@
 
 #if defined(WINDOWS)
 
-#include <cmath>
-
 #include "WindowsGamepad.h"
 
 WindowsGamepad::WindowsGamepad()
@@ -51,7 +49,7 @@ void WindowsGamepad::update(State& dest, const XINPUT_STATE& src)
 
 	float rx = src.Gamepad.sThumbRX;
 	float ry = src.Gamepad.sThumbRY;
-	float rMag = sqrtf(rx * rx + ry * ry);
+	float rMag = std::sqrt(rx * rx + ry * ry);
 
 	if(rMag > XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE)
 		{
