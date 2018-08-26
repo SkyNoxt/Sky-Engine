@@ -5,7 +5,6 @@
 
 #include <Streams/Stream.h>
 
-template <class T = Vector4<unsigned char>>
 class Sampler
 {
 
@@ -15,14 +14,19 @@ public:
 	unsigned int height;
 	unsigned int depth;
 	unsigned int length;
-	T* samples;
+	unsigned int sampleSize;
+	unsigned char* samples;
 
 	//Constructor
-	Sampler(unsigned int smpWidth, unsigned int smpHeight, unsigned int smpDepth, unsigned int smpLength, T* data);
+	Sampler(unsigned int smpWidth, unsigned int smpHeight, unsigned int smpDepth, unsigned int smpLength, unsigned int smpSize, unsigned char* data);
 	Sampler(const Stream& stream);
 
 	//Member functions
+
+	template <class T>
 	const T& sample(unsigned int x = 1, unsigned int y = 1) const;
+
+	template <class T>
 	T& sample(unsigned int x = 1, unsigned int y = 1);
 
 	void serialize(const Stream& stream) const;
@@ -30,3 +34,15 @@ public:
 	//Destructor
 	~Sampler();
 };
+
+template <class T>
+const T& Sampler::sample(unsigned int x, unsigned int y) const
+{
+	return (T&)samples[(y * width + x) * sampleSize];
+}
+
+template <class T>
+T& Sampler::sample(unsigned int x, unsigned int y)
+{
+	return (T&)samples[(y * width + x) * sampleSize];
+}

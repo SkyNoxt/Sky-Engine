@@ -23,7 +23,7 @@
 #include <opencv2/highgui/highgui.hpp>
 
 Model* model;
-Sampler<>* texture;
+Sampler* texture;
 
 Matrix4<>* modelMatrix;
 bool mode = true;
@@ -93,7 +93,7 @@ static Vector3<> castRay(Ray& ray, Camera& camera, unsigned int depth)
 			unsigned int xx = txc.x * texture->width;
 			unsigned int yy = txc.y * texture->height;
 
-			Vector4<unsigned char>* texel = texture->samples + (yy * texture->width + xx);
+			Vector4<unsigned char>* texel = (Vector4<unsigned char>*)texture->samples + (yy * texture->width + xx);
 			hitColor = Vector3<>{ texel->z / 255.0f, texel->y / 255.0f, texel->x / 255.0f };
 
 			//Face ratio
@@ -162,7 +162,8 @@ float backFace(const Vector3<>& a, const Vector3<>& b, const Vector3<>& c)
 
 static void rasterize(Camera& camera, int width, int height)
 {
-	Sampler<> framebuffer = Sampler<>(width, height, 1, 1, new Vector4<unsigned char>[width * height]);
+	Sampler framebuffer = Sampler(width, height, 1, 1, 4, 0);
+	framebuffer.samples = (unsigned char*)calloc(1, width * height * 4);
 	float depthbuffer[width * height];
 	for(int i = 0; i < width * height; ++i)
 		depthbuffer[i] = camera.farPlane;
@@ -277,8 +278,8 @@ static void rasterize(Camera& camera, int width, int height)
 
 													uv.y = uv.y - (int)uv.y;
 
-													const Vector4<unsigned char>& texel = texture->sample(uv.x * texture->width, uv.y * texture->height);
-													framebuffer.sample(x, y) = Vector4<unsigned char>{ texel.z, texel.y, texel.x, 255 };
+													const Vector4<unsigned char>& texel = texture->sample<Vector4<unsigned char>>(uv.x * texture->width, uv.y * texture->height);
+													framebuffer.sample<Vector4<unsigned char>>(x, y) = Vector4<unsigned char>{ texel.z, texel.y, texel.x, 255 };
 												}
 										}
 								}
@@ -301,7 +302,7 @@ int main(int argc, char* argv[])
 
 	Camera camera = Camera(1.0, 90, imgWidth / (float)imgHeight, 0.1, 200.0);
 	model = new Model(FileStream("/home/sky/Desktop/Light.dat"));
-	texture = new Sampler<>(FileStream("/home/sky/Desktop/Light.tex"));
+	texture = new Sampler(FileStream("/home/sky/Desktop/Light3.tex"));
 
 	//Instance gamepad
 	gamepad = new Gamepad();
