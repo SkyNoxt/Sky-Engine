@@ -26,8 +26,6 @@ public:
 	virtual ~Stream() = default;
 };
 
-//Template method specific instantiation
-
 template <class T>
 T Stream::read() const
 {
