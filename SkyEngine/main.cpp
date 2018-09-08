@@ -9,6 +9,7 @@
 
 #include <Streams/FileStream.h>
 
+#include <Geometry/Vertex.h>
 #include <Geometry/Model.h>
 #include <Shading/Sampler.h>
 
@@ -71,9 +72,9 @@ static Vector3<> castRay(Ray& ray, Camera& camera, unsigned int depth)
 			//std::cout << index << std::endl;
 			Vector3<> hitPoint = ray.origin + ray.direction * distance;
 
-			Vector3<> n0 = meshes[meshIndex].vertexArray[index].normal;
-			Vector3<> n1 = meshes[meshIndex].vertexArray[index + 1].normal;
-			Vector3<> n2 = meshes[meshIndex].vertexArray[index + 2].normal;
+			Vector3<> n0 = meshes[meshIndex].vertex<Vertex>(index).normal;
+			Vector3<> n1 = meshes[meshIndex].vertex<Vertex>(index + 1).normal;
+			Vector3<> n2 = meshes[meshIndex].vertex<Vertex>(index + 2).normal;
 
 			/*Vector3<> v0 = meshes[meshIndex]->vertexArray[index    ].position; 
     		Vector3<> v1 = meshes[meshIndex]->vertexArray[index + 1].position; 
@@ -82,7 +83,7 @@ static Vector3<> castRay(Ray& ray, Camera& camera, unsigned int depth)
 			//Face and vertex Normals
 			//Vector3<> fN = (v1 - v0).cross(v2 - v0).normalize();
 			//Vector3<> vN = (1 - uv.x - uv.y) * n0 + uv.x * n1 + uv.y * n2;
-			Vector2<> txc = (1 - uv.x - uv.y) * meshes[meshIndex].vertexArray[index].texCoord + uv.x * meshes[meshIndex].vertexArray[index + 1].texCoord + uv.y * meshes[meshIndex].vertexArray[index + 2].texCoord;
+			Vector2<> txc = (1 - uv.x - uv.y) * meshes[meshIndex].vertex<Vertex>(index).texCoord + uv.x * meshes[meshIndex].vertex<Vertex>(index + 1).texCoord + uv.y * meshes[meshIndex].vertex<Vertex>(index + 2).texCoord;
 
 			//Light direction (inverse ray transformed)
 			//Vector3<> L = -(*lightDirection * modelMatrix->inverse());
@@ -177,9 +178,9 @@ static void rasterize(Camera& camera, int width, int height)
 #pragma omp parallel for num_threads(2)
 			for(unsigned int i = 0; i < numTriangles; ++i)
 				{
-					const Vertex& v0 = model->meshArray[m].vertex(i * 3);
-					const Vertex& v1 = model->meshArray[m].vertex(i * 3 + 1);
-					const Vertex& v2 = model->meshArray[m].vertex(i * 3 + 2);
+					const Vertex& v0 = model->meshArray[m].vertex<Vertex>(i * 3);
+					const Vertex& v1 = model->meshArray[m].vertex<Vertex>(i * 3 + 1);
+					const Vertex& v2 = model->meshArray[m].vertex<Vertex>(i * 3 + 2);
 
 					const Vector3<>& p0 = v0.position;
 					const Vector3<>& p1 = v1.position;
@@ -301,7 +302,7 @@ int main(int argc, char* argv[])
 	namedWindow("Sky Engine", cv::WINDOW_AUTOSIZE);
 
 	Camera camera = Camera(1.0, 90, imgWidth / (float)imgHeight, 0.1, 200.0);
-	model = new Model(FileStream("/home/sky/Desktop/models/Artisans Hub.dat"));
+	model = new Model(FileStream("/home/sky/Desktop/test.dat"));
 	texture = new Sampler(FileStream("/home/sky/Desktop/models/Artisans High.dat"));
 
 	//Instance gamepad

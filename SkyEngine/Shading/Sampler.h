@@ -7,12 +7,12 @@ class Sampler
 {
 
 public:
-	//Member variables
 	unsigned int size;
 	unsigned int width;
 	unsigned int height;
 	unsigned int depth;
 	unsigned int length;
+
 	unsigned char* samples;
 
 	//Constructor

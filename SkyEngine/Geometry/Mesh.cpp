@@ -2,17 +2,20 @@
 #include <cmath>
 
 #include "Mesh.h"
+#include "Vertex.h"
 
-Mesh::Mesh(unsigned int vertexCount, unsigned int indexCount, Vertex* vertices, unsigned int* indices)
-	: numVertices(vertexCount)
+Mesh::Mesh(unsigned int vertexSize, unsigned int vertexCount, unsigned int indexCount, unsigned char* vertices, unsigned int* indices)
+	: size(vertexSize)
+	, numVertices(vertexCount)
 	, numIndices(indexCount)
 	, vertexArray(vertices)
 	, indexArray(indices)
 {
 }
 
-Mesh::Mesh(unsigned int vertexCount, Vertex* vertices)
-	: numVertices(vertexCount)
+Mesh::Mesh(unsigned int vertexSize, unsigned int vertexCount, unsigned char* vertices)
+	: size(vertexSize)
+	, numVertices(vertexCount)
 	, numIndices(0)
 	, vertexArray(vertices)
 	, indexArray(nullptr)
@@ -20,15 +23,17 @@ Mesh::Mesh(unsigned int vertexCount, Vertex* vertices)
 }
 
 Mesh::Mesh(const Stream& stream)
-	: numVertices(stream.read<unsigned int>())
+	: size(stream.read<unsigned int>())
+	, numVertices(stream.read<unsigned int>())
 	, numIndices(stream.read<unsigned int>())
-	, vertexArray(stream.read<Vertex>(numVertices))
+	, vertexArray(stream.read<unsigned char>(size * numVertices))
 	, indexArray(numVertices ? stream.read<unsigned int>(numIndices) : nullptr)
 {
 }
 
 Mesh::Mesh()
-	: numVertices(0)
+	: size(0)
+	, numVertices(0)
 	, numIndices(0)
 	, vertexArray(nullptr)
 	, indexArray(nullptr)
@@ -43,7 +48,7 @@ bool Mesh::intersect(const Ray& ray, float& distance, unsigned int& index, Vecto
 	distance = Ray::MAX_LENGTH;
 	for(unsigned int i = 0; i < numVertices; i += 3)
 		{
-			if(triangleIntersect(ray, vertex(i).position, vertex(i + 1).position, vertex(i + 2).position, tempDist, u, v)
+			if(triangleIntersect(ray, vertex<Vertex>(i).position, vertex<Vertex>(i + 1).position, vertex<Vertex>(i + 2).position, tempDist, u, v)
 				&& tempDist > 0 && tempDist < distance)
 				{
 					distance = tempDist;
@@ -63,25 +68,12 @@ unsigned int Mesh::numElements() const
 	return numVertices;
 }
 
-const Vertex& Mesh::vertex(unsigned int index) const
-{
-	if(indexArray)
-		return vertexArray[indexArray[index]];
-	return vertexArray[index];
-}
-
-Vertex& Mesh::vertex(unsigned int index)
-{
-	if(indexArray)
-		return vertexArray[indexArray[index]];
-	return vertexArray[index];
-}
-
 void Mesh::serialize(const Stream& stream) const
 {
+	stream.write<unsigned int>(size);
 	stream.write<unsigned int>(numVertices);
 	stream.write<unsigned int>(numIndices);
-	stream.write<Vertex>(vertexArray, numVertices);
+	stream.write<unsigned char>(vertexArray, size * numVertices);
 	stream.write<unsigned int>(indexArray, numIndices);
 }
 

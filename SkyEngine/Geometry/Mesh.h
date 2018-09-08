@@ -8,20 +8,21 @@
 
 #include <Streams/Stream.h>
 
-#include "Vertex.h"
-
 class Mesh
 {
 public:
 	bool culling = false;
+
+	unsigned int size;
 	unsigned int numVertices;
 	unsigned int numIndices;
-	Vertex* vertexArray;
+
+	unsigned char* vertexArray;
 	unsigned int* indexArray;
 
 	//Constructors
-	Mesh(unsigned int vertexCount, unsigned int indexCount, Vertex* vertices, unsigned int* indices);
-	Mesh(unsigned int vertexCount, Vertex* vertices);
+	Mesh(unsigned int vertexSize, unsigned int vertexCount, unsigned int indexCount, unsigned char* vertices, unsigned int* indices);
+	Mesh(unsigned int vertexSize, unsigned int vertexCount, unsigned char* vertices);
 	Mesh(const Stream& stream);
 	Mesh();
 
@@ -29,8 +30,11 @@ public:
 	bool intersect(const Ray& ray, float& distance, unsigned int& index, Vector2<>& barycenter) const;
 	unsigned int numElements() const;
 
-	const Vertex& vertex(unsigned int index) const;
-	Vertex& vertex(unsigned int index);
+	template <class T>
+	const T& vertex(unsigned int index) const;
+
+	template <class T>
+	T& vertex(unsigned int index);
 
 	void serialize(const Stream& stream) const;
 
@@ -42,3 +46,19 @@ private:
 		const Vector3<>& vertex0, const Vector3<>& vertex1, const Vector3<>& vertex2,
 		float& distance, float& u, float& v) const;
 };
+
+template <class T>
+const T& Mesh::vertex(unsigned int index) const
+{
+	if(indexArray)
+		return ((T*)vertexArray)[indexArray[index]];
+	return ((T*)vertexArray)[index];
+}
+
+template <class T>
+T& Mesh::vertex(unsigned int index)
+{
+	if(indexArray)
+		return ((T*)vertexArray)[indexArray[index]];
+	return ((T*)vertexArray)[index];
+}
