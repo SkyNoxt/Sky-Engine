@@ -54,7 +54,7 @@ bool Mesh::intersect(const Ray& ray, float& distance, unsigned int& index, Vecto
 	float tempDist, u, v;
 
 	distance = Ray::MAX_LENGTH;
-	for(unsigned int i = 0; i < numVertices; i += 3)
+	for(unsigned int i = 0; i < numElements(); i += 3)
 		{
 			if(triangleIntersect(ray, vertex<T>(i).position, vertex<T>(i + 1).position, vertex<T>(i + 2).position, tempDist, u, v)
 				&& tempDist > 0 && tempDist < distance)
