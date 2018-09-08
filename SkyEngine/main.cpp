@@ -9,8 +9,8 @@
 
 #include <Streams/FileStream.h>
 
-#include <Geometry/Vertex.h>
 #include <Geometry/Model.h>
+#include <Geometry/Vertex.h>
 #include <Shading/Sampler.h>
 
 #include <Shading/DeltaLight.h>
@@ -57,7 +57,7 @@ static Vector3<> castRay(Ray& ray, Camera& camera, unsigned int depth)
 	Mesh* meshes = model->meshArray;
 	for(unsigned int i = 0; i < numMeshes; ++i)
 		{
-			if(meshes[i].intersect(ray, tempDistance, tempIndex, tempUV) && tempDistance > 0 && tempDistance < distance)
+			if(meshes[i].intersect<Vertex>(ray, tempDistance, tempIndex, tempUV) && tempDistance > 0 && tempDistance < distance)
 				{
 					meshIndex = i;
 					distance = tempDistance;
@@ -302,7 +302,7 @@ int main(int argc, char* argv[])
 	namedWindow("Sky Engine", cv::WINDOW_AUTOSIZE);
 
 	Camera camera = Camera(1.0, 90, imgWidth / (float)imgHeight, 0.1, 200.0);
-	model = new Model(FileStream("/home/sky/Desktop/test.dat"));
+	model = new Model(FileStream("/home/sky/Desktop/models/Artisans Hub.dat"));
 	texture = new Sampler(FileStream("/home/sky/Desktop/models/Artisans High.dat"));
 
 	//Instance gamepad

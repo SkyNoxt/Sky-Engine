@@ -27,8 +27,10 @@ public:
 	Mesh();
 
 	//Member functions
-	bool intersect(const Ray& ray, float& distance, unsigned int& index, Vector2<>& barycenter) const;
 	unsigned int numElements() const;
+
+	template <class T>
+	bool intersect(const Ray& ray, float& distance, unsigned int& index, Vector2<>& barycenter) const;
 
 	template <class T>
 	const T& vertex(unsigned int index) const;
@@ -46,19 +48,3 @@ private:
 		const Vector3<>& vertex0, const Vector3<>& vertex1, const Vector3<>& vertex2,
 		float& distance, float& u, float& v) const;
 };
-
-template <class T>
-const T& Mesh::vertex(unsigned int index) const
-{
-	if(indexArray)
-		return ((T*)vertexArray)[indexArray[index]];
-	return ((T*)vertexArray)[index];
-}
-
-template <class T>
-T& Mesh::vertex(unsigned int index)
-{
-	if(indexArray)
-		return ((T*)vertexArray)[indexArray[index]];
-	return ((T*)vertexArray)[index];
-}

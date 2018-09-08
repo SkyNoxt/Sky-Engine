@@ -40,6 +40,14 @@ Mesh::Mesh()
 {
 }
 
+unsigned int Mesh::numElements() const
+{
+	if(indexArray)
+		return numIndices;
+	return numVertices;
+}
+
+template <class T>
 bool Mesh::intersect(const Ray& ray, float& distance, unsigned int& index, Vector2<>& barycenter) const
 {
 	bool intersect = false;
@@ -48,7 +56,7 @@ bool Mesh::intersect(const Ray& ray, float& distance, unsigned int& index, Vecto
 	distance = Ray::MAX_LENGTH;
 	for(unsigned int i = 0; i < numVertices; i += 3)
 		{
-			if(triangleIntersect(ray, vertex<Vertex>(i).position, vertex<Vertex>(i + 1).position, vertex<Vertex>(i + 2).position, tempDist, u, v)
+			if(triangleIntersect(ray, vertex<T>(i).position, vertex<T>(i + 1).position, vertex<T>(i + 2).position, tempDist, u, v)
 				&& tempDist > 0 && tempDist < distance)
 				{
 					distance = tempDist;
@@ -61,11 +69,20 @@ bool Mesh::intersect(const Ray& ray, float& distance, unsigned int& index, Vecto
 	return intersect;
 }
 
-unsigned int Mesh::numElements() const
+template <class T>
+const T& Mesh::vertex(unsigned int index) const
 {
 	if(indexArray)
-		return numIndices;
-	return numVertices;
+		return ((T*)vertexArray)[indexArray[index]];
+	return ((T*)vertexArray)[index];
+}
+
+template <class T>
+T& Mesh::vertex(unsigned int index)
+{
+	if(indexArray)
+		return ((T*)vertexArray)[indexArray[index]];
+	return ((T*)vertexArray)[index];
 }
 
 void Mesh::serialize(const Stream& stream) const
@@ -115,3 +132,8 @@ bool Mesh::triangleIntersect(const Ray& ray,
 
 	return true;
 }
+
+template bool Mesh::intersect<Vertex>(const Ray& ray, float& distance, unsigned int& index, Vector2<>& barycenter) const;
+
+template const Vertex& Mesh::vertex<Vertex>(unsigned int index) const;
+template Vertex& Mesh::vertex<Vertex>(unsigned int index);
