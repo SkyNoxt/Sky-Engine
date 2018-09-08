@@ -162,7 +162,7 @@ float backFace(const Vector3<>& a, const Vector3<>& b, const Vector3<>& c)
 
 static void rasterize(Camera& camera, int width, int height)
 {
-	Sampler framebuffer = Sampler(width, height, 1, 1, 4, 0);
+	Sampler framebuffer = Sampler(4, width, height, 1, 1, 0);
 	framebuffer.samples = (unsigned char*)calloc(1, width * height * 4);
 	float depthbuffer[width * height];
 	for(int i = 0; i < width * height; ++i)

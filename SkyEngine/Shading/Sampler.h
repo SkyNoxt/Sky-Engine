@@ -1,8 +1,6 @@
 
 #pragma once
 
-#include <Math/Vector4.h>
-
 #include <Streams/Stream.h>
 
 class Sampler
@@ -10,15 +8,15 @@ class Sampler
 
 public:
 	//Member variables
+	unsigned int size;
 	unsigned int width;
 	unsigned int height;
 	unsigned int depth;
 	unsigned int length;
-	unsigned int sampleSize;
 	unsigned char* samples;
 
 	//Constructor
-	Sampler(unsigned int smpWidth, unsigned int smpHeight, unsigned int smpDepth, unsigned int smpLength, unsigned int smpSize, unsigned char* data);
+	Sampler(unsigned int smpSize, unsigned int smpWidth, unsigned int smpHeight, unsigned int smpDepth, unsigned int smpLength, unsigned char* data);
 	Sampler(const Stream& stream);
 
 	//Member functions
