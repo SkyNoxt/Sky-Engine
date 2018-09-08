@@ -301,8 +301,8 @@ int main(int argc, char* argv[])
 	namedWindow("Sky Engine", cv::WINDOW_AUTOSIZE);
 
 	Camera camera = Camera(1.0, 90, imgWidth / (float)imgHeight, 0.1, 200.0);
-	model = new Model(FileStream("/home/sky/Desktop/Light.dat"));
-	texture = new Sampler(FileStream("/home/sky/Desktop/Light3.tex"));
+	model = new Model(FileStream("/home/sky/Desktop/models/Artisans Hub.dat"));
+	texture = new Sampler(FileStream("/home/sky/Desktop/models/Artisans High.dat"));
 
 	//Instance gamepad
 	gamepad = new Gamepad();
