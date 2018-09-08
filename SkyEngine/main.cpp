@@ -70,11 +70,11 @@ static Vector3<> castRay(Ray& ray, Camera& camera, unsigned int depth)
 	if(intersect)
 		{
 			//std::cout << index << std::endl;
-			Vector3<> hitPoint = ray.origin + ray.direction * distance;
+			//Vector3<> hitPoint = ray.origin + ray.direction * distance;
 
-			Vector3<> n0 = meshes[meshIndex].vertex<Vertex>(index).normal;
+			/*Vector3<> n0 = meshes[meshIndex].vertex<Vertex>(index).normal;
 			Vector3<> n1 = meshes[meshIndex].vertex<Vertex>(index + 1).normal;
-			Vector3<> n2 = meshes[meshIndex].vertex<Vertex>(index + 2).normal;
+			Vector3<> n2 = meshes[meshIndex].vertex<Vertex>(index + 2).normal;*/
 
 			/*Vector3<> v0 = meshes[meshIndex]->vertexArray[index    ].position; 
     		Vector3<> v1 = meshes[meshIndex]->vertexArray[index + 1].position; 
@@ -94,8 +94,8 @@ static Vector3<> castRay(Ray& ray, Camera& camera, unsigned int depth)
 			unsigned int xx = txc.x * texture->width;
 			unsigned int yy = txc.y * texture->height;
 
-			Vector4<unsigned char>* texel = (Vector4<unsigned char>*)texture->samples + (yy * texture->width + xx);
-			hitColor = Vector3<>{ texel->z / 255.0f, texel->y / 255.0f, texel->x / 255.0f };
+			Vector4<unsigned char>& texel = texture->sample<Vector4<unsigned char>>(xx, yy);
+			hitColor = Vector3<>{ texel.z / 255.0f, texel.y / 255.0f, texel.x / 255.0f };
 
 			//Face ratio
 			//hitColor = std::max(0.f, vN.dot(-ray.direction));
