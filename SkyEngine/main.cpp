@@ -10,7 +10,6 @@
 #include <Streams/FileStream.h>
 
 #include <Geometry/Model.h>
-#include <Geometry/Vertex.h>
 #include <Shading/Sampler.h>
 
 #include <Shading/DeltaLight.h>

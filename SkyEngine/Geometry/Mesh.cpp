@@ -2,7 +2,6 @@
 #include <cmath>
 
 #include "Mesh.h"
-#include "Vertex.h"
 
 Mesh::Mesh(unsigned int vertexSize, unsigned int vertexCount, unsigned int indexCount, unsigned char* vertices, unsigned int* indices)
 	: size(vertexSize)
