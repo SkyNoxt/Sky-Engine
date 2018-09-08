@@ -17,4 +17,8 @@ typedef AndroidGamepad Gamepad;
 
 typedef WindowsGamepad Gamepad;
 
+#else
+
+typedef Gamepad;
+
 #endif
