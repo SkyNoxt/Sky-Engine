@@ -298,7 +298,7 @@ int main(int argc, char* argv[])
 	int imgHeight = 720;
 
 	//OpenCV window
-	namedWindow("Sky Engine", cv::WINDOW_NORMAL);
+	namedWindow("Sky Engine", cv::WINDOW_OPENGL);
 	cv::resizeWindow("Sky Engine", imgWidth, imgHeight);
 
 	Camera camera = Camera(1.0, 90, imgWidth / (float)imgHeight, 0.1, 200.0);
