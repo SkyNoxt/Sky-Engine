@@ -299,6 +299,7 @@ int main(int argc, char* argv[])
 
 	//OpenCV window
 	namedWindow("Sky Engine", cv::WINDOW_NORMAL);
+	cv::resizeWindow("Sky Engine", imgWidth, imgHeight);
 
 	Camera camera = Camera(1.0, 90, imgWidth / (float)imgHeight, 0.1, 200.0);
 	model = new Model(FileStream("/home/sky/Desktop/models/Artisans Hub.dat"));
