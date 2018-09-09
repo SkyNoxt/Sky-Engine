@@ -298,11 +298,11 @@ int main(int argc, char* argv[])
 	int imgHeight = 720;
 
 	//OpenCV window
-	namedWindow("Sky Engine", cv::WINDOW_AUTOSIZE);
+	namedWindow("Sky Engine", cv::WINDOW_NORMAL);
 
 	Camera camera = Camera(1.0, 90, imgWidth / (float)imgHeight, 0.1, 200.0);
 	model = new Model(FileStream("/home/sky/Desktop/models/Artisans Hub.dat"));
-	texture = new Sampler(FileStream("/home/sky/Desktop/models/Artisans High.dat"));
+	texture = new Sampler(FileStream("/home/sky/Desktop/models/Artisans Hub.tex"));
 
 	//Instance gamepad
 	gamepad = new Gamepad();
