@@ -22,6 +22,77 @@
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 
+//physics test
+#include <Geometry/Box.h>
+#include <Physics/Constraint.h>
+#include <Physics/Particle.h>
+
+Box<float> bounds = Box<float>(Vector3<>{ -10.0, 0, -10 }, Vector3<>{ 10, 10, 10 });
+unsigned int numParticles = 8;
+unsigned int numConstraints = 56;
+Particle<>** particles;
+Constraint<>** constraints;
+float timestep = 1.0 / 60.0;
+
+static void updatePoints()
+{
+	for(unsigned int i = 0; i < numParticles; ++i)
+		{
+			Vector3<> Temp = particles[i]->current;
+			Vector3<> velocity = (particles[i]->current - particles[i]->previous);
+			particles[i]->current += velocity + particles[i]->acceleration * timestep * timestep;
+			particles[i]->previous = Temp;
+
+			if(particles[i]->current.x > bounds.bounds[1].x)
+				{
+					particles[i]->current.x = bounds.bounds[1].x;
+					particles[i]->previous.x = particles[i]->current.x + velocity.x;
+				}
+			else if(particles[i]->current.x < bounds.bounds[0].x)
+				{
+					particles[i]->current.x = bounds.bounds[0].x;
+					particles[i]->previous.x = particles[i]->current.x + velocity.x;
+				}
+			if(particles[i]->current.y > bounds.bounds[1].y)
+				{
+					particles[i]->current.y = bounds.bounds[1].y;
+					particles[i]->previous.y = particles[i]->current.y + velocity.y;
+				}
+			else if(particles[i]->current.y < bounds.bounds[0].y)
+				{
+					particles[i]->current.y = bounds.bounds[0].y;
+					particles[i]->previous.y = particles[i]->current.y + velocity.y;
+				}
+			if(particles[i]->current.z > bounds.bounds[1].z)
+				{
+					particles[i]->current.z = bounds.bounds[1].z;
+					particles[i]->previous.z = particles[i]->current.z + velocity.z;
+				}
+			else if(particles[i]->current.z < bounds.bounds[0].z)
+				{
+					particles[i]->current.z = bounds.bounds[0].z;
+					particles[i]->previous.z = particles[i]->current.z + velocity.z;
+				}
+		}
+}
+
+void resetParticles()
+{
+	particles[0] = new Particle<>(Vector3<>{ -1.0, 0.0, -1.0 }, Vector3<>{ -3, 0.0, -1.0 }, Vector3<>{ 0.0, -9.81, 0.0 });
+	particles[1] = new Particle<>(Vector3<>{ -1.0, 0.0, 1.0 }, Vector3<>{ -1.0, 0.0, 1.0 }, Vector3<>{ 0.0, -9.81, 0.0 });
+	particles[2] = new Particle<>(Vector3<>{ 1.0, 0.0, 1.0 }, Vector3<>{ 1.0, 0.0, 1.0 }, Vector3<>{ 0.0, -9.81, 0.0 });
+	particles[3] = new Particle<>(Vector3<>{ 1.0, 0.0, -1.0 }, Vector3<>{ 1.0, 0.0, -1.0 }, Vector3<>{ 0.0, -9.81, 0.0 });
+
+	particles[4] = new Particle<>(Vector3<>{ -1.0, 2.0, -1.0 }, Vector3<>{ -1.0, 2.0, -1.0 }, Vector3<>{ 0.0, -9.81, 0.0 });
+	particles[5] = new Particle<>(Vector3<>{ -1.0, 2.0, 1.0 }, Vector3<>{ -1.0, 2.0, 1.0 }, Vector3<>{ 0.0, -9.81, 0.0 });
+	particles[6] = new Particle<>(Vector3<>{ 1.0, 2.0, 1.0 }, Vector3<>{ 1.0, 2.0, 1.0 }, Vector3<>{ 0.0, -9.81, 0.0 });
+	particles[7] = new Particle<>(Vector3<>{ 1.0, 2.0, -1.0 }, Vector3<>{ 1.0, 2.0, -1.0 }, Vector3<>{ 0.0, -9.81, 0.0 });
+
+	for(unsigned int i = 0; i < 8; ++i)
+		for(unsigned int j = 0; j < 7; ++j)
+			constraints[7 * i + j] = new Constraint<>(particles[i], particles[(i + j + 1) % 8]);
+}
+
 Model* model;
 Sampler* texture;
 
@@ -106,7 +177,7 @@ static Vector3<> castRay(Ray& ray, Camera& camera, unsigned int depth)
 	return hitColor;
 }
 
-/*static bool rasterVertex(Vector3<>& raster, const Vector4<>& vertex, unsigned int width, unsigned int height)
+static bool rasterVertex(Vector3<>& raster, const Vector4<>& vertex, unsigned int width, unsigned int height)
 {
 	raster = { vertex.x, vertex.y, -vertex.z };
 
@@ -124,7 +195,7 @@ static Vector3<> castRay(Ray& ray, Camera& camera, unsigned int depth)
 	raster.y = ((1 - (raster.y + 1) * 0.5) * height);
 
 	return true;
-}*/
+}
 
 static void render(Camera& camera, unsigned int width, unsigned int height)
 {
@@ -169,6 +240,18 @@ static void rasterize(Camera& camera, int width, int height)
 		depthbuffer[i] = camera.farPlane;
 
 	Matrix4<> transform = camera.projectionMatrix * camera.viewMatrix * *modelMatrix;
+
+	for(unsigned int i = 0; i < numParticles; ++i)
+	{
+		Vector4<> t0 = Vector4<>{ particles[i]->current.x, particles[i]->current.y, particles[i]->current.z, 1.0 } * transform;
+		Vector3<> raster;
+		if(rasterVertex(raster, t0, 1280, 720))
+			framebuffer.sample<Vector4<unsigned char>>(raster.x, raster.y) = Vector4<unsigned char>{ 255, 255, 255, 255 };
+	}
+
+	updatePoints();
+	for(unsigned int i = 0; i < numConstraints; ++i)
+		constraints[i]->apply();
 
 #pragma omp parallel for num_threads(2)
 	for(unsigned int m = 0; m < model->numMeshes; ++m)
@@ -326,14 +409,21 @@ int main(int argc, char* argv[])
 	//Compute camera
 	camera.viewMatrix = camera.cameraMatrix.inverse();
 
+	//Physics test
+	particles = new Particle<>*[numParticles];
+	constraints = new Constraint<>*[numConstraints];
+	resetParticles();
+
 	//Compute light
 	light = new DeltaLight({ 1.0, 0.0, 0.0 }, 15);
 	light->lightMatrix.translate(0.0, 0.0, 0.0); //Point light transform
 	//light->lightMatrix.rotate(45, 1.0, 0.0, 0.0);
 	lightDirection = new Vector3<>();
 	*lightDirection = Vector3<>{ 0.0, 0.0, -1.0 } * light->lightMatrix;
+
 	double totalFPS = 0;
 	unsigned int numFrames = 0;
+
 	//Render
 	while(true)
 		{
@@ -347,6 +437,9 @@ int main(int argc, char* argv[])
 			else
 				rasterize(camera, imgWidth, imgHeight);
 
+			if(gamepad->state.buttons & Gamepad::BUTTON_A)
+				resetParticles();
+
 			/*light->lightMatrix.rotate(1, 0.0, 1.0, 0.0);
 			*lightDirection = Vector3<> { 0.0, 0.0, -1.0 } * light->lightMatrix;*/
 
@@ -358,6 +451,14 @@ int main(int argc, char* argv[])
 			totalFPS += fps;
 			std::cout << "MEAN: " << totalFPS / numFrames << std::endl;
 		}
+
+	for(unsigned int i = 0; i < numParticles; ++i)
+		delete particles[i];
+	delete[] particles;
+
+	for(unsigned int i = 0; i < numConstraints; ++i)
+		delete constraints[i];
+	delete[] constraints;
 
 	delete gamepad;
 
