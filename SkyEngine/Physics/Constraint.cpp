@@ -19,7 +19,12 @@ void Constraint<T>::apply() const
 	float len = vector.length();
 	float diff = len - length;
 
-	vector = vector.normalize();
+	T l = 1 / len;
+
+	if(l)
+		vector = Vector3<T>{ vector.x * l, vector.y * l, vector.z * l };
+	else
+		vector = Vector3<T>{ 0, 0, 0 };
 
 	one->current += vector * diff * 0.5f;
 	two->current -= vector * diff * 0.5f;
