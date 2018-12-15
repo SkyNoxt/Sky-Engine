@@ -28,8 +28,8 @@
 #include <Physics/Particle.h>
 
 Box<float> bounds = Box<float>(Vector3<>{ -10.0, 0, -10 }, Vector3<>{ 10, 10, 10 });
-unsigned int numParticles = 8;
-unsigned int numConstraints = 56;
+unsigned int numParticles = 16;
+unsigned int numConstraints = 112;
 Particle<>** particles;
 Constraint<>** constraints;
 float timestep = 1.0 / 60.0;
@@ -38,10 +38,10 @@ static void updatePoints()
 {
 	for(unsigned int i = 0; i < numParticles; ++i)
 		{
-			Vector3<> Temp = particles[i]->current;
 			Vector3<> velocity = (particles[i]->current - particles[i]->previous);
-			particles[i]->current += velocity + particles[i]->acceleration * timestep * timestep;
-			particles[i]->previous = Temp;
+			Vector3<> newPosition = particles[i]->current + velocity + particles[i]->acceleration * timestep * timestep;
+			particles[i]->previous = particles[i]->current;
+			particles[i]->current = newPosition;
 
 			if(particles[i]->current.x > bounds.bounds[1].x)
 				{
@@ -88,9 +88,23 @@ void resetParticles()
 	particles[6] = new Particle<>(Vector3<>{ 1.0, 2.0, 1.0 }, Vector3<>{ 1.0, 2.0, 1.0 }, Vector3<>{ 0.0, -9.81, 0.0 });
 	particles[7] = new Particle<>(Vector3<>{ 1.0, 2.0, -1.0 }, Vector3<>{ 1.0, 2.0, -1.0 }, Vector3<>{ 0.0, -9.81, 0.0 });
 
+	particles[8] = new Particle<>(Vector3<>{ -1.0, 2.5, -1.0 }, Vector3<>{ -1.0, 2.5, -1.0 }, Vector3<>{ 0.0, -9.81, 0.0 });
+	particles[9] = new Particle<>(Vector3<>{ -1.0, 2.5, 1.0 }, Vector3<>{ -1.0, 2.5, 1.0 }, Vector3<>{ 0.0, -9.81, 0.0 });
+	particles[10] = new Particle<>(Vector3<>{ 1.0, 2.5, 1.0 }, Vector3<>{ 1.0, 2.5, 1.0 }, Vector3<>{ 0.0, -9.81, 0.0 });
+	particles[11] = new Particle<>(Vector3<>{ 1.0, 2.5, -1.0 }, Vector3<>{ 1.0, 2.5, -1.0 }, Vector3<>{ 0.0, -9.81, 0.0 });
+
+	particles[12] = new Particle<>(Vector3<>{ -1.0, 4.5, -1.0 }, Vector3<>{ -1.0, 4.5, -1.0 }, Vector3<>{ 0.0, -9.81, 0.0 });
+	particles[13] = new Particle<>(Vector3<>{ -1.0, 4.5, 1.0 }, Vector3<>{ -1.0, 4.5, 1.0 }, Vector3<>{ 0.0, -9.81, 0.0 });
+	particles[14] = new Particle<>(Vector3<>{ 1.0, 4.5, 1.0 }, Vector3<>{ 1.0, 4.5, 1.0 }, Vector3<>{ 0.0, -9.81, 0.0 });
+	particles[15] = new Particle<>(Vector3<>{ 1.0, 4.5, -1.0 }, Vector3<>{ 1.0, 4.5, -1.0 }, Vector3<>{ 0.0, -9.81, 0.0 });
+
 	for(unsigned int i = 0; i < 8; ++i)
 		for(unsigned int j = 0; j < 7; ++j)
 			constraints[7 * i + j] = new Constraint<>(particles[i], particles[(i + j + 1) % 8]);
+
+	for(unsigned int i = 0; i < 8; ++i)
+		for(unsigned int j = 0; j < 7; ++j)
+			constraints[7 * i + j + 56] = new Constraint<>(particles[i + 8], particles[(i + j + 1) % 8 + 8]);
 }
 
 Model* model;
@@ -242,12 +256,12 @@ static void rasterize(Camera& camera, int width, int height)
 	Matrix4<> transform = camera.projectionMatrix * camera.viewMatrix * *modelMatrix;
 
 	for(unsigned int i = 0; i < numParticles; ++i)
-	{
-		Vector4<> t0 = Vector4<>{ particles[i]->current.x, particles[i]->current.y, particles[i]->current.z, 1.0 } * transform;
-		Vector3<> raster;
-		if(rasterVertex(raster, t0, 1280, 720))
-			framebuffer.sample<Vector4<unsigned char>>(raster.x, raster.y) = Vector4<unsigned char>{ 255, 255, 255, 255 };
-	}
+		{
+			Vector4<> t0 = Vector4<>{ particles[i]->current.x, particles[i]->current.y, particles[i]->current.z, 1.0 } * transform;
+			Vector3<> raster;
+			if(rasterVertex(raster, t0, 1280, 720))
+				framebuffer.sample<Vector4<unsigned char>>(raster.x, raster.y) = Vector4<unsigned char>{ 255, 255, 255, 255 };
+		}
 
 	updatePoints();
 	for(unsigned int i = 0; i < numConstraints; ++i)
