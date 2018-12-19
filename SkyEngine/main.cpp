@@ -191,7 +191,7 @@ static Vector3<> castRay(Ray& ray, Camera& camera, unsigned int depth)
 	return hitColor;
 }
 
-static void dda(Vector3<> one, Vector3<> two, Sampler& framebuffer)
+static void rasterLine(Vector3<> one, Vector3<> two, Sampler& framebuffer)
 {
 	int length = abs(two.x - one.x);
 	int yLen = abs(two.y - one.y);
@@ -283,7 +283,7 @@ static void rasterize(Camera& camera, int width, int height)
 			Vector3<> raster0;
 			Vector3<> raster1;
 			if(rasterVertex(raster0, t0, 1280, 720) && rasterVertex(raster1, t1, 1280, 720))
-				dda(raster0, raster1, framebuffer);
+				rasterLine(raster0, raster1, framebuffer);
 		}
 
 #pragma omp parallel for num_threads(2)
