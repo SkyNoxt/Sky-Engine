@@ -191,6 +191,24 @@ static Vector3<> castRay(Ray& ray, Camera& camera, unsigned int depth)
 	return hitColor;
 }
 
+static void dda(Vector3<> one, Vector3<> two, Sampler& framebuffer)
+{
+	int length = abs(two.x - one.x);
+	int yLen = abs(two.y - one.y);
+
+	if(yLen > length)
+		length = yLen;
+
+	Vector3<> increment = (two - one) * (1.0 / length);
+
+	Vector3<> current = { one.x + 0.5, one.y + 0.5, one.z + 0.5 };
+	for(int i = 1; i <= length; ++i)
+		{
+			framebuffer.sample<Vector4<unsigned char>>(current.x, current.y) = Vector4<unsigned char>{ 0, 0, 255, 255 };
+			current += increment;
+		}
+}
+
 static bool rasterVertex(Vector3<>& raster, const Vector4<>& vertex, unsigned int width, unsigned int height)
 {
 	raster = { vertex.x, vertex.y, -vertex.z };
@@ -255,17 +273,18 @@ static void rasterize(Camera& camera, int width, int height)
 
 	Matrix4<> transform = camera.projectionMatrix * camera.viewMatrix * *modelMatrix;
 
-	for(unsigned int i = 0; i < numParticles; ++i)
-		{
-			Vector4<> t0 = Vector4<>{ particles[i]->current.x, particles[i]->current.y, particles[i]->current.z, 1.0 } * transform;
-			Vector3<> raster;
-			if(rasterVertex(raster, t0, 1280, 720))
-				framebuffer.sample<Vector4<unsigned char>>(raster.x, raster.y) = Vector4<unsigned char>{ 255, 255, 255, 255 };
-		}
-
 	updatePoints();
 	for(unsigned int i = 0; i < numConstraints; ++i)
-		constraints[i]->apply();
+		{
+			constraints[i]->apply();
+
+			Vector4<> t0 = Vector4<>{ constraints[i]->one->current.x, constraints[i]->one->current.y, constraints[i]->one->current.z, 1.0 } * transform;
+			Vector4<> t1 = Vector4<>{ constraints[i]->two->current.x, constraints[i]->two->current.y, constraints[i]->two->current.z, 1.0 } * transform;
+			Vector3<> raster0;
+			Vector3<> raster1;
+			if(rasterVertex(raster0, t0, 1280, 720) && rasterVertex(raster1, t1, 1280, 720))
+				dda(raster0, raster1, framebuffer);
+		}
 
 #pragma omp parallel for num_threads(2)
 	for(unsigned int m = 0; m < model->numMeshes; ++m)
