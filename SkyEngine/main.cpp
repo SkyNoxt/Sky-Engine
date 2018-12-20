@@ -256,11 +256,11 @@ static void rasterize(Camera& camera, int width, int height)
 
 	body->update(timestep * timestep);
 
-#pragma omp parallel for num_threads(2)
+//#pragma omp parallel for num_threads(2)
 	for(unsigned int m = 0; m < model->numMeshes; ++m)
 		{
 			unsigned int numTriangles = model->meshArray[m].numElements() / 3;
-#pragma omp parallel for num_threads(2)
+//#pragma omp parallel for num_threads(2)
 			for(unsigned int i = 0; i < numTriangles; ++i)
 				{
 					const Vertex& v0 = model->meshArray[m].vertex<Vertex>(i * 3);
