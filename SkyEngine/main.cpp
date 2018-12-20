@@ -23,88 +23,52 @@
 #include <opencv2/highgui/highgui.hpp>
 
 //physics test
-#include <Geometry/Box.h>
-#include <Physics/Constraint.h>
-#include <Physics/Particle.h>
+#include <Physics/Body.h>
 
-Box<float> bounds = Box<float>(Vector3<>{ -10.0, 0, -10 }, Vector3<>{ 10, 10, 10 });
 unsigned int numParticles = 16;
 unsigned int numConstraints = 112;
-Particle** particles;
-Constraint** constraints;
+Body* body = nullptr;
 float timestep = 1.0 / 60.0;
-
-static void updatePoints()
-{
-	for(unsigned int i = 0; i < numParticles; ++i)
-		{
-			Vector3<> velocity = (particles[i]->current - particles[i]->previous);
-			Vector3<> newPosition = particles[i]->current + velocity + particles[i]->acceleration * timestep * timestep;
-			particles[i]->previous = particles[i]->current;
-			particles[i]->current = newPosition;
-
-			if(particles[i]->current.x > bounds.bounds[1].x)
-				{
-					particles[i]->current.x = bounds.bounds[1].x;
-					particles[i]->previous.x = particles[i]->current.x + velocity.x;
-				}
-			else if(particles[i]->current.x < bounds.bounds[0].x)
-				{
-					particles[i]->current.x = bounds.bounds[0].x;
-					particles[i]->previous.x = particles[i]->current.x + velocity.x;
-				}
-			if(particles[i]->current.y > bounds.bounds[1].y)
-				{
-					particles[i]->current.y = bounds.bounds[1].y;
-					particles[i]->previous.y = particles[i]->current.y + velocity.y;
-				}
-			else if(particles[i]->current.y < bounds.bounds[0].y)
-				{
-					particles[i]->current.y = bounds.bounds[0].y;
-					particles[i]->previous.y = particles[i]->current.y + velocity.y;
-				}
-			if(particles[i]->current.z > bounds.bounds[1].z)
-				{
-					particles[i]->current.z = bounds.bounds[1].z;
-					particles[i]->previous.z = particles[i]->current.z + velocity.z;
-				}
-			else if(particles[i]->current.z < bounds.bounds[0].z)
-				{
-					particles[i]->current.z = bounds.bounds[0].z;
-					particles[i]->previous.z = particles[i]->current.z + velocity.z;
-				}
-		}
-}
 
 void resetParticles()
 {
-	particles[0] = new Particle(Vector3<>{ -1.0, 0.0, -1.0 }, Vector3<>{ -3, 0.0, -1.0 }, Vector3<>{ 0.0, -9.81, 0.0 });
-	particles[1] = new Particle(Vector3<>{ -1.0, 0.0, 1.0 }, Vector3<>{ -1.0, 0.0, 1.0 }, Vector3<>{ 0.0, -9.81, 0.0 });
-	particles[2] = new Particle(Vector3<>{ 1.0, 0.0, 1.0 }, Vector3<>{ 1.0, 0.0, 1.0 }, Vector3<>{ 0.0, -9.81, 0.0 });
-	particles[3] = new Particle(Vector3<>{ 1.0, 0.0, -1.0 }, Vector3<>{ 1.0, 0.0, -1.0 }, Vector3<>{ 0.0, -9.81, 0.0 });
+	if(body)
+		delete body;
 
-	particles[4] = new Particle(Vector3<>{ -1.0, 2.0, -1.0 }, Vector3<>{ -1.0, 2.0, -1.0 }, Vector3<>{ 0.0, -9.81, 0.0 });
-	particles[5] = new Particle(Vector3<>{ -1.0, 2.0, 1.0 }, Vector3<>{ -1.0, 2.0, 1.0 }, Vector3<>{ 0.0, -9.81, 0.0 });
-	particles[6] = new Particle(Vector3<>{ 1.0, 2.0, 1.0 }, Vector3<>{ 1.0, 2.0, 1.0 }, Vector3<>{ 0.0, -9.81, 0.0 });
-	particles[7] = new Particle(Vector3<>{ 1.0, 2.0, -1.0 }, Vector3<>{ 1.0, 2.0, -1.0 }, Vector3<>{ 0.0, -9.81, 0.0 });
+	numParticles = 16;
+	numConstraints = 112;
+	Particle* particles = (Particle*)malloc(numParticles * sizeof(Particle));
+	Constraint* constraints = (Constraint*)malloc(numConstraints * sizeof(Constraint));
 
-	particles[8] = new Particle(Vector3<>{ -1.0, 2.5, -1.0 }, Vector3<>{ -1.0, 2.5, -1.0 }, Vector3<>{ 0.0, -9.81, 0.0 });
-	particles[9] = new Particle(Vector3<>{ -1.0, 2.5, 1.0 }, Vector3<>{ -1.0, 2.5, 1.0 }, Vector3<>{ 0.0, -9.81, 0.0 });
-	particles[10] = new Particle(Vector3<>{ 1.0, 2.5, 1.0 }, Vector3<>{ 1.0, 2.5, 1.0 }, Vector3<>{ 0.0, -9.81, 0.0 });
-	particles[11] = new Particle(Vector3<>{ 1.0, 2.5, -1.0 }, Vector3<>{ 1.0, 2.5, -1.0 }, Vector3<>{ 0.0, -9.81, 0.0 });
+	particles[0] = Particle(Vector3<>{ -1.0, 0.0, -1.0 }, Vector3<>{ -1.0, -3.0, -1.0 }, Vector3<>{ 0.0, -9.81, 0.0 });
+	particles[1] = Particle(Vector3<>{ -1.0, 0.0, 1.0 }, Vector3<>{ -1.0, 0.0, 1.0 }, Vector3<>{ 0.0, -9.81, 0.0 });
+	particles[2] = Particle(Vector3<>{ 1.0, 0.0, 1.0 }, Vector3<>{ 1.0, 0.0, 1.0 }, Vector3<>{ 0.0, -9.81, 0.0 });
+	particles[3] = Particle(Vector3<>{ 1.0, 0.0, -1.0 }, Vector3<>{ 1.0, 0.0, -1.0 }, Vector3<>{ 0.0, -9.81, 0.0 });
 
-	particles[12] = new Particle(Vector3<>{ -1.0, 4.5, -1.0 }, Vector3<>{ -1.0, 4.5, -1.0 }, Vector3<>{ 0.0, -9.81, 0.0 });
-	particles[13] = new Particle(Vector3<>{ -1.0, 4.5, 1.0 }, Vector3<>{ -1.0, 4.5, 1.0 }, Vector3<>{ 0.0, -9.81, 0.0 });
-	particles[14] = new Particle(Vector3<>{ 1.0, 4.5, 1.0 }, Vector3<>{ 1.0, 4.5, 1.0 }, Vector3<>{ 0.0, -9.81, 0.0 });
-	particles[15] = new Particle(Vector3<>{ 1.0, 4.5, -1.0 }, Vector3<>{ 1.0, 4.5, -1.0 }, Vector3<>{ 0.0, -9.81, 0.0 });
+	particles[4] = Particle(Vector3<>{ -1.0, 2.0, -1.0 }, Vector3<>{ -1.0, 2.0, -1.0 }, Vector3<>{ 0.0, -9.81, 0.0 });
+	particles[5] = Particle(Vector3<>{ -1.0, 2.0, 1.0 }, Vector3<>{ -1.0, 2.0, 1.0 }, Vector3<>{ 0.0, -9.81, 0.0 });
+	particles[6] = Particle(Vector3<>{ 1.0, 2.0, 1.0 }, Vector3<>{ 1.0, 2.0, 1.0 }, Vector3<>{ 0.0, -9.81, 0.0 });
+	particles[7] = Particle(Vector3<>{ 1.0, 2.0, -1.0 }, Vector3<>{ 1.0, 2.0, -1.0 }, Vector3<>{ 0.0, -9.81, 0.0 });
+
+	particles[8] = Particle(Vector3<>{ -1.0, 2.5, -1.0 }, Vector3<>{ -1.0, 2.5, -1.0 }, Vector3<>{ 0.0, -9.81, 0.0 });
+	particles[9] = Particle(Vector3<>{ -1.0, 2.5, 1.0 }, Vector3<>{ -1.0, 2.5, 1.0 }, Vector3<>{ 0.0, -9.81, 0.0 });
+	particles[10] = Particle(Vector3<>{ 1.0, 2.5, 1.0 }, Vector3<>{ 1.0, 2.5, 1.0 }, Vector3<>{ 0.0, -9.81, 0.0 });
+	particles[11] = Particle(Vector3<>{ 1.0, 2.5, -1.0 }, Vector3<>{ 1.0, 2.5, -1.0 }, Vector3<>{ 0.0, -9.81, 0.0 });
+
+	particles[12] = Particle(Vector3<>{ -1.0, 4.5, -1.0 }, Vector3<>{ -1.0, 4.5, -1.0 }, Vector3<>{ 0.0, -9.81, 0.0 });
+	particles[13] = Particle(Vector3<>{ -1.0, 4.5, 1.0 }, Vector3<>{ -1.0, 4.5, 1.0 }, Vector3<>{ 0.0, -9.81, 0.0 });
+	particles[14] = Particle(Vector3<>{ 1.0, 4.5, 1.0 }, Vector3<>{ 1.0, 4.5, 1.0 }, Vector3<>{ 0.0, -9.81, 0.0 });
+	particles[15] = Particle(Vector3<>{ 1.0, 4.5, -1.0 }, Vector3<>{ 1.0, 4.5, -1.0 }, Vector3<>{ 0.0, -9.81, 0.0 });
 
 	for(unsigned int i = 0; i < 8; ++i)
 		for(unsigned int j = 0; j < 7; ++j)
-			constraints[7 * i + j] = new Constraint(particles[i], particles[(i + j + 1) % 8]);
+			constraints[7 * i + j] = Constraint(particles + i, particles + (i + j + 1) % 8);
 
 	for(unsigned int i = 0; i < 8; ++i)
 		for(unsigned int j = 0; j < 7; ++j)
-			constraints[7 * i + j + 56] = new Constraint(particles[i + 8], particles[(i + j + 1) % 8 + 8]);
+			constraints[7 * i + j + 56] = Constraint(particles + i + 8, particles + (i + j + 1) % 8 + 8);
+
+	body = new Body(numParticles, numConstraints, particles, constraints);
 }
 
 Model* model;
@@ -273,18 +237,17 @@ static void rasterize(Camera& camera, int width, int height)
 
 	Matrix4<> transform = camera.projectionMatrix * camera.viewMatrix * *modelMatrix;
 
-	updatePoints();
-	for(unsigned int i = 0; i < numConstraints; ++i)
+	for(unsigned int i = 0; i < body->numConstraints; ++i)
 		{
-			constraints[i]->apply();
-
-			Vector4<> t0 = Vector4<>{ constraints[i]->one->current.x, constraints[i]->one->current.y, constraints[i]->one->current.z, 1.0 } * transform;
-			Vector4<> t1 = Vector4<>{ constraints[i]->two->current.x, constraints[i]->two->current.y, constraints[i]->two->current.z, 1.0 } * transform;
+			Vector4<> t0 = Vector4<>{ body->constraintArray[i].one->current.x, body->constraintArray[i].one->current.y, body->constraintArray[i].one->current.z, 1.0 } * transform;
+			Vector4<> t1 = Vector4<>{ body->constraintArray[i].two->current.x, body->constraintArray[i].two->current.y, body->constraintArray[i].two->current.z, 1.0 } * transform;
 			Vector3<> raster0;
 			Vector3<> raster1;
 			if(rasterVertex(raster0, t0, 1280, 720) && rasterVertex(raster1, t1, 1280, 720))
 				rasterLine(raster0, raster1, framebuffer);
 		}
+
+	body->update(timestep * timestep);
 
 #pragma omp parallel for num_threads(2)
 	for(unsigned int m = 0; m < model->numMeshes; ++m)
@@ -443,8 +406,6 @@ int main(int argc, char* argv[])
 	camera.viewMatrix = camera.cameraMatrix.inverse();
 
 	//Physics test
-	particles = new Particle*[numParticles];
-	constraints = new Constraint*[numConstraints];
 	resetParticles();
 
 	//Compute light
@@ -484,14 +445,6 @@ int main(int argc, char* argv[])
 			totalFPS += fps;
 			std::cout << "MEAN: " << totalFPS / numFrames << std::endl;
 		}
-
-	for(unsigned int i = 0; i < numParticles; ++i)
-		delete particles[i];
-	delete[] particles;
-
-	for(unsigned int i = 0; i < numConstraints; ++i)
-		delete constraints[i];
-	delete[] constraints;
 
 	delete gamepad;
 

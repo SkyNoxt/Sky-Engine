@@ -15,9 +15,6 @@ public:
 	//Constructor
 	Constraint(Particle* on, Particle* tw);
 
-	//Member function
-	void apply() const;
-
 	//Destructor
 	~Constraint() = default;
 };
