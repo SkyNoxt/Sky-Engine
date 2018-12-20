@@ -3,7 +3,6 @@
 
 #include <Math/Vector3.h>
 
-template <class T = float>
 class Particle
 {
 

@@ -3,18 +3,17 @@
 
 #include "Particle.h"
 
-template <class T = float>
 class Constraint
 {
 
 public:
 	//Member variables
-	Particle<>* one;
-	Particle<>* two;
-	T length;
+	Particle* one;
+	Particle* two;
+	float length;
 
 	//Constructor
-	Constraint(Particle<>* on, Particle<>* tw);
+	Constraint(Particle* on, Particle* tw);
 
 	//Member function
 	void apply() const;

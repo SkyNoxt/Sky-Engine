@@ -30,8 +30,8 @@
 Box<float> bounds = Box<float>(Vector3<>{ -10.0, 0, -10 }, Vector3<>{ 10, 10, 10 });
 unsigned int numParticles = 16;
 unsigned int numConstraints = 112;
-Particle<>** particles;
-Constraint<>** constraints;
+Particle** particles;
+Constraint** constraints;
 float timestep = 1.0 / 60.0;
 
 static void updatePoints()
@@ -78,33 +78,33 @@ static void updatePoints()
 
 void resetParticles()
 {
-	particles[0] = new Particle<>(Vector3<>{ -1.0, 0.0, -1.0 }, Vector3<>{ -3, 0.0, -1.0 }, Vector3<>{ 0.0, -9.81, 0.0 });
-	particles[1] = new Particle<>(Vector3<>{ -1.0, 0.0, 1.0 }, Vector3<>{ -1.0, 0.0, 1.0 }, Vector3<>{ 0.0, -9.81, 0.0 });
-	particles[2] = new Particle<>(Vector3<>{ 1.0, 0.0, 1.0 }, Vector3<>{ 1.0, 0.0, 1.0 }, Vector3<>{ 0.0, -9.81, 0.0 });
-	particles[3] = new Particle<>(Vector3<>{ 1.0, 0.0, -1.0 }, Vector3<>{ 1.0, 0.0, -1.0 }, Vector3<>{ 0.0, -9.81, 0.0 });
+	particles[0] = new Particle(Vector3<>{ -1.0, 0.0, -1.0 }, Vector3<>{ -3, 0.0, -1.0 }, Vector3<>{ 0.0, -9.81, 0.0 });
+	particles[1] = new Particle(Vector3<>{ -1.0, 0.0, 1.0 }, Vector3<>{ -1.0, 0.0, 1.0 }, Vector3<>{ 0.0, -9.81, 0.0 });
+	particles[2] = new Particle(Vector3<>{ 1.0, 0.0, 1.0 }, Vector3<>{ 1.0, 0.0, 1.0 }, Vector3<>{ 0.0, -9.81, 0.0 });
+	particles[3] = new Particle(Vector3<>{ 1.0, 0.0, -1.0 }, Vector3<>{ 1.0, 0.0, -1.0 }, Vector3<>{ 0.0, -9.81, 0.0 });
 
-	particles[4] = new Particle<>(Vector3<>{ -1.0, 2.0, -1.0 }, Vector3<>{ -1.0, 2.0, -1.0 }, Vector3<>{ 0.0, -9.81, 0.0 });
-	particles[5] = new Particle<>(Vector3<>{ -1.0, 2.0, 1.0 }, Vector3<>{ -1.0, 2.0, 1.0 }, Vector3<>{ 0.0, -9.81, 0.0 });
-	particles[6] = new Particle<>(Vector3<>{ 1.0, 2.0, 1.0 }, Vector3<>{ 1.0, 2.0, 1.0 }, Vector3<>{ 0.0, -9.81, 0.0 });
-	particles[7] = new Particle<>(Vector3<>{ 1.0, 2.0, -1.0 }, Vector3<>{ 1.0, 2.0, -1.0 }, Vector3<>{ 0.0, -9.81, 0.0 });
+	particles[4] = new Particle(Vector3<>{ -1.0, 2.0, -1.0 }, Vector3<>{ -1.0, 2.0, -1.0 }, Vector3<>{ 0.0, -9.81, 0.0 });
+	particles[5] = new Particle(Vector3<>{ -1.0, 2.0, 1.0 }, Vector3<>{ -1.0, 2.0, 1.0 }, Vector3<>{ 0.0, -9.81, 0.0 });
+	particles[6] = new Particle(Vector3<>{ 1.0, 2.0, 1.0 }, Vector3<>{ 1.0, 2.0, 1.0 }, Vector3<>{ 0.0, -9.81, 0.0 });
+	particles[7] = new Particle(Vector3<>{ 1.0, 2.0, -1.0 }, Vector3<>{ 1.0, 2.0, -1.0 }, Vector3<>{ 0.0, -9.81, 0.0 });
 
-	particles[8] = new Particle<>(Vector3<>{ -1.0, 2.5, -1.0 }, Vector3<>{ -1.0, 2.5, -1.0 }, Vector3<>{ 0.0, -9.81, 0.0 });
-	particles[9] = new Particle<>(Vector3<>{ -1.0, 2.5, 1.0 }, Vector3<>{ -1.0, 2.5, 1.0 }, Vector3<>{ 0.0, -9.81, 0.0 });
-	particles[10] = new Particle<>(Vector3<>{ 1.0, 2.5, 1.0 }, Vector3<>{ 1.0, 2.5, 1.0 }, Vector3<>{ 0.0, -9.81, 0.0 });
-	particles[11] = new Particle<>(Vector3<>{ 1.0, 2.5, -1.0 }, Vector3<>{ 1.0, 2.5, -1.0 }, Vector3<>{ 0.0, -9.81, 0.0 });
+	particles[8] = new Particle(Vector3<>{ -1.0, 2.5, -1.0 }, Vector3<>{ -1.0, 2.5, -1.0 }, Vector3<>{ 0.0, -9.81, 0.0 });
+	particles[9] = new Particle(Vector3<>{ -1.0, 2.5, 1.0 }, Vector3<>{ -1.0, 2.5, 1.0 }, Vector3<>{ 0.0, -9.81, 0.0 });
+	particles[10] = new Particle(Vector3<>{ 1.0, 2.5, 1.0 }, Vector3<>{ 1.0, 2.5, 1.0 }, Vector3<>{ 0.0, -9.81, 0.0 });
+	particles[11] = new Particle(Vector3<>{ 1.0, 2.5, -1.0 }, Vector3<>{ 1.0, 2.5, -1.0 }, Vector3<>{ 0.0, -9.81, 0.0 });
 
-	particles[12] = new Particle<>(Vector3<>{ -1.0, 4.5, -1.0 }, Vector3<>{ -1.0, 4.5, -1.0 }, Vector3<>{ 0.0, -9.81, 0.0 });
-	particles[13] = new Particle<>(Vector3<>{ -1.0, 4.5, 1.0 }, Vector3<>{ -1.0, 4.5, 1.0 }, Vector3<>{ 0.0, -9.81, 0.0 });
-	particles[14] = new Particle<>(Vector3<>{ 1.0, 4.5, 1.0 }, Vector3<>{ 1.0, 4.5, 1.0 }, Vector3<>{ 0.0, -9.81, 0.0 });
-	particles[15] = new Particle<>(Vector3<>{ 1.0, 4.5, -1.0 }, Vector3<>{ 1.0, 4.5, -1.0 }, Vector3<>{ 0.0, -9.81, 0.0 });
-
-	for(unsigned int i = 0; i < 8; ++i)
-		for(unsigned int j = 0; j < 7; ++j)
-			constraints[7 * i + j] = new Constraint<>(particles[i], particles[(i + j + 1) % 8]);
+	particles[12] = new Particle(Vector3<>{ -1.0, 4.5, -1.0 }, Vector3<>{ -1.0, 4.5, -1.0 }, Vector3<>{ 0.0, -9.81, 0.0 });
+	particles[13] = new Particle(Vector3<>{ -1.0, 4.5, 1.0 }, Vector3<>{ -1.0, 4.5, 1.0 }, Vector3<>{ 0.0, -9.81, 0.0 });
+	particles[14] = new Particle(Vector3<>{ 1.0, 4.5, 1.0 }, Vector3<>{ 1.0, 4.5, 1.0 }, Vector3<>{ 0.0, -9.81, 0.0 });
+	particles[15] = new Particle(Vector3<>{ 1.0, 4.5, -1.0 }, Vector3<>{ 1.0, 4.5, -1.0 }, Vector3<>{ 0.0, -9.81, 0.0 });
 
 	for(unsigned int i = 0; i < 8; ++i)
 		for(unsigned int j = 0; j < 7; ++j)
-			constraints[7 * i + j + 56] = new Constraint<>(particles[i + 8], particles[(i + j + 1) % 8 + 8]);
+			constraints[7 * i + j] = new Constraint(particles[i], particles[(i + j + 1) % 8]);
+
+	for(unsigned int i = 0; i < 8; ++i)
+		for(unsigned int j = 0; j < 7; ++j)
+			constraints[7 * i + j + 56] = new Constraint(particles[i + 8], particles[(i + j + 1) % 8 + 8]);
 }
 
 Model* model;
@@ -443,8 +443,8 @@ int main(int argc, char* argv[])
 	camera.viewMatrix = camera.cameraMatrix.inverse();
 
 	//Physics test
-	particles = new Particle<>*[numParticles];
-	constraints = new Constraint<>*[numConstraints];
+	particles = new Particle*[numParticles];
+	constraints = new Constraint*[numConstraints];
 	resetParticles();
 
 	//Compute light

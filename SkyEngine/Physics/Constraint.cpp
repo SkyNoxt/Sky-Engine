@@ -1,18 +1,14 @@
 
-#include <Math/Vector3.h>
-
 #include "Constraint.h"
 
-template <class T>
-Constraint<T>::Constraint(Particle<>* on, Particle<>* tw)
+Constraint::Constraint(Particle* on, Particle* tw)
 	: one(on)
 	, two(tw)
 	, length(two->current.distance(one->current))
 {
 }
 
-template <class T>
-void Constraint<T>::apply() const
+void Constraint::apply() const
 {
 	Vector3<> vector = two->current - one->current;
 
@@ -22,5 +18,3 @@ void Constraint<T>::apply() const
 	one->current += vector;
 	two->current -= vector;
 }
-
-template class Constraint<>;
