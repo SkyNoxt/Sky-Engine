@@ -62,11 +62,11 @@ void resetParticles()
 
 	for(unsigned int i = 0; i < 8; ++i)
 		for(unsigned int j = 0; j < 7; ++j)
-			constraints[7 * i + j] = Constraint(particles + i, particles + (i + j + 1) % 8);
+			constraints[7 * i + j] = Constraint(i, (i + j + 1) % 8, particles[(i + j + 1) % 8].current.distance(particles[i].current));
 
 	for(unsigned int i = 0; i < 8; ++i)
 		for(unsigned int j = 0; j < 7; ++j)
-			constraints[7 * i + j + 56] = Constraint(particles + i + 8, particles + (i + j + 1) % 8 + 8);
+			constraints[7 * i + j + 56] = Constraint(i + 8, (i + j + 1) % 8 + 8, particles[(i + j + 1) % 8 + 8].current.distance(particles[i + 8].current));
 
 	body = new Body(numParticles, numConstraints, particles, constraints);
 }
@@ -237,10 +237,17 @@ static void rasterize(Camera& camera, int width, int height)
 
 	Matrix4<> transform = camera.projectionMatrix * camera.viewMatrix * *modelMatrix;
 
+	Constraint* constraint;
+	Particle* one;
+	Particle* two;
 	for(unsigned int i = 0; i < body->numConstraints; ++i)
 		{
-			Vector4<> t0 = Vector4<>{ body->constraintArray[i].one->current.x, body->constraintArray[i].one->current.y, body->constraintArray[i].one->current.z, 1.0 } * transform;
-			Vector4<> t1 = Vector4<>{ body->constraintArray[i].two->current.x, body->constraintArray[i].two->current.y, body->constraintArray[i].two->current.z, 1.0 } * transform;
+			constraint = body->constraintArray + i;
+			one = body->particleArray + constraint->one;
+			two = body->particleArray + constraint->two;
+
+			Vector4<> t0 = Vector4<>{ one->current.x, one->current.y, one->current.z, 1.0 } * transform;
+			Vector4<> t1 = Vector4<>{ two->current.x, two->current.y, two->current.z, 1.0 } * transform;
 			Vector3<> raster0;
 			Vector3<> raster1;
 			if(rasterVertex(raster0, t0, 1280, 720) && rasterVertex(raster1, t1, 1280, 720))

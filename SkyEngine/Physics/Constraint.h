@@ -8,12 +8,12 @@ class Constraint
 
 public:
 	//Member variables
-	Particle* one;
-	Particle* two;
+	unsigned int one;
+	unsigned int two;
 	float length;
 
 	//Constructor
-	Constraint(Particle* on, Particle* tw);
+	Constraint(unsigned int oneIndex, unsigned int twoIndex, float len);
 
 	//Destructor
 	~Constraint() = default;
