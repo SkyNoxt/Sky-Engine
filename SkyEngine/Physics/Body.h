@@ -16,8 +16,14 @@ public:
 	//Constructor
 	Body(unsigned int particleCount, unsigned int constraintCount, Particle* particles, Constraint* constraints);
 
-	//Member function
+	//Member functions
 	void update(float squaredTimestep);
+
+	const Particle& particle(unsigned int index) const;
+	Particle& particle(unsigned int index);
+
+	const Constraint& constraint(unsigned int index) const;
+	Constraint& constraint(unsigned int index);
 
 	//Destructor
 	~Body();

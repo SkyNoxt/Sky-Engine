@@ -11,42 +11,28 @@ Body::Body(unsigned int particleCount, unsigned int constraintCount, Particle* p
 
 void Body::update(float squaredTimestep)
 {
-	Particle* particle;
-	Vector3<> current;
-	Vector3<> previous;
-
-	Vector3<> velocity;
-	Vector3<> newPosition;
 	for(unsigned int i = 0; i < numParticles; ++i)
 		{
-			particle = particleArray + i;
-			current = particle->current;
-			previous = particle->previous;
+			Particle& currentParticle = particle(i);
+			Vector3<> current = currentParticle.current;
 
-			velocity = current - previous;
-			newPosition = current + velocity + particle->acceleration * squaredTimestep;
-			particle->previous = current;
-			particle->current = newPosition;
+			currentParticle.current = current + current - currentParticle.previous + currentParticle.acceleration * squaredTimestep;
+			currentParticle.previous = current;
 		}
-
-	Particle* one;
-	Particle* two;
-	Constraint* constraint;
-
-	Vector3<> vector;
+        
 	for(unsigned int i = 0; i < numConstraints; ++i)
 		{
-			constraint = constraintArray + i;
-			one = particleArray + constraint->one;
-			two = particleArray + constraint->two;
+			const Constraint& currentConstraint = constraint(i);
+			Particle& one = particle(currentConstraint.one);
+			Particle& two = particle(currentConstraint.two);
 
-			vector = two->current - one->current;
+			Vector3<> vector = two.current - one.current;
 
 			float len = vector.length();
 			vector *= ((len - constraintArray[i].length) / len) * 0.5;
 
-			one->current += vector;
-			two->current -= vector;
+			one.current += vector;
+			two.current -= vector;
 		}
 }
 
@@ -54,4 +40,24 @@ Body::~Body()
 {
 	delete[] particleArray;
 	delete[] constraintArray;
+}
+
+const Particle& Body::particle(unsigned int index) const
+{
+	return particleArray[index];
+}
+
+Particle& Body::particle(unsigned int index)
+{
+	return particleArray[index];
+}
+
+const Constraint& Body::constraint(unsigned int index) const
+{
+	return constraintArray[index];
+}
+
+Constraint& Body::constraint(unsigned int index)
+{
+	return constraintArray[index];
 }
