@@ -19,7 +19,7 @@ void Body::update(float squaredTimestep)
 			currentParticle.current = current + current - currentParticle.previous + currentParticle.acceleration * squaredTimestep;
 			currentParticle.previous = current;
 		}
-        
+
 	for(unsigned int i = 0; i < numConstraints; ++i)
 		{
 			const Constraint& currentConstraint = constraint(i);
