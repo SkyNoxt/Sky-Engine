@@ -25,6 +25,11 @@ public:
 	const Constraint& constraint(unsigned int index) const;
 	Constraint& constraint(unsigned int index);
 
+	bool collision(const Body& body, float& collisionLength, Vector3<>& collisionVector, Particle& collisionParticle, Constraint& collisionConstraint);
+
 	//Destructor
 	~Body();
+
+private:
+	void project(const Vector3<>& axis, float& min, float& max) const;
 };

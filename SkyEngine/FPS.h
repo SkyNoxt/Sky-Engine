@@ -17,7 +17,7 @@ public:
 	//Destructor
 	~FPS() = default;
 
-private:
+//private:
 	Camera* camera;
 	Gamepad* gamepad;
 
