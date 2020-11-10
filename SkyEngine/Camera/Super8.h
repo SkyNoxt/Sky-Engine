@@ -6,6 +6,6 @@
 class Super8 : public Camera
 {
 
-public:
+  public:
 	Super8(float targetRatio);
 };

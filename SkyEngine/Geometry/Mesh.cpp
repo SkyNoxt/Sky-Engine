@@ -54,16 +54,16 @@ bool Mesh::intersect(const Ray& ray, float& distance, unsigned int& index, Vecto
 
 	distance = Ray::MAX_LENGTH;
 	for(unsigned int i = 0; i < numElements(); i += 3)
+	{
+		if(triangleIntersect(ray, vertex<T>(i).position, vertex<T>(i + 1).position, vertex<T>(i + 2).position, tempDist, u, v)
+		   && tempDist > 0 && tempDist < distance)
 		{
-			if(triangleIntersect(ray, vertex<T>(i).position, vertex<T>(i + 1).position, vertex<T>(i + 2).position, tempDist, u, v)
-				&& tempDist > 0 && tempDist < distance)
-				{
-					distance = tempDist;
-					barycenter = { u, v };
-					index = i;
-					intersect = true;
-				}
+			distance = tempDist;
+			barycenter = { u, v };
+			index = i;
+			intersect = true;
 		}
+	}
 
 	return intersect;
 }
@@ -100,8 +100,8 @@ Mesh::~Mesh()
 }
 
 bool Mesh::triangleIntersect(const Ray& ray,
-	const Vector3<>& vertex0, const Vector3<>& vertex1, const Vector3<>& vertex2,
-	float& distance, float& u, float& v) const
+							 const Vector3<>& vertex0, const Vector3<>& vertex1, const Vector3<>& vertex2,
+							 float& distance, float& u, float& v) const
 {
 	Vector3<> edge1 = vertex1 - vertex0;
 	Vector3<> edge2 = vertex2 - vertex0;

@@ -5,9 +5,9 @@
 
 template <class T>
 const Matrix4<T> Matrix4<T>::IDENTITY = Matrix4<T>{ 1, 0, 0, 0,
-	0, 1, 0, 0,
-	0, 0, 1, 0,
-	0, 0, 0, 1 };
+													0, 1, 0, 0,
+													0, 0, 1, 0,
+													0, 0, 0, 1 };
 
 template <class T>
 Matrix4<T>::Matrix4(T xxVal, T xyVal, T xzVal, T xwVal, T yxVal, T yyVal, T yzVal, T ywVal, T zxVal, T zyVal, T zzVal, T zwVal, T wxVal, T wyVal, T wzVal, T wwVal)
@@ -197,9 +197,9 @@ void Matrix4<T>::rotate(T angle, T x, T y, T z)
 	c1 = 1 - c;
 
 	Matrix4<T> rotationMatrix = Matrix4<T>{ (c1 * xx) + c, (c1 * xy) + zs, (c1 * zx) - ys, 0,
-		(c1 * xy) - zs, (c1 * yy) + c, (c1 * yz) + xs, 0,
-		(c1 * zx) + ys, (c1 * yz) - xs, (c1 * zz) + c, 0,
-		0, 0, 0, 1 };
+											(c1 * xy) - zs, (c1 * yy) + c, (c1 * yz) + xs, 0,
+											(c1 * zx) + ys, (c1 * yz) - xs, (c1 * zz) + c, 0,
+											0, 0, 0, 1 };
 
 	*this *= rotationMatrix;
 }

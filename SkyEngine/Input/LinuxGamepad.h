@@ -6,7 +6,7 @@
 class LinuxGamepad : public VirtualGamepad
 {
 
-public:
+  public:
 	//Constructor
 	LinuxGamepad();
 
@@ -16,7 +16,7 @@ public:
 	//Destructor
 	~LinuxGamepad() override;
 
-private:
+  private:
 	static const float AXIS_MAP;
 
 	int stickDeadzone;

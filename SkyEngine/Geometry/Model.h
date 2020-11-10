@@ -10,7 +10,7 @@
 class Model
 {
 
-public:
+  public:
 	unsigned int numMeshes;
 	Mesh* meshArray;
 

@@ -6,7 +6,7 @@
 class Constraint
 {
 
-public:
+  public:
 	//Member variables
 	unsigned int one;
 	unsigned int two;

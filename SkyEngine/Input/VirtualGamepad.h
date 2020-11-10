@@ -4,7 +4,7 @@
 class VirtualGamepad
 {
 
-public:
+  public:
 	static const unsigned int BUTTON_DPAD_UP = 0x00000001;
 	static const unsigned int BUTTON_DPAD_DOWN = 0x00000002;
 	static const unsigned int BUTTON_DPAD_LEFT = 0x00000004;

@@ -4,7 +4,7 @@
 class Stream
 {
 
-public:
+  public:
 	//Member functions
 	virtual unsigned int write(void* buffer, unsigned int size, unsigned int count) const = 0;
 	virtual unsigned int read(void* buffer, unsigned int size, unsigned int count) const = 0;

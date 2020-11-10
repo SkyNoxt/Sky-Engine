@@ -6,7 +6,7 @@
 class FileStream : public Stream
 {
 
-public:
+  public:
 	//Constructor
 	FileStream(const char* filePath);
 
@@ -18,6 +18,6 @@ public:
 	//Destructor
 	~FileStream() override;
 
-private:
+  private:
 	FILE* file;
 };

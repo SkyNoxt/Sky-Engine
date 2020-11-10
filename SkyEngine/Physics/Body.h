@@ -5,7 +5,7 @@
 
 class Body
 {
-public:
+  public:
 	//Member variables
 	unsigned int numParticles;
 	unsigned int numConstraints;
@@ -30,6 +30,6 @@ public:
 	//Destructor
 	~Body();
 
-private:
+  private:
 	void project(const Vector3<>& axis, float& min, float& max) const;
 };

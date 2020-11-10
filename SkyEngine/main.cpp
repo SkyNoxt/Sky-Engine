@@ -59,7 +59,7 @@ void resetParticles()
 
 	particlesU[4] = Particle(Vector3<>{ 0.0, 2.0, 0.0 }, Vector3<>{ 0.0, 2.0, 0.0 }, Vector3<>{ 0.0, 0.0, 0.0 });
 	particlesU[5] = Particle(Vector3<>{ 0.0, 2.0, 2.0 }, Vector3<>{ 0.0, 2.0, 2.0 }, Vector3<>{ 0.0, 0.0, 0.0 });
-	particlesU[6] = Particle(Vector3<>{ 2.0, 2.0, 2.0 }, Vector3<>{ 2.0, 2.0, 2.0  }, Vector3<>{ 0.0, 0.0, 0.0 });
+	particlesU[6] = Particle(Vector3<>{ 2.0, 2.0, 2.0 }, Vector3<>{ 2.0, 2.0, 2.0 }, Vector3<>{ 0.0, 0.0, 0.0 });
 	particlesU[7] = Particle(Vector3<>{ 2.0, 2.0, 0.0 }, Vector3<>{ 2.0, 2.0, 0.0 }, Vector3<>{ 0.0, 0.0, 0.0 });
 
 	particlesD[0] = Particle(Vector3<>{ -1.0, 2.5, -1.0 }, Vector3<>{ -1.0, 2.5, -1.0 }, Vector3<>{ 0.0, 0.00, 0.0 });
@@ -72,10 +72,10 @@ void resetParticles()
 	particlesD[6] = Particle(Vector3<>{ 1.0, 4.5, 1.0 }, Vector3<>{ 1.0, 4.5, 1.0 }, Vector3<>{ 0.0, 0.00, 0.0 });
 	particlesD[7] = Particle(Vector3<>{ 1.0, 4.5, -1.0 }, Vector3<>{ 1.0, 4.5, -1.0 }, Vector3<>{ 0.0, 0.00, 0.0 });
 
-	Vector3<> camOne = Vector3<> { fps->camera->cameraMatrix.wx, fps->camera->cameraMatrix.wy, fps->camera->cameraMatrix.wz + 1.0 };
-	Vector3<> camTwo = Vector3<> { fps->camera->cameraMatrix.wx + 2.5, fps->camera->cameraMatrix.wy + 5.0, fps->camera->cameraMatrix.wz + 10 };
-	camParticles[0] = Particle(camOne, camOne, Vector3<> { 0, 0, 0 });
-	camParticles[1] = Particle(camTwo, camTwo, Vector3<> { 0, 0, 0 });
+	Vector3<> camOne = Vector3<>{ fps->camera->cameraMatrix.wx, fps->camera->cameraMatrix.wy, fps->camera->cameraMatrix.wz + 1.0 };
+	Vector3<> camTwo = Vector3<>{ fps->camera->cameraMatrix.wx + 2.5, fps->camera->cameraMatrix.wy + 5.0, fps->camera->cameraMatrix.wz + 10 };
+	camParticles[0] = Particle(camOne, camOne, Vector3<>{ 0, 0, 0 });
+	camParticles[1] = Particle(camTwo, camTwo, Vector3<>{ 0, 0, 0 });
 
 	camConstraints[0] = Constraint(0, 1, camParticles[1].current.distance(camParticles[0].current));
 
@@ -90,7 +90,6 @@ void resetParticles()
 	bodyU = new Body(numParticles, numConstraints, particlesU, constraintsU);
 	camBody = new Body(numParticles, numConstraints, particlesD, constraintsD);
 	bodyD = new Body(2, 1, camParticles, camConstraints);
-
 }
 
 Model* model;
@@ -126,53 +125,53 @@ static Vector3<> castRay(Ray& ray, Camera& camera, unsigned int depth)
 	unsigned int numMeshes = model->numMeshes;
 	Mesh* meshes = model->meshArray;
 	for(unsigned int i = 0; i < numMeshes; ++i)
+	{
+		if(meshes[i].intersect<Vertex>(ray, tempDistance, tempIndex, tempUV) && tempDistance > 0 && tempDistance < distance)
 		{
-			if(meshes[i].intersect<Vertex>(ray, tempDistance, tempIndex, tempUV) && tempDistance > 0 && tempDistance < distance)
-				{
-					meshIndex = i;
-					distance = tempDistance;
-					index = tempIndex;
-					uv = tempUV;
-					intersect = true;
-				}
+			meshIndex = i;
+			distance = tempDistance;
+			index = tempIndex;
+			uv = tempUV;
+			intersect = true;
 		}
+	}
 
 	if(intersect)
-		{
-			//std::cout << index << std::endl;
-			//Vector3<> hitPoint = ray.origin + ray.direction * distance;
+	{
+		//std::cout << index << std::endl;
+		//Vector3<> hitPoint = ray.origin + ray.direction * distance;
 
-			/*Vector3<> n0 = meshes[meshIndex].vertex<Vertex>(index).normal;
+		/*Vector3<> n0 = meshes[meshIndex].vertex<Vertex>(index).normal;
 			Vector3<> n1 = meshes[meshIndex].vertex<Vertex>(index + 1).normal;
 			Vector3<> n2 = meshes[meshIndex].vertex<Vertex>(index + 2).normal;*/
 
-			/*Vector3<> v0 = meshes[meshIndex]->vertexArray[index    ].position; 
+		/*Vector3<> v0 = meshes[meshIndex]->vertexArray[index    ].position; 
     		Vector3<> v1 = meshes[meshIndex]->vertexArray[index + 1].position; 
     		Vector3<> v2 = meshes[meshIndex]->vertexArray[index + 2].position;*/
 
-			//Face and vertex Normals
-			//Vector3<> fN = (v1 - v0).cross(v2 - v0).normalize();
-			//Vector3<> vN = (1 - uv.x - uv.y) * n0 + uv.x * n1 + uv.y * n2;
-			Vector2<> txc = (1 - uv.x - uv.y) * meshes[meshIndex].vertex<Vertex>(index).texCoord + uv.x * meshes[meshIndex].vertex<Vertex>(index + 1).texCoord + uv.y * meshes[meshIndex].vertex<Vertex>(index + 2).texCoord;
+		//Face and vertex Normals
+		//Vector3<> fN = (v1 - v0).cross(v2 - v0).normalize();
+		//Vector3<> vN = (1 - uv.x - uv.y) * n0 + uv.x * n1 + uv.y * n2;
+		Vector2<> txc = (1 - uv.x - uv.y) * meshes[meshIndex].vertex<Vertex>(index).texCoord + uv.x * meshes[meshIndex].vertex<Vertex>(index + 1).texCoord + uv.y * meshes[meshIndex].vertex<Vertex>(index + 2).texCoord;
 
-			//Light direction (inverse ray transformed)
-			//Vector3<> L = -(*lightDirection * modelMatrix->inverse());
+		//Light direction (inverse ray transformed)
+		//Vector3<> L = -(*lightDirection * modelMatrix->inverse());
 
-			//Texture mapping
-			txc.y = txc.y - (int)txc.y;
+		//Texture mapping
+		txc.y = txc.y - (int)txc.y;
 
-			unsigned int xx = txc.x * texture->width;
-			unsigned int yy = txc.y * texture->height;
+		unsigned int xx = txc.x * texture->width;
+		unsigned int yy = txc.y * texture->height;
 
-			Vector4<unsigned char>& texel = texture->sample<Vector4<unsigned char>>(xx, yy);
-			hitColor = Vector3<>{ texel.z / 255.0f, texel.y / 255.0f, texel.x / 255.0f };
+		Vector4<unsigned char>& texel = texture->sample<Vector4<unsigned char>>(xx, yy);
+		hitColor = Vector3<>{ texel.z / 255.0f, texel.y / 255.0f, texel.x / 255.0f };
 
-			//Face ratio
-			//hitColor = std::max(0.f, vN.dot(-ray.direction));
+		//Face ratio
+		//hitColor = std::max(0.f, vN.dot(-ray.direction));
 
-			//Diffuse shading
-			//hitColor = Vector3<>{0.18} * (1.0/M_PI) * light->intensity * light->color * std::max(0.f, vN.dot(L));
-		}
+		//Diffuse shading
+		//hitColor = Vector3<>{0.18} * (1.0/M_PI) * light->intensity * light->color * std::max(0.f, vN.dot(L));
+	}
 
 	return hitColor;
 }
@@ -189,10 +188,10 @@ static void rasterLine(Vector3<> one, Vector3<> two, Sampler& framebuffer)
 
 	Vector3<> current = { one.x + 0.5, one.y + 0.5, one.z + 0.5 };
 	for(int i = 1; i <= length; ++i)
-		{
-			framebuffer.sample<Vector4<unsigned char>>(current.x, current.y) = Vector4<unsigned char>{ 0, 0, 255, 255 };
-			current += increment;
-		}
+	{
+		framebuffer.sample<Vector4<unsigned char>>(current.x, current.y) = Vector4<unsigned char>{ 0, 0, 255, 255 };
+		current += increment;
+	}
 }
 
 static bool rasterVertex(Vector3<>& raster, const Vector4<>& vertex, unsigned int width, unsigned int height)
@@ -223,14 +222,14 @@ static void render(Camera& camera, unsigned int width, unsigned int height)
 
 #pragma omp parallel for num_threads(32)
 	for(unsigned int j = 0; j < height; ++j)
-		{
+	{
 #pragma omp parallel for num_threads(32)
-			for(unsigned int i = 0; i < width; ++i)
-				{
-					Ray ray = camera.castRay(width, height, i, j);
-					framebuffer[width * j + i] = castRay(ray, camera, level);
-				}
+		for(unsigned int i = 0; i < width; ++i)
+		{
+			Ray ray = camera.castRay(width, height, i, j);
+			framebuffer[width * j + i] = castRay(ray, camera, level);
 		}
+	}
 
 	cv::Mat img(height, width, CV_32FC3, framebuffer);
 	imshow("Sky Engine", img);
@@ -261,171 +260,172 @@ static void rasterize(Camera& camera, int width, int height)
 
 	float collisionDistance;
 	Vector3<> collisionVector;
-	Particle collisionParticle = Particle(Vector3<>{0, 0, 0}, Vector3<>{0, 0, 0}, Vector3<>{0, 0, 0});
+	Particle collisionParticle = Particle(Vector3<>{ 0, 0, 0 }, Vector3<>{ 0, 0, 0 }, Vector3<>{ 0, 0, 0 });
 	Constraint collisionConstraint = Constraint(0, 0, 0);
 	if(bodyD->collision(*bodyU, collisionDistance, collisionVector, collisionParticle, collisionConstraint))
-		{
-			std::cout << "COLLISION - " << "Lenght: " << collisionDistance << " | " << "Vector: " << collisionVector.x << " " << 
-				collisionVector.y << " " << collisionVector.z << " | " << "Particle: " << collisionParticle.current.x << " " <<
-				 collisionParticle.current.y << " " << collisionParticle.current.z << std::endl;
-		}
+	{
+		std::cout << "COLLISION - "
+				  << "Lenght: " << collisionDistance << " | "
+				  << "Vector: " << collisionVector.x << " " << collisionVector.y << " " << collisionVector.z << " | "
+				  << "Particle: " << collisionParticle.current.x << " " << collisionParticle.current.y << " " << collisionParticle.current.z << std::endl;
+	}
 
-	Vector4<> origin = Vector4<> { 0.0, 0.0, 0.0, 1.0 } * transform;
-	Vector4<> axisend = Vector4<> { collisionVector.x, collisionVector.y, collisionVector.z, 1.0 } * transform;
+	Vector4<> origin = Vector4<>{ 0.0, 0.0, 0.0, 1.0 } * transform;
+	Vector4<> axisend = Vector4<>{ collisionVector.x, collisionVector.y, collisionVector.z, 1.0 } * transform;
 
-	Vector4<> particleSpace = Vector4<> { collisionParticle.current.x, collisionParticle.current.y, collisionParticle.current.z, 1.0 } * transform;
+	Vector4<> particleSpace = Vector4<>{ collisionParticle.current.x, collisionParticle.current.y, collisionParticle.current.z, 1.0 } * transform;
 	Vector3<> particleRaster;
 
 	Constraint* constraint;
 	Particle* one;
 	Particle* two;
 	for(unsigned int i = 0; i < bodyU->numConstraints; ++i)
-		{
-			constraint = bodyU->constraintArray + i;
-			one = bodyU->particleArray + constraint->one;
-			two = bodyU->particleArray + constraint->two;
+	{
+		constraint = bodyU->constraintArray + i;
+		one = bodyU->particleArray + constraint->one;
+		two = bodyU->particleArray + constraint->two;
 
-			Vector4<> t0 = Vector4<>{ one->current.x, one->current.y, one->current.z, 1.0 } * transform;
-			Vector4<> t1 = Vector4<>{ two->current.x, two->current.y, two->current.z, 1.0 } * transform;
-			Vector3<> raster0;
-			Vector3<> raster1;
-			if(rasterVertex(raster0, t0, 1280, 720) && rasterVertex(raster1, t1, 1280, 720))
-				rasterLine(raster0, raster1, framebuffer);
-		}
+		Vector4<> t0 = Vector4<>{ one->current.x, one->current.y, one->current.z, 1.0 } * transform;
+		Vector4<> t1 = Vector4<>{ two->current.x, two->current.y, two->current.z, 1.0 } * transform;
+		Vector3<> raster0;
+		Vector3<> raster1;
+		if(rasterVertex(raster0, t0, 1280, 720) && rasterVertex(raster1, t1, 1280, 720))
+			rasterLine(raster0, raster1, framebuffer);
+	}
 
 	for(unsigned int i = 0; i < bodyD->numConstraints; ++i)
-		{
-			constraint = bodyD->constraintArray + i;
-			one = bodyD->particleArray + constraint->one;
-			two = bodyD->particleArray + constraint->two;
+	{
+		constraint = bodyD->constraintArray + i;
+		one = bodyD->particleArray + constraint->one;
+		two = bodyD->particleArray + constraint->two;
 
-			Vector4<> t0 = Vector4<>{ one->current.x, one->current.y, one->current.z, 1.0 } * transform;
-			Vector4<> t1 = Vector4<>{ two->current.x, two->current.y, two->current.z, 1.0 } * transform;
-			Vector3<> raster0;
-			Vector3<> raster1;
-			if(rasterVertex(raster0, t0, 1280, 720) && rasterVertex(raster1, t1, 1280, 720))
-				rasterLine(raster0, raster1, framebuffer);
-		}
+		Vector4<> t0 = Vector4<>{ one->current.x, one->current.y, one->current.z, 1.0 } * transform;
+		Vector4<> t1 = Vector4<>{ two->current.x, two->current.y, two->current.z, 1.0 } * transform;
+		Vector3<> raster0;
+		Vector3<> raster1;
+		if(rasterVertex(raster0, t0, 1280, 720) && rasterVertex(raster1, t1, 1280, 720))
+			rasterLine(raster0, raster1, framebuffer);
+	}
 
 	bodyU->update(timestep * timestep);
 	bodyD->update(timestep * timestep);
 
 	//#pragma omp parallel for num_threads(2)
 	for(unsigned int m = 0; m < model->numMeshes; ++m)
+	{
+		unsigned int numTriangles = model->meshArray[m].numElements() / 3;
+		//#pragma omp parallel for num_threads(2)
+		for(unsigned int i = 0; i < numTriangles; ++i)
 		{
-			unsigned int numTriangles = model->meshArray[m].numElements() / 3;
-			//#pragma omp parallel for num_threads(2)
-			for(unsigned int i = 0; i < numTriangles; ++i)
-				{
-					const Vertex& v0 = model->meshArray[m].vertex<Vertex>(i * 3);
-					const Vertex& v1 = model->meshArray[m].vertex<Vertex>(i * 3 + 1);
-					const Vertex& v2 = model->meshArray[m].vertex<Vertex>(i * 3 + 2);
+			const Vertex& v0 = model->meshArray[m].vertex<Vertex>(i * 3);
+			const Vertex& v1 = model->meshArray[m].vertex<Vertex>(i * 3 + 1);
+			const Vertex& v2 = model->meshArray[m].vertex<Vertex>(i * 3 + 2);
 
-					const Vector3<>& p0 = v0.position;
-					const Vector3<>& p1 = v1.position;
-					const Vector3<>& p2 = v2.position;
+			const Vector3<>& p0 = v0.position;
+			const Vector3<>& p1 = v1.position;
+			const Vector3<>& p2 = v2.position;
 
-					Vector4<> t0 = Vector4<>{ p0.x, p0.y, p0.z, 1.0 } * transform;
-					Vector4<> t1 = Vector4<>{ p1.x, p1.y, p1.z, 1.0 } * transform;
-					Vector4<> t2 = Vector4<>{ p2.x, p2.y, p2.z, 1.0 } * transform;
+			Vector4<> t0 = Vector4<>{ p0.x, p0.y, p0.z, 1.0 } * transform;
+			Vector4<> t1 = Vector4<>{ p1.x, p1.y, p1.z, 1.0 } * transform;
+			Vector4<> t2 = Vector4<>{ p2.x, p2.y, p2.z, 1.0 } * transform;
 
-					if(t0.w < 0.0 || t1.w < 0.0 || t2.w < 0.0)
-						continue;
-					if(t0.z > t0.w || t1.z > t1.w || t2.z > t2.w)
-						continue;
+			if(t0.w < 0.0 || t1.w < 0.0 || t2.w < 0.0)
+				continue;
+			if(t0.z > t0.w || t1.z > t1.w || t2.z > t2.w)
+				continue;
 
-					Vector3<> r0 = { t0.x, t0.y, t0.z };
-					r0 *= (1 / t0.w);
-					r0.x = ((r0.x + 1) * 0.5 * width);
-					r0.y = ((1 - (r0.y + 1) * 0.5) * height);
+			Vector3<> r0 = { t0.x, t0.y, t0.z };
+			r0 *= (1 / t0.w);
+			r0.x = ((r0.x + 1) * 0.5 * width);
+			r0.y = ((1 - (r0.y + 1) * 0.5) * height);
 
-					Vector3<> r1 = { t1.x, t1.y, t1.z };
-					r1 *= (1 / t1.w);
-					r1.x = ((r1.x + 1) * 0.5 * width);
-					r1.y = ((1 - (r1.y + 1) * 0.5) * height);
+			Vector3<> r1 = { t1.x, t1.y, t1.z };
+			r1 *= (1 / t1.w);
+			r1.x = ((r1.x + 1) * 0.5 * width);
+			r1.y = ((1 - (r1.y + 1) * 0.5) * height);
 
-					Vector3<> r2 = { t2.x, t2.y, t2.z };
-					r2 *= (1 / t2.w);
-					r2.x = ((r2.x + 1) * 0.5 * width);
-					r2.y = ((1 - (r2.y + 1) * 0.5) * height);
+			Vector3<> r2 = { t2.x, t2.y, t2.z };
+			r2 *= (1 / t2.w);
+			r2.x = ((r2.x + 1) * 0.5 * width);
+			r2.y = ((1 - (r2.y + 1) * 0.5) * height);
 
-					float xmin = std::min({ r0.x, r1.x, r2.x });
-					float ymin = std::min({ r0.y, r1.y, r2.y });
-					float xmax = std::max({ r0.x, r1.x, r2.x });
-					float ymax = std::max({ r0.y, r1.y, r2.y });
+			float xmin = std::min({ r0.x, r1.x, r2.x });
+			float ymin = std::min({ r0.y, r1.y, r2.y });
+			float xmax = std::max({ r0.x, r1.x, r2.x });
+			float ymax = std::max({ r0.y, r1.y, r2.y });
 
-					//Partial triangle clipping
-					if(xmin >= width || xmax < 0 || ymin >= height || ymax < 0)
-						continue;
-					//Full triangle clipping
-					//if (xmin < 0 || xmax >= width || ymin < 0 || ymax >= height) continue;
+			//Partial triangle clipping
+			if(xmin >= width || xmax < 0 || ymin >= height || ymax < 0)
+				continue;
+			//Full triangle clipping
+			//if (xmin < 0 || xmax >= width || ymin < 0 || ymax >= height) continue;
 
-					if(xmax >= width)
-						xmax = width - 1;
-					if(ymax >= height)
-						ymax = height - 1;
-					if(xmin < 0)
-						xmin = 0;
-					if(ymin < 0)
-						ymin = 0;
+			if(xmax >= width)
+				xmax = width - 1;
+			if(ymax >= height)
+				ymax = height - 1;
+			if(xmin < 0)
+				xmin = 0;
+			if(ymin < 0)
+				ymin = 0;
 
-					float area = frontFace(r0, r1, r2);
-					if(area <= 0)
-						continue;
-					//float (*edgeFunction)(const Vector3<>&, const Vector3<>&, const Vector3<>&) = &frontFace;
-					//float area = edgeFunction(r0, r1, r2);
-					/*if(area < 0)
+			float area = frontFace(r0, r1, r2);
+			if(area <= 0)
+				continue;
+			//float (*edgeFunction)(const Vector3<>&, const Vector3<>&, const Vector3<>&) = &frontFace;
+			//float area = edgeFunction(r0, r1, r2);
+			/*if(area < 0)
 						{
 							area = -area;
 							edgeFunction = &backFace;
 						}*/
 
-					for(unsigned int y = ymin; y <= ymax; ++y)
-						{
-							for(unsigned int x = xmin; x <= xmax; ++x)
-								{
-									Vector3<> pixelSample(x + 0.5, y + 0.5, 0);
-									float w0 = frontFace(r1, r2, pixelSample);
-									float w1 = frontFace(r2, r0, pixelSample);
-									float w2 = frontFace(r0, r1, pixelSample);
+			for(unsigned int y = ymin; y <= ymax; ++y)
+			{
+				for(unsigned int x = xmin; x <= xmax; ++x)
+				{
+					Vector3<> pixelSample(x + 0.5, y + 0.5, 0);
+					float w0 = frontFace(r1, r2, pixelSample);
+					float w1 = frontFace(r2, r0, pixelSample);
+					float w2 = frontFace(r0, r1, pixelSample);
 
-									if(w0 >= 0 && w1 >= 0 && w2 >= 0)
-										{
-											w0 /= area;
-											w1 /= area;
-											w2 /= area;
+					if(w0 >= 0 && w1 >= 0 && w2 >= 0)
+					{
+						w0 /= area;
+						w1 /= area;
+						w2 /= area;
 
-											float z = r0.z * w0 + r1.z * w1 + r2.z * w2;
+						float z = r0.z * w0 + r1.z * w1 + r2.z * w2;
 
-											Vector3<> persp = { w0 /= t0.w, w1 /= t1.w, w2 /= t2.w };
-											persp = (1.0f / (persp.x + persp.y + persp.z)) * persp;
-											w0 = persp.x;
-											w1 = persp.y;
-											w2 = persp.z;
+						Vector3<> persp = { w0 /= t0.w, w1 /= t1.w, w2 /= t2.w };
+						persp = (1.0f / (persp.x + persp.y + persp.z)) * persp;
+						w0 = persp.x;
+						w1 = persp.y;
+						w2 = persp.z;
 
-											/*if(z < -1 || z > 1)
+						/*if(z < -1 || z > 1)
 												continue;*/
 
-											if(z < depthbuffer[y * width + x])
-												{
-													depthbuffer[y * width + x] = z;
+						if(z < depthbuffer[y * width + x])
+						{
+							depthbuffer[y * width + x] = z;
 
-													Vector2<> uv0 = v0.texCoord;
-													Vector2<> uv1 = v1.texCoord;
-													Vector2<> uv2 = v2.texCoord;
+							Vector2<> uv0 = v0.texCoord;
+							Vector2<> uv1 = v1.texCoord;
+							Vector2<> uv2 = v2.texCoord;
 
-													Vector2<> uv = uv0 * w0 + uv1 * w1 + uv2 * w2;
+							Vector2<> uv = uv0 * w0 + uv1 * w1 + uv2 * w2;
 
-													uv.y = uv.y - (int)uv.y;
+							uv.y = uv.y - (int)uv.y;
 
-													const Vector4<unsigned char>& texel = texture->sample<Vector4<unsigned char>>(uv.x * texture->width, uv.y * texture->height);
-													framebuffer.sample<Vector4<unsigned char>>(x, y) = Vector4<unsigned char>{ texel.z, texel.y, texel.x, 255 };
-												}
-										}
-								}
+							const Vector4<unsigned char>& texel = texture->sample<Vector4<unsigned char>>(uv.x * texture->width, uv.y * texture->height);
+							framebuffer.sample<Vector4<unsigned char>>(x, y) = Vector4<unsigned char>{ texel.z, texel.y, texel.x, 255 };
 						}
+					}
 				}
+			}
 		}
+	}
 
 	if(rasterVertex(particleRaster, particleSpace, 1280, 720))
 		framebuffer.sample<Vector4<unsigned char>>(particleRaster.x, particleRaster.y) = Vector4<unsigned char>{ 255, 255, 255, 255 };
@@ -489,31 +489,31 @@ int main(int argc, char* argv[])
 
 	//Render
 	while(true)
-		{
-			clock_t begin = clock();
+	{
+		clock_t begin = clock();
 
-			gamepad->poll();
-			fps->update();
+		gamepad->poll();
+		fps->update();
 
-			if(gamepad->state.buttons & Gamepad::BUTTON_RIGHT_SHOULDER)
-				render(camera, imgWidth, imgHeight);
-			else
-				rasterize(camera, imgWidth, imgHeight);
+		if(gamepad->state.buttons & Gamepad::BUTTON_RIGHT_SHOULDER)
+			render(camera, imgWidth, imgHeight);
+		else
+			rasterize(camera, imgWidth, imgHeight);
 
-			if(gamepad->state.buttons & Gamepad::BUTTON_A)
-				resetParticles();
+		if(gamepad->state.buttons & Gamepad::BUTTON_A)
+			resetParticles();
 
-			/*light->lightMatrix.rotate(1, 0.0, 1.0, 0.0);
+		/*light->lightMatrix.rotate(1, 0.0, 1.0, 0.0);
 			*lightDirection = Vector3<> { 0.0, 0.0, -1.0 } * light->lightMatrix;*/
 
-			clock_t end = clock();
-			double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-			++numFrames;
-			double fps = 1.0 / elapsed_secs;
-			std::cout << "FPS: " << fps << std::endl;
-			totalFPS += fps;
-			std::cout << "MEAN: " << totalFPS / numFrames << std::endl;
-		}
+		clock_t end = clock();
+		double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+		++numFrames;
+		double fps = 1.0 / elapsed_secs;
+		std::cout << "FPS: " << fps << std::endl;
+		totalFPS += fps;
+		std::cout << "MEAN: " << totalFPS / numFrames << std::endl;
+	}
 
 	delete gamepad;
 

@@ -7,7 +7,7 @@
 class DeltaLight
 {
 
-public:
+  public:
 	Matrix4<> lightMatrix;
 	Vector3<> color;
 	float intensity;

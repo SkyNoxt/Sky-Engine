@@ -8,7 +8,7 @@
 class WindowsGamepad : public VirtualGamepad
 {
 
-public:
+  public:
 	//Constructor
 	WindowsGamepad();
 
@@ -18,6 +18,6 @@ public:
 	//Destructor
 	~WindowsGamepad() override;
 
-private:
+  private:
 	void update(State& dest, const XINPUT_STATE& src);
 };

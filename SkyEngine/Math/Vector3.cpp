@@ -86,8 +86,8 @@ template <class T>
 Vector3<T> Vector3<T>::cross(const Vector3<T>& vector) const
 {
 	return Vector3<T>{ y * vector.z - vector.y * z,
-		z * vector.x - vector.z * x,
-		x * vector.y - vector.x * y };
+					   z * vector.x - vector.z * x,
+					   x * vector.y - vector.x * y };
 }
 
 template <class T>

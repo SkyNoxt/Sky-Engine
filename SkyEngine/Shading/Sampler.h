@@ -6,7 +6,7 @@
 class Sampler
 {
 
-public:
+  public:
 	unsigned int size;
 	unsigned int width;
 	unsigned int height;

@@ -6,7 +6,7 @@
 class Ray
 {
 
-public:
+  public:
 	static const float MAX_LENGTH;
 
 	//Member variables

@@ -3,8 +3,8 @@
 
 template <class T>
 const Matrix3<T> Matrix3<T>::IDENTITY = Matrix3<T>{ 1, 0, 0,
-	0, 1, 0,
-	0, 0, 1 };
+													0, 1, 0,
+													0, 0, 1 };
 
 template <class T>
 Matrix3<T>::Matrix3(T xxVal, T xyVal, T xzVal, T yxVal, T yyVal, T yzVal, T zxVal, T zyVal, T zzVal)

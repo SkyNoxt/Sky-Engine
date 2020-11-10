@@ -7,7 +7,7 @@ template <class T = float>
 class Matrix3
 {
 
-public:
+  public:
 	union
 	{
 		struct
@@ -67,7 +67,7 @@ public:
 	//Destructor
 	~Matrix3() = default;
 
-private:
+  private:
 };
 
 //Inline heterogeneous opeartors

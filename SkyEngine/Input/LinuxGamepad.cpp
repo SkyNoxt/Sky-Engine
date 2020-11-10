@@ -25,50 +25,50 @@ void LinuxGamepad::poll()
 	evCount /= sizeof(js_event);
 
 	for(int i = 0; i < evCount; ++i)
-		{
-			const struct js_event& ev = evBuf[i];
+	{
+		const struct js_event& ev = evBuf[i];
 
-			if(ev.type & JS_EVENT_AXIS)
-				switch(ev.number)
-					{
-						case 0:
-							state.leftThumbX = mapCenteredAxis(ev.value, stickDeadzone);
-							break;
-						case 1:
-							state.leftThumbY = mapCenteredAxis(ev.value, stickDeadzone);
-							break;
-						case 2:
-							state.leftTrigger = mapAxis(ev.value, triggerDeadzone);
-							break;
-						case 3:
-							state.rightThumbX = mapCenteredAxis(ev.value, stickDeadzone);
-							break;
-						case 4:
-							state.rightThumbY = mapCenteredAxis(ev.value, stickDeadzone);
-							break;
-						case 5:
-							state.rightTrigger = mapAxis(ev.value, triggerDeadzone);
-							break;
-						case 6:
-							if(ev.value < -0.5)
-								state.buttons = (state.buttons & (~LinuxGamepad::BUTTON_DPAD_RIGHT)) | LinuxGamepad::BUTTON_DPAD_LEFT;
-							else if(ev.value > 0.5)
-								state.buttons = (state.buttons & (~LinuxGamepad::BUTTON_DPAD_LEFT)) | LinuxGamepad::BUTTON_DPAD_RIGHT;
-							else
-								state.buttons &= ~(LinuxGamepad::BUTTON_DPAD_LEFT | LinuxGamepad::BUTTON_DPAD_RIGHT);
-							break;
-						case 7:
-							if(ev.value < -0.5)
-								state.buttons = (state.buttons & (~LinuxGamepad::BUTTON_DPAD_DOWN)) | LinuxGamepad::BUTTON_DPAD_UP;
-							else if(ev.value > 0.5)
-								state.buttons = (state.buttons & (~LinuxGamepad::BUTTON_DPAD_UP)) | LinuxGamepad::BUTTON_DPAD_DOWN;
-							else
-								state.buttons &= ~(LinuxGamepad::BUTTON_DPAD_DOWN | LinuxGamepad::BUTTON_DPAD_UP);
-							break;
-					}
-			if(ev.type & JS_EVENT_BUTTON)
-				updateButtonMask(ev.value, state.buttons, linuxButton(ev.number));
-		}
+		if(ev.type & JS_EVENT_AXIS)
+			switch(ev.number)
+			{
+				case 0:
+					state.leftThumbX = mapCenteredAxis(ev.value, stickDeadzone);
+					break;
+				case 1:
+					state.leftThumbY = mapCenteredAxis(ev.value, stickDeadzone);
+					break;
+				case 2:
+					state.leftTrigger = mapAxis(ev.value, triggerDeadzone);
+					break;
+				case 3:
+					state.rightThumbX = mapCenteredAxis(ev.value, stickDeadzone);
+					break;
+				case 4:
+					state.rightThumbY = mapCenteredAxis(ev.value, stickDeadzone);
+					break;
+				case 5:
+					state.rightTrigger = mapAxis(ev.value, triggerDeadzone);
+					break;
+				case 6:
+					if(ev.value < -0.5)
+						state.buttons = (state.buttons & (~LinuxGamepad::BUTTON_DPAD_RIGHT)) | LinuxGamepad::BUTTON_DPAD_LEFT;
+					else if(ev.value > 0.5)
+						state.buttons = (state.buttons & (~LinuxGamepad::BUTTON_DPAD_LEFT)) | LinuxGamepad::BUTTON_DPAD_RIGHT;
+					else
+						state.buttons &= ~(LinuxGamepad::BUTTON_DPAD_LEFT | LinuxGamepad::BUTTON_DPAD_RIGHT);
+					break;
+				case 7:
+					if(ev.value < -0.5)
+						state.buttons = (state.buttons & (~LinuxGamepad::BUTTON_DPAD_DOWN)) | LinuxGamepad::BUTTON_DPAD_UP;
+					else if(ev.value > 0.5)
+						state.buttons = (state.buttons & (~LinuxGamepad::BUTTON_DPAD_UP)) | LinuxGamepad::BUTTON_DPAD_DOWN;
+					else
+						state.buttons &= ~(LinuxGamepad::BUTTON_DPAD_DOWN | LinuxGamepad::BUTTON_DPAD_UP);
+					break;
+			}
+		if(ev.type & JS_EVENT_BUTTON)
+			updateButtonMask(ev.value, state.buttons, linuxButton(ev.number));
+	}
 }
 
 LinuxGamepad::~LinuxGamepad()
@@ -114,32 +114,32 @@ void LinuxGamepad::updateButtonMask(bool down, unsigned int& currentMask, unsign
 unsigned int LinuxGamepad::linuxButton(unsigned int btn)
 {
 	switch(btn)
-		{
-			case 0:
-				return BUTTON_A;
-			case 1:
-				return BUTTON_B;
-			case 2:
-				return BUTTON_X;
-			case 3:
-				return BUTTON_Y;
-			case 4:
-				return BUTTON_LEFT_SHOULDER;
-			case 5:
-				return BUTTON_RIGHT_SHOULDER;
-			case 6:
-				return BUTTON_BACK;
-			case 7:
-				return BUTTON_START;
-			case 8:
-				return BUTTON_CENTER;
-			case 9:
-				return BUTTON_LEFT_THUMB;
-			case 10:
-				return BUTTON_RIGHT_THUMB;
-			default:
-				return 0;
-		}
+	{
+		case 0:
+			return BUTTON_A;
+		case 1:
+			return BUTTON_B;
+		case 2:
+			return BUTTON_X;
+		case 3:
+			return BUTTON_Y;
+		case 4:
+			return BUTTON_LEFT_SHOULDER;
+		case 5:
+			return BUTTON_RIGHT_SHOULDER;
+		case 6:
+			return BUTTON_BACK;
+		case 7:
+			return BUTTON_START;
+		case 8:
+			return BUTTON_CENTER;
+		case 9:
+			return BUTTON_LEFT_THUMB;
+		case 10:
+			return BUTTON_RIGHT_THUMB;
+		default:
+			return 0;
+	}
 };
 
 #endif

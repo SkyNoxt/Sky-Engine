@@ -6,7 +6,7 @@
 class Particle
 {
 
-public:
+  public:
 	//Member variables
 	Vector3<> current;
 	Vector3<> previous;

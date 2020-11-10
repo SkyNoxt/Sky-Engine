@@ -9,7 +9,7 @@ template <class T = float>
 class Box
 {
 
-public:
+  public:
 	Vector3<T> bounds[2];
 
 	//Constructor

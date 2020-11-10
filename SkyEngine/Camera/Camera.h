@@ -8,7 +8,7 @@
 class Camera
 {
 
-public:
+  public:
 	static const float DEG_TO_RAD;
 	//static const float RAD_TO_DEG;
 

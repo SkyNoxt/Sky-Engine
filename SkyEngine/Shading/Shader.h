@@ -7,7 +7,7 @@
 class Shader
 {
 
-public:
+  public:
 	//Constructor
 	Shader() = default;
 

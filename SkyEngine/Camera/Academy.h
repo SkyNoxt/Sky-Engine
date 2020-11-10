@@ -6,6 +6,6 @@
 class Academy : public Camera
 {
 
-public:
+  public:
 	Academy(float targetRatio);
 };

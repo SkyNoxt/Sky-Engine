@@ -5,7 +5,7 @@ template <class T = float>
 class Vector3
 {
 
-public:
+  public:
 	union
 	{
 		struct
@@ -67,7 +67,7 @@ public:
 	//Destructor
 	~Vector3() = default;
 
-private:
+  private:
 };
 
 //Inline heterogeneous opeartors
