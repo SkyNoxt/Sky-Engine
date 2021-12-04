@@ -220,10 +220,8 @@ static void render(Camera& camera, unsigned int width, unsigned int height)
 
 	Vector3<>* framebuffer = new Vector3<>[width * height];
 
-#pragma omp parallel for num_threads(32)
 	for(unsigned int j = 0; j < height; ++j)
 	{
-#pragma omp parallel for num_threads(32)
 		for(unsigned int i = 0; i < width; ++i)
 		{
 			Ray ray = camera.castRay(width, height, i, j);
@@ -310,11 +308,9 @@ static void rasterize(Camera& camera, int width, int height)
 	bodyU->update(timestep * timestep);
 	bodyD->update(timestep * timestep);
 
-	//#pragma omp parallel for num_threads(2)
 	for(unsigned int m = 0; m < model->numMeshes; ++m)
 	{
 		unsigned int numTriangles = model->meshArray[m].numElements() / 3;
-		//#pragma omp parallel for num_threads(2)
 		for(unsigned int i = 0; i < numTriangles; ++i)
 		{
 			const Vertex& v0 = model->meshArray[m].vertex<Vertex>(i * 3);
