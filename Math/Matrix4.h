@@ -92,22 +92,22 @@ class Matrix4
 
 //Inline heterogeneous opeartors
 
-template <class T>
+/*template <class T>
 Vector3<T>& operator*=(Vector3<T>& vector, const Matrix4<T>& matrix)
 {
 	return vector = vector * matrix;
-}
+}*/
 
 template <class T>
 Vector3<T> operator*(const Vector3<T>& vector, const Matrix4<T>& matrix)
 {
-	/*T w = 1 / (vector.x * matrix.xw + vector.y * matrix.yw + vector.z * matrix.zw + matrix.ww);
-
-	return Vector3<T>(
-		vector.x * matrix.xx + vector.y * matrix.yx + vector.z * matrix.zx + matrix.wx * w,
-		vector.x * matrix.xy + vector.y * matrix.yy + vector.z * matrix.zy + matrix.wy * w,
-		vector.x * matrix.xz + vector.y * matrix.yz + vector.z * matrix.zz + matrix.wz * w
-	);*/
+	//T w = 1 / (vector.x * matrix.xw + vector.y * matrix.yw + vector.z * matrix.zw + matrix.ww);
+	//
+	//return Vector3<T>(
+	//	vector.x * matrix.xx + vector.y * matrix.yx + vector.z * matrix.zx + matrix.wx * w,
+	//	vector.x * matrix.xy + vector.y * matrix.yy + vector.z * matrix.zy + matrix.wy * w,
+	//	vector.x * matrix.xz + vector.y * matrix.yz + vector.z * matrix.zz + matrix.wz * w
+	//);
 
 	return Vector3<T>{
 		vector.x * matrix.xx + vector.y * matrix.yx + vector.z * matrix.zx,
@@ -116,11 +116,11 @@ Vector3<T> operator*(const Vector3<T>& vector, const Matrix4<T>& matrix)
 	};
 }
 
-template <class T>
+/*template <class T>
 Vector4<T>& operator*=(Vector4<T>& vector, const Matrix4<T>& matrix)
 {
 	return vector = vector * matrix;
-}
+}*/
 
 template <class T>
 Vector4<T> operator*(const Vector4<T>& vector, const Matrix4<T>& matrix)

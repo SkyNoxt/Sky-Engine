@@ -2,8 +2,6 @@
 #include <iostream>
 #include <memory.h>
 
-#include <omp.h>
-
 #include <Camera/Camera.h>
 #include <Math/Vector3.h>
 
@@ -451,14 +449,14 @@ int main(int argc, char* argv[])
 
 	//Instance gamepad
 	gamepad = new Gamepad();
-	Gamepad::State state;
+	//Gamepad::State state;
 
 	fps = new FPS(&camera, gamepad);
 
 	//Compute transformation matrix
 	modelMatrix = new Matrix4<>();
 	//modelMatrix->scale(10, 10, 10);
-	Matrix4<> normalMatrix = modelMatrix->inverse().transpose();
+	//Matrix4<> normalMatrix = modelMatrix->inverse().transpose();
 
 	/*//Forward Mesh Transformation
 	for(unsigned int i = 0; i < mesh->numVertices; ++i)
