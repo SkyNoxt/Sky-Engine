@@ -140,6 +140,6 @@ unsigned int LinuxGamepad::linuxButton(unsigned int btn)
 		default:
 			return 0;
 	}
-};
+}
 
 #endif
