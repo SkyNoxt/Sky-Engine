@@ -34,12 +34,6 @@ class Sampler
 };
 
 template <class T>
-const T& Sampler::sample(unsigned int x, unsigned int y) const
-{
-	return ((T*)samples)[y * width + x];
-}
-
-template <class T>
 T& Sampler::sample(unsigned int x, unsigned int y)
 {
 	return ((T*)samples)[y * width + x];

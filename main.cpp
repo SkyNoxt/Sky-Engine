@@ -442,12 +442,12 @@ int main(int argc, char* argv[])
 	int imgHeight = 720;
 
 	//OpenCV window
-	namedWindow("Sky Engine", cv::WINDOW_OPENGL);
+	namedWindow("Sky Engine", cv::WINDOW_NORMAL);
 	cv::resizeWindow("Sky Engine", imgWidth, imgHeight);
 
 	Camera camera = Camera(1.0, 90, imgWidth / (float)imgHeight, 0.1, 200.0);
-	model = new Model(FileStream("/home/nelson/Desktop/Light.dat"));
-	texture = new Sampler(FileStream("/home/nelson/Desktop/Light.tex"));
+	model = new Model(FileStream("/home/sky/Documents/Other/sky/Models/Artisans/Artisans Hub.dat"));
+	texture = new Sampler(FileStream("/home/sky/Documents/Other/sky/Models/Artisans/Artisans Hub.tex"));
 
 	//Instance gamepad
 	gamepad = new Gamepad();
