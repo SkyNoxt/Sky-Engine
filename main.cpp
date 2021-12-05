@@ -1,16 +1,13 @@
 ﻿
 #include <iostream>
-#include <memory.h>
+#include <chrono>
 
 #include <Camera/Camera.h>
-#include <Math/Vector3.h>
 
 #include <Streams/FileStream.h>
 
 #include <Geometry/Model.h>
 #include <Shading/Sampler.h>
-
-#include <Shading/DeltaLight.h>
 
 #include <Input/Gamepad.h>
 
@@ -98,8 +95,8 @@ bool mode = true;
 
 Gamepad* gamepad;
 
-DeltaLight* light;
-Vector3<>* lightDirection;
+//DeltaLight* light;
+//Vector3<>* lightDirection;
 
 static Vector3<> castRay(Ray& ray, Camera& camera, unsigned int depth)
 {
@@ -472,20 +469,16 @@ int main(int argc, char* argv[])
 	resetParticles();
 
 	//Compute light
-	light = new DeltaLight({ 1.0, 0.0, 0.0 }, 15);
-	light->lightMatrix.translate(0.0, 0.0, 0.0); //Point light transform
+	//light = new DeltaLight({ 1.0, 0.0, 0.0 }, 15);
+	//light->lightMatrix.translate(0.0, 0.0, 0.0); //Point light transform
 	//light->lightMatrix.rotate(45, 1.0, 0.0, 0.0);
-	lightDirection = new Vector3<>();
-	*lightDirection = Vector3<>{ 0.0, 0.0, -1.0 } * light->lightMatrix;
-
-	double totalFPS = 0;
-	unsigned int numFrames = 0;
+	//lightDirection = new Vector3<>();
+	//*lightDirection = Vector3<>{ 0.0, 0.0, -1.0 } * light->lightMatrix;
 
 	//Render
 	while(true)
 	{
-		clock_t begin = clock();
-
+		auto start = std::chrono::high_resolution_clock::now();
 		gamepad->poll();
 		fps->update();
 
@@ -494,19 +487,14 @@ int main(int argc, char* argv[])
 		else
 			rasterize(camera, imgWidth, imgHeight);
 
-		if(gamepad->state.buttons & Gamepad::BUTTON_A)
-			resetParticles();
+		/*if(gamepad->state.buttons & Gamepad::BUTTON_A)
+			resetParticles();*/
 
 		/*light->lightMatrix.rotate(1, 0.0, 1.0, 0.0);
 			*lightDirection = Vector3<> { 0.0, 0.0, -1.0 } * light->lightMatrix;*/
 
-		clock_t end = clock();
-		double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-		++numFrames;
-		double fps = 1.0 / elapsed_secs;
-		std::cout << "FPS: " << fps << std::endl;
-		totalFPS += fps;
-		std::cout << "MEAN: " << totalFPS / numFrames << std::endl;
+		auto ms = std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::high_resolution_clock::now() - start);
+		printf("FPS: %f\n", 1000000000.0 / ms.count());
 	}
 
 	delete gamepad;
