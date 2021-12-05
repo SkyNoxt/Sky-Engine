@@ -17,7 +17,7 @@ class FPS
 	//Destructor
 	~FPS() = default;
 
-  //private:
+  private:
 	Camera* camera;
 	Gamepad* gamepad;
 

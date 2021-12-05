@@ -1,6 +1,6 @@
 ﻿
-#include <iostream>
 #include <chrono>
+#include <iostream>
 #include <thread>
 
 #include <Camera/Camera.h>
@@ -18,14 +18,13 @@
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 
+Gamepad* gamepad;
 FPS* fps;
 
 Model* model;
 Sampler* texture;
 
 Matrix4<>* modelMatrix;
-
-Gamepad* gamepad;
 
 static Vector3<> castRay(Ray& ray, Camera& camera, unsigned int depth)
 {
@@ -323,25 +322,42 @@ int main(int argc, char* argv[])
 	//Compute camera
 	camera.viewMatrix = camera.cameraMatrix.inverse();
 
-	std::thread gamepadPoll = std::thread([]() {
-		while(true)
-			gamepad->poll();
-	});
+	//Input thread
+	std::thread input = std::thread([]()
+									{
+										while(true)
+											gamepad->poll();
+									});
 
-	//Render
+	//Game logic thread
+	std::thread logic = std::thread([]()
+									{
+										while(true)
+										{
+											auto start = std::chrono::steady_clock::now();
+											auto next = start + std::chrono::milliseconds(10);
+
+											fps->update();
+
+											std::this_thread::sleep_until(next);
+
+											auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - start);
+											printf("Logic: %f\n", 1000.0 / ms.count());
+										}
+									});
+
+	//Rendering (main) thread
 	while(true)
 	{
-		auto start = std::chrono::high_resolution_clock::now();
-		
-		fps->update();
+		auto start = std::chrono::steady_clock::now();
 
 		if(gamepad->state.buttons & Gamepad::BUTTON_RIGHT_SHOULDER)
 			render(camera, imgWidth, imgHeight);
 		else
 			rasterize(camera, imgWidth, imgHeight);
 
-		auto ms = std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::high_resolution_clock::now() - start);
-		printf("FPS: %f\n", 1000000000.0 / ms.count());
+		auto ms = std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now() - start);
+		printf("Graphics: %f\n", 1000000000.0 / ms.count());
 	}
 
 	delete gamepad;
