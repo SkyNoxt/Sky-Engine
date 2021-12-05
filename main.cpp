@@ -1,6 +1,7 @@
 ﻿
 #include <iostream>
 #include <chrono>
+#include <thread>
 
 #include <Camera/Camera.h>
 
@@ -17,86 +18,14 @@
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 
-//physics test
-#include <Physics/Body.h>
-
 FPS* fps;
-
-unsigned int numParticles = 16;
-unsigned int numConstraints = 112;
-Body* bodyU = nullptr;
-Body* bodyD = nullptr;
-Body* camBody = nullptr;
-float timestep = 1.0 / 60.0;
-
-void resetParticles()
-{
-	delete bodyU;
-	delete bodyD;
-	delete camBody;
-
-	numParticles = 8;
-	numConstraints = 56;
-
-	Particle* particlesU = (Particle*)malloc(numParticles * sizeof(Particle));
-	Constraint* constraintsU = (Constraint*)malloc(numConstraints * sizeof(Constraint));
-
-	Particle* particlesD = (Particle*)malloc(numParticles * sizeof(Particle));
-	Constraint* constraintsD = (Constraint*)malloc(numConstraints * sizeof(Constraint));
-
-	Particle* camParticles = (Particle*)malloc(sizeof(Particle) * 2);
-	Constraint* camConstraints = (Constraint*)malloc(sizeof(Constraint));
-
-	particlesU[0] = Particle(Vector3<>{ 0.0, 0.0, 0.0 }, Vector3<>{ 0.0, 0.0, 0.0 }, Vector3<>{ 0.0, 0.0, 0.0 });
-	particlesU[1] = Particle(Vector3<>{ 0.0, 0.0, 2.0 }, Vector3<>{ 0.0, 0.0, 2.0 }, Vector3<>{ 0.0, 0.0, 0.0 });
-	particlesU[2] = Particle(Vector3<>{ 2.0, 0.0, 2.0 }, Vector3<>{ 2.0, 0.0, 2.0 }, Vector3<>{ 0.0, 0.0, 0.0 });
-	particlesU[3] = Particle(Vector3<>{ 2.0, 0.0, 0.0 }, Vector3<>{ 2.0, 0.0, 0.0 }, Vector3<>{ 0.0, 0.0, 0.0 });
-
-	particlesU[4] = Particle(Vector3<>{ 0.0, 2.0, 0.0 }, Vector3<>{ 0.0, 2.0, 0.0 }, Vector3<>{ 0.0, 0.0, 0.0 });
-	particlesU[5] = Particle(Vector3<>{ 0.0, 2.0, 2.0 }, Vector3<>{ 0.0, 2.0, 2.0 }, Vector3<>{ 0.0, 0.0, 0.0 });
-	particlesU[6] = Particle(Vector3<>{ 2.0, 2.0, 2.0 }, Vector3<>{ 2.0, 2.0, 2.0 }, Vector3<>{ 0.0, 0.0, 0.0 });
-	particlesU[7] = Particle(Vector3<>{ 2.0, 2.0, 0.0 }, Vector3<>{ 2.0, 2.0, 0.0 }, Vector3<>{ 0.0, 0.0, 0.0 });
-
-	particlesD[0] = Particle(Vector3<>{ -1.0, 2.5, -1.0 }, Vector3<>{ -1.0, 2.5, -1.0 }, Vector3<>{ 0.0, 0.00, 0.0 });
-	particlesD[1] = Particle(Vector3<>{ -1.0, 2.5, 1.0 }, Vector3<>{ -1.0, 2.5, 1.0 }, Vector3<>{ 0.0, 0.00, 0.0 });
-	particlesD[2] = Particle(Vector3<>{ 1.0, 2.5, 1.0 }, Vector3<>{ 1.0, 2.5, 1.0 }, Vector3<>{ 0.0, 0.00, 0.0 });
-	particlesD[3] = Particle(Vector3<>{ 1.0, 2.5, -1.0 }, Vector3<>{ 1.0, 2.5, -1.0 }, Vector3<>{ 0.0, 0.00, 0.0 });
-
-	particlesD[4] = Particle(Vector3<>{ -1.0, 4.5, -1.0 }, Vector3<>{ -1.0, 4.5, -1.0 }, Vector3<>{ 0.0, 0.00, 0.0 });
-	particlesD[5] = Particle(Vector3<>{ -1.0, 4.5, 1.0 }, Vector3<>{ -1.0, 4.5, 1.0 }, Vector3<>{ 0.0, 0.00, 0.0 });
-	particlesD[6] = Particle(Vector3<>{ 1.0, 4.5, 1.0 }, Vector3<>{ 1.0, 4.5, 1.0 }, Vector3<>{ 0.0, 0.00, 0.0 });
-	particlesD[7] = Particle(Vector3<>{ 1.0, 4.5, -1.0 }, Vector3<>{ 1.0, 4.5, -1.0 }, Vector3<>{ 0.0, 0.00, 0.0 });
-
-	Vector3<> camOne = Vector3<>{ fps->camera->cameraMatrix.wx, fps->camera->cameraMatrix.wy, fps->camera->cameraMatrix.wz + 1.0 };
-	Vector3<> camTwo = Vector3<>{ fps->camera->cameraMatrix.wx + 2.5, fps->camera->cameraMatrix.wy + 5.0, fps->camera->cameraMatrix.wz + 10 };
-	camParticles[0] = Particle(camOne, camOne, Vector3<>{ 0, 0, 0 });
-	camParticles[1] = Particle(camTwo, camTwo, Vector3<>{ 0, 0, 0 });
-
-	camConstraints[0] = Constraint(0, 1, camParticles[1].current.distance(camParticles[0].current));
-
-	for(unsigned int i = 0; i < 8; ++i)
-		for(unsigned int j = 0; j < 7; ++j)
-			constraintsU[7 * i + j] = Constraint(i, (i + j + 1) % 8, particlesU[(i + j + 1) % 8].current.distance(particlesU[i].current));
-
-	for(unsigned int i = 0; i < 8; ++i)
-		for(unsigned int j = 0; j < 7; ++j)
-			constraintsD[7 * i + j] = Constraint(i, (i + j + 1) % 8, particlesD[(i + j + 1) % 8].current.distance(particlesD[i].current));
-
-	bodyU = new Body(numParticles, numConstraints, particlesU, constraintsU);
-	camBody = new Body(numParticles, numConstraints, particlesD, constraintsD);
-	bodyD = new Body(2, 1, camParticles, camConstraints);
-}
 
 Model* model;
 Sampler* texture;
 
 Matrix4<>* modelMatrix;
-bool mode = true;
 
 Gamepad* gamepad;
-
-//DeltaLight* light;
-//Vector3<>* lightDirection;
 
 static Vector3<> castRay(Ray& ray, Camera& camera, unsigned int depth)
 {
@@ -251,58 +180,6 @@ static void rasterize(Camera& camera, int width, int height)
 
 	Matrix4<> transform = camera.projectionMatrix * camera.viewMatrix * *modelMatrix;
 
-	float collisionDistance;
-	Vector3<> collisionVector;
-	Particle collisionParticle = Particle(Vector3<>{ 0, 0, 0 }, Vector3<>{ 0, 0, 0 }, Vector3<>{ 0, 0, 0 });
-	Constraint collisionConstraint = Constraint(0, 0, 0);
-	if(bodyD->collision(*bodyU, collisionDistance, collisionVector, collisionParticle, collisionConstraint))
-	{
-		std::cout << "COLLISION - "
-				  << "Lenght: " << collisionDistance << " | "
-				  << "Vector: " << collisionVector.x << " " << collisionVector.y << " " << collisionVector.z << " | "
-				  << "Particle: " << collisionParticle.current.x << " " << collisionParticle.current.y << " " << collisionParticle.current.z << std::endl;
-	}
-
-	Vector4<> origin = Vector4<>{ 0.0, 0.0, 0.0, 1.0 } * transform;
-	Vector4<> axisend = Vector4<>{ collisionVector.x, collisionVector.y, collisionVector.z, 1.0 } * transform;
-
-	Vector4<> particleSpace = Vector4<>{ collisionParticle.current.x, collisionParticle.current.y, collisionParticle.current.z, 1.0 } * transform;
-	Vector3<> particleRaster;
-
-	Constraint* constraint;
-	Particle* one;
-	Particle* two;
-	for(unsigned int i = 0; i < bodyU->numConstraints; ++i)
-	{
-		constraint = bodyU->constraintArray + i;
-		one = bodyU->particleArray + constraint->one;
-		two = bodyU->particleArray + constraint->two;
-
-		Vector4<> t0 = Vector4<>{ one->current.x, one->current.y, one->current.z, 1.0 } * transform;
-		Vector4<> t1 = Vector4<>{ two->current.x, two->current.y, two->current.z, 1.0 } * transform;
-		Vector3<> raster0;
-		Vector3<> raster1;
-		if(rasterVertex(raster0, t0, 1280, 720) && rasterVertex(raster1, t1, 1280, 720))
-			rasterLine(raster0, raster1, framebuffer);
-	}
-
-	for(unsigned int i = 0; i < bodyD->numConstraints; ++i)
-	{
-		constraint = bodyD->constraintArray + i;
-		one = bodyD->particleArray + constraint->one;
-		two = bodyD->particleArray + constraint->two;
-
-		Vector4<> t0 = Vector4<>{ one->current.x, one->current.y, one->current.z, 1.0 } * transform;
-		Vector4<> t1 = Vector4<>{ two->current.x, two->current.y, two->current.z, 1.0 } * transform;
-		Vector3<> raster0;
-		Vector3<> raster1;
-		if(rasterVertex(raster0, t0, 1280, 720) && rasterVertex(raster1, t1, 1280, 720))
-			rasterLine(raster0, raster1, framebuffer);
-	}
-
-	bodyU->update(timestep * timestep);
-	bodyD->update(timestep * timestep);
-
 	for(unsigned int m = 0; m < model->numMeshes; ++m)
 	{
 		unsigned int numTriangles = model->meshArray[m].numElements() / 3;
@@ -418,14 +295,6 @@ static void rasterize(Camera& camera, int width, int height)
 		}
 	}
 
-	if(rasterVertex(particleRaster, particleSpace, 1280, 720))
-		framebuffer.sample<Vector4<unsigned char>>(particleRaster.x, particleRaster.y) = Vector4<unsigned char>{ 255, 255, 255, 255 };
-
-	Vector3<> axis0;
-	Vector3<> axis1;
-	if(rasterVertex(axis0, axisend, 1280, 720) && rasterVertex(axis1, origin, 1280, 720))
-		rasterLine(axis0, axis1, framebuffer);
-
 	cv::Mat img(height, width, CV_8UC4, framebuffer.samples);
 	imshow("Sky Engine", img);
 	cv::waitKey(1);
@@ -446,52 +315,30 @@ int main(int argc, char* argv[])
 
 	//Instance gamepad
 	gamepad = new Gamepad();
-	//Gamepad::State state;
-
 	fps = new FPS(&camera, gamepad);
 
 	//Compute transformation matrix
 	modelMatrix = new Matrix4<>();
-	//modelMatrix->scale(10, 10, 10);
-	//Matrix4<> normalMatrix = modelMatrix->inverse().transpose();
-
-	/*//Forward Mesh Transformation
-	for(unsigned int i = 0; i < mesh->numVertices; ++i)
-	{
-		mesh->vertexArray[i].position *= *modelMatrix;
-		mesh->vertexArray[i].normal *= normalMatrix;
-	}*/
 
 	//Compute camera
 	camera.viewMatrix = camera.cameraMatrix.inverse();
 
-	//Physics test
-	resetParticles();
-
-	//Compute light
-	//light = new DeltaLight({ 1.0, 0.0, 0.0 }, 15);
-	//light->lightMatrix.translate(0.0, 0.0, 0.0); //Point light transform
-	//light->lightMatrix.rotate(45, 1.0, 0.0, 0.0);
-	//lightDirection = new Vector3<>();
-	//*lightDirection = Vector3<>{ 0.0, 0.0, -1.0 } * light->lightMatrix;
+	std::thread gamepadPoll = std::thread([]() {
+		while(true)
+			gamepad->poll();
+	});
 
 	//Render
 	while(true)
 	{
 		auto start = std::chrono::high_resolution_clock::now();
-		gamepad->poll();
+		
 		fps->update();
 
 		if(gamepad->state.buttons & Gamepad::BUTTON_RIGHT_SHOULDER)
 			render(camera, imgWidth, imgHeight);
 		else
 			rasterize(camera, imgWidth, imgHeight);
-
-		/*if(gamepad->state.buttons & Gamepad::BUTTON_A)
-			resetParticles();*/
-
-		/*light->lightMatrix.rotate(1, 0.0, 1.0, 0.0);
-			*lightDirection = Vector3<> { 0.0, 0.0, -1.0 } * light->lightMatrix;*/
 
 		auto ms = std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::high_resolution_clock::now() - start);
 		printf("FPS: %f\n", 1000000000.0 / ms.count());

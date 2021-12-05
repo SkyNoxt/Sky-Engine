@@ -3,7 +3,7 @@
 OS = LINUX
 
 CXXFLAGS = -std=c++20 -Ofast -flto -D $(OS) -I /usr/include/opencv4 -I . -Wall -Wno-narrowing
-LDFLAGS = -Ofast -flto -lopencv_core -lopencv_imgproc -lopencv_highgui
+LDFLAGS = -Ofast -flto -l pthread -l opencv_core -l opencv_imgproc -l opencv_highgui
 
 # File names
 TARGET = SkyEngine

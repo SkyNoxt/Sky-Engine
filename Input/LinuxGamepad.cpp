@@ -13,7 +13,7 @@ char joyDevPath[16] = "/dev/input/js0";
 LinuxGamepad::LinuxGamepad()
 	: stickDeadzone(8000)
 	, triggerDeadzone(400)
-	, joyFile(open(joyDevPath, O_RDONLY | O_NONBLOCK))
+	, joyFile(open(joyDevPath, O_RDONLY))
 {
 }
 
