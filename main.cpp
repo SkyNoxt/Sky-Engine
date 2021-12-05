@@ -169,11 +169,12 @@ float backFace(const Vector3<>& a, const Vector3<>& b, const Vector3<>& c)
 	return (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x);
 }
 
+Sampler framebuffer = Sampler(4, 1280, 720, 1, 1, 0);
+float depthbuffer[1280 * 720];
+
 static void rasterize(Camera& camera, int width, int height)
 {
-	Sampler framebuffer = Sampler(4, width, height, 1, 1, 0);
-	framebuffer.samples = (unsigned char*)calloc(1, width * height * 4);
-	float depthbuffer[width * height];
+	memset(framebuffer.samples, 0, framebuffer.size * framebuffer.width * framebuffer.height);
 	for(int i = 0; i < width * height; ++i)
 		depthbuffer[i] = camera.farPlane;
 
@@ -299,6 +300,8 @@ static void rasterize(Camera& camera, int width, int height)
 	cv::waitKey(1);
 }
 
+bool running = true;
+
 int main(int argc, char* argv[])
 {
 	int imgWidth = 1280;
@@ -307,6 +310,8 @@ int main(int argc, char* argv[])
 	//OpenCV window
 	namedWindow("Sky Engine", cv::WINDOW_NORMAL);
 	cv::resizeWindow("Sky Engine", imgWidth, imgHeight);
+
+	framebuffer.samples = (unsigned char*)calloc(1, imgWidth * imgHeight * 4);
 
 	Camera camera = Camera(1.0, 90, imgWidth / (float)imgHeight, 0.1, 200.0);
 	model = new Model(FileStream("/home/sky/Documents/Other/sky/Models/Artisans/Artisans Hub.dat"));
@@ -323,31 +328,27 @@ int main(int argc, char* argv[])
 	camera.viewMatrix = camera.cameraMatrix.inverse();
 
 	//Input thread
-	std::thread input = std::thread([]()
-									{
-										while(true)
-											gamepad->poll();
-									});
+	std::thread input = std::thread(
+		[]()
+		{
+			while(running)
+				gamepad->poll();
+		});
 
 	//Game logic thread
-	std::thread logic = std::thread([]()
-									{
-										while(true)
-										{
-											auto start = std::chrono::steady_clock::now();
-											auto next = start + std::chrono::milliseconds(10);
-
-											fps->update();
-
-											std::this_thread::sleep_until(next);
-
-											auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - start);
-											printf("Logic: %f\n", 1000.0 / ms.count());
-										}
-									});
+	std::thread logic = std::thread(
+		[]()
+		{
+			while(running)
+			{
+				auto next = std::chrono::steady_clock::now() + std::chrono::milliseconds(10);
+				fps->update();
+				std::this_thread::sleep_until(next);
+			}
+		});
 
 	//Rendering (main) thread
-	while(true)
+	while(running)
 	{
 		auto start = std::chrono::steady_clock::now();
 
@@ -358,7 +359,13 @@ int main(int argc, char* argv[])
 
 		auto ms = std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now() - start);
 		printf("Graphics: %f\n", 1000000000.0 / ms.count());
+
+		if(gamepad->state.buttons & Gamepad::BUTTON_A)
+			running = false;
 	}
+
+	logic.join();
+	input.join();
 
 	delete gamepad;
 
