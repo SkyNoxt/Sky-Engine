@@ -19,10 +19,10 @@ class Vector4
 	};
 
 	//Constructors
-	Vector4<T>(const T xVal, const T yVal, const T zVal, const T wVal);
-	Vector4<T>(const T val[4]);
-	Vector4<T>(const T value);
-	Vector4<T>();
+	Vector4(const T xVal, const T yVal, const T zVal, const T wVal);
+	Vector4(const T val[4]);
+	Vector4(const T value);
+	Vector4();
 
 	//Member functions
 	T dot() const;

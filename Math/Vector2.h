@@ -17,10 +17,10 @@ class Vector2
 	};
 
 	//Constructors
-	Vector2<T>(const T xVal, const T yVal);
-	Vector2<T>(const T val[2]);
-	Vector2<T>(const T value);
-	Vector2<T>();
+	Vector2(const T xVal, const T yVal);
+	Vector2(const T val[2]);
+	Vector2(const T value);
+	Vector2();
 
 	//Member functions
 	T dot() const;

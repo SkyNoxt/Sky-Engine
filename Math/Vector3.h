@@ -18,10 +18,10 @@ class Vector3
 	};
 
 	//Constructors
-	Vector3<T>(const T xVal, const T yVal, const T zVal);
-	Vector3<T>(const T val[3]);
-	Vector3<T>(const T value);
-	Vector3<T>();
+	Vector3(const T xVal, const T yVal, const T zVal);
+	Vector3(const T val[3]);
+	Vector3(const T value);
+	Vector3();
 
 	//Member functions
 	T dot() const;

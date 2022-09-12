@@ -42,15 +42,15 @@ class Matrix4
 	static const Matrix4<T> IDENTITY;
 
 	//Constructors
-	Matrix4<T>(T xxVal, T xyVal, T xzVal, T xwVal, T yxVal, T yyVal, T yzVal, T ywVal, T zxVal, T zyVal, T zzVal, T zwVal, T wxVal, T wyVal, T wzVal, T wwVal);
-	Matrix4<T>(T matrix[16]);
-	Matrix4<T>(T value);
-	Matrix4<T>();
+	Matrix4(T xxVal, T xyVal, T xzVal, T xwVal, T yxVal, T yyVal, T yzVal, T ywVal, T zxVal, T zyVal, T zzVal, T zwVal, T wxVal, T wyVal, T wzVal, T wwVal);
+	Matrix4(T matrix[16]);
+	Matrix4(T value);
+	Matrix4();
 
-	Matrix4<T>(const Vector4<T>& xVec, const Vector4<T>& yVec, const Vector4<T>& zVec, const Vector4<T>& wVec);
-	Matrix4<T>(const Vector4<T> vec[4]);
+	Matrix4(const Vector4<T>& xVec, const Vector4<T>& yVec, const Vector4<T>& zVec, const Vector4<T>& wVec);
+	Matrix4(const Vector4<T> vec[4]);
 
-	Matrix4<T>(const Vector3<T>& eye, const Vector3<T>& center, const Vector3<T>& up = { 0, 1, 0 });
+	Matrix4(const Vector3<T>& eye, const Vector3<T>& center, const Vector3<T>& up = { 0, 1, 0 });
 
 	//Member functions
 	T determinant() const;

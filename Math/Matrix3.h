@@ -33,13 +33,13 @@ class Matrix3
 	static const Matrix3<T> IDENTITY;
 
 	//Constructors
-	Matrix3<T>(T xxVal, T xyVal, T xzVal, T yxVal, T yyVal, T yzVal, T zxVal, T zyVal, T zzVal);
-	Matrix3<T>(T matrix[9]);
-	Matrix3<T>(T value);
-	Matrix3<T>();
+	Matrix3(T xxVal, T xyVal, T xzVal, T yxVal, T yyVal, T yzVal, T zxVal, T zyVal, T zzVal);
+	Matrix3(T matrix[9]);
+	Matrix3(T value);
+	Matrix3();
 
-	Matrix3<T>(const Vector3<T>& xVec, const Vector3<T>& yVec, const Vector3<T>& zVec);
-	Matrix3<T>(const Vector3<T> vec[3]);
+	Matrix3(const Vector3<T>& xVec, const Vector3<T>& yVec, const Vector3<T>& zVec);
+	Matrix3(const Vector3<T> vec[3]);
 
 	//Member functions
 	T determinant() const;
