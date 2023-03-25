@@ -2,10 +2,18 @@
 #include <cstdio>
 #include <fcntl.h>
 
+#if !defined(O_BINARY)
+#define O_BINARY 0
+#endif
+
+#if defined(WINDOWS)
+#include <io.h>
+#endif
+
 #include "FileStream.h"
 
 FileStream::FileStream(const char* filePath)
-	: file(fdopen(open(filePath, O_RDWR | O_CREAT, 0666), "r+"))
+	: file(fdopen(open(filePath, O_RDWR | O_CREAT | O_BINARY, 0666), "r+"))
 {
 }
 

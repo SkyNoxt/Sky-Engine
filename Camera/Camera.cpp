@@ -1,10 +1,11 @@
-
+﻿
 #include <cmath>
+#include <numbers>
 
 #include "Camera.h"
 
-const float Camera::DEG_TO_RAD = M_PI / 180;
-// const float Camera::RAD_TO_DEG = 180 / M_PI;
+const float Camera::DEG_TO_RAD = std::numbers::pi / 180;
+// const float Camera::RAD_TO_DEG = 180 / std::numbers::pi;
 
 Camera::Camera(float fLength, float fov, float targetRatio, float zNear, float zFar)
 	: focalLength(fLength)

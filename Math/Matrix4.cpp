@@ -1,5 +1,6 @@
 ﻿
 #include <cmath>
+#include <numbers>
 
 #include "Matrix4.h"
 
@@ -172,8 +173,8 @@ void Matrix4<T>::translate(const Vector3<T>& translation)
 template <class T>
 void Matrix4<T>::rotate(T angle, T x, T y, T z)
 {
-	T s = std::sin(angle * M_PI / 180),
-	  c = std::cos(angle * M_PI / 180),
+	T s = std::sin(angle * std::numbers::pi / 180),
+	  c = std::cos(angle * std::numbers::pi / 180),
 	  xx,
 	  yy,
 	  zz,

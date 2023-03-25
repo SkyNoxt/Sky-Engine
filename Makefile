@@ -1,23 +1,36 @@
 
 # Declaration of variables
-OS = LINUX
+CXXFLAGS = -c -std=c++20 -Ofast -flto -I . -I $(OPENCVINC) -Wall -Wno-narrowing
+LDFLAGS = -Ofast -flto -L $(OPENCVLIB)
 
-CXXFLAGS = -std=c++20 -Ofast -flto -D $(OS) -I /usr/include/opencv4 -I . -Wall -Wno-narrowing
-LDFLAGS = -Ofast -flto -l pthread -l opencv_core -l opencv_imgproc -l opencv_highgui
+EXECUTABLE = SkyEngine
+
+ifdef OS
+	CXXFLAGS += -D WINDOWS
+	LDFLAGS += -fuse-ld=lld -l xinput -l opencv_world460
+	EXEEX = exe
+	OBJEX = obj
+else
+	CXXFLAGS += -D LINUX
+	LDFLAGS += -l opencv_core -l opencv_imgproc -l opencv_highgui
+	EXEEX = elf
+	OBJEX = o
+endif
 
 # File names
-TARGET = SkyEngine
 HEADERS = $(shell find . -name "*.h")
 SOURCES = $(shell find . -name "*.cpp")
-OBJECTS = $(SOURCES:.cpp=.o)
+OBJECTS = $(SOURCES:.cpp=.$(OBJEX))
+
+TARGET = $(EXECUTABLE).$(EXEEX)
 
 # Main target linking
 $(TARGET): $(OBJECTS)
-	$(CXX) $(OBJECTS) $(LDFLAGS) -o $(TARGET)
+	$(CXX) $^ $(LDFLAGS) -o $@
 
 # Compile source files
-%.o: %.cpp
-	$(CXX) -c $(CXXFLAGS) $< -o $@
+%.$(OBJEX): %.cpp $(wildcard %.h)
+	$(CXX) $(CXXFLAGS) $< -o $@
 
 # Format code
 format:
@@ -25,4 +38,4 @@ format:
 
 # Clean generated files
 clean:
-	rm -f $(TARGET) $(OBJECTS)
+	$(RM) $(TARGET) $(OBJECTS)

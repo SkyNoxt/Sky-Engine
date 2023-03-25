@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include <windows.h>
 #include <xinput.h>
 
 #include "VirtualGamepad.h"
