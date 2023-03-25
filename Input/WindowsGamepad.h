@@ -9,13 +9,13 @@ class WindowsGamepad : public VirtualGamepad
 {
 
   public:
-	//Constructor
+	// Constructor
 	WindowsGamepad();
 
-	//Member function
+	// Member function
 	void poll() override;
 
-	//Destructor
+	// Destructor
 	~WindowsGamepad() override;
 
   private:

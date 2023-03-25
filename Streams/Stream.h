@@ -5,7 +5,7 @@ class Stream
 {
 
   public:
-	//Member functions
+	// Member functions
 	virtual unsigned int write(void* buffer, unsigned int size, unsigned int count) const = 0;
 	virtual unsigned int read(void* buffer, unsigned int size, unsigned int count) const = 0;
 	virtual void flush() const = 0;
@@ -22,7 +22,7 @@ class Stream
 	template <class T>
 	void write(T* value, unsigned int count) const;
 
-	//Destructor
+	// Destructor
 	virtual ~Stream() = default;
 };
 

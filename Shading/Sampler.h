@@ -15,11 +15,11 @@ class Sampler
 
 	unsigned char* samples;
 
-	//Constructor
+	// Constructor
 	Sampler(unsigned int smpSize, unsigned int smpWidth, unsigned int smpHeight, unsigned int smpDepth, unsigned int smpLength, unsigned char* data);
 	Sampler(const Stream& stream);
 
-	//Member functions
+	// Member functions
 
 	template <class T>
 	T& sample(unsigned int x);
@@ -33,7 +33,7 @@ class Sampler
 
 	void serialize(const Stream& stream) const;
 
-	//Destructor
+	// Destructor
 	~Sampler();
 };
 

@@ -6,17 +6,17 @@
 class Body
 {
   public:
-	//Member variables
+	// Member variables
 	unsigned int numParticles;
 	unsigned int numConstraints;
 
 	Particle* particleArray;
 	Constraint* constraintArray;
 
-	//Constructor
+	// Constructor
 	Body(unsigned int particleCount, unsigned int constraintCount, Particle* particles, Constraint* constraints);
 
-	//Member functions
+	// Member functions
 	void update(float squaredTimestep);
 
 	const Particle& particle(unsigned int index) const;
@@ -27,7 +27,7 @@ class Body
 
 	bool collision(const Body& body, float& collisionLength, Vector3<>& collisionVector, Particle& collisionParticle, Constraint& collisionConstraint);
 
-	//Destructor
+	// Destructor
 	~Body();
 
   private:

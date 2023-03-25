@@ -12,11 +12,11 @@ class DeltaLight
 	Vector3<> color;
 	float intensity;
 
-	//Constructor
+	// Constructor
 	DeltaLight(const Vector3<>& clr, float ntnst);
 
-	//Member functions
+	// Member functions
 
-	//Destructor
+	// Destructor
 	~DeltaLight() = default;
 };

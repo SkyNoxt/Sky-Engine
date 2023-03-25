@@ -7,14 +7,14 @@ class Particle
 {
 
   public:
-	//Member variables
+	// Member variables
 	Vector3<> current;
 	Vector3<> previous;
 	Vector3<> acceleration;
 
-	//Constructor
+	// Constructor
 	Particle(const Vector3<>& curr, const Vector3<>& prev, const Vector3<> acc);
 
-	//Destructor
+	// Destructor
 	~Particle() = default;
 };

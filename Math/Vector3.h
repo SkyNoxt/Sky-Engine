@@ -17,13 +17,13 @@ class Vector3
 		T vector[3];
 	};
 
-	//Constructors
+	// Constructors
 	Vector3(const T xVal, const T yVal, const T zVal);
 	Vector3(const T val[3]);
 	Vector3(const T value);
 	Vector3();
 
-	//Member functions
+	// Member functions
 	T dot() const;
 	T length() const;
 	T dot(const Vector3<T>& vector) const;
@@ -37,7 +37,7 @@ class Vector3
 	static Vector3<T> minima(const Vector3<T>& aVec, const Vector3<T>& bVec);
 	static Vector3<T> maxima(const Vector3<T>& aVec, const Vector3<T>& bVec);
 
-	//Unary operators
+	// Unary operators
 	Vector3<T> operator-() const;
 
 	Vector3<T>& operator=(const Vector3<T>& vector);
@@ -49,10 +49,10 @@ class Vector3
 	Vector3<T>& operator-=(const T value);
 	Vector3<T>& operator*=(const T value);
 
-	//Subscript operator
+	// Subscript operator
 	T& operator[](const int index);
 
-	//Binary operators
+	// Binary operators
 	bool operator==(const Vector3<T>& vector) const;
 	bool operator!=(const Vector3<T>& vector) const;
 
@@ -64,13 +64,13 @@ class Vector3
 	Vector3<T> operator-(const T value) const;
 	Vector3<T> operator*(const T value) const;
 
-	//Destructor
+	// Destructor
 	~Vector3() = default;
 
   private:
 };
 
-//Inline heterogeneous opeartors
+// Inline heterogeneous opeartors
 
 template <class T>
 Vector3<T> operator*(const T value, const Vector3<T>& vector)

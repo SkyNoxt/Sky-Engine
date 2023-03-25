@@ -27,13 +27,13 @@ class Mesh
 	unsigned char* vertexArray;
 	unsigned int* indexArray;
 
-	//Constructors
+	// Constructors
 	Mesh(unsigned int vertexSize, unsigned int vertexCount, unsigned int indexCount, unsigned char* vertices, unsigned int* indices);
 	Mesh(unsigned int vertexSize, unsigned int vertexCount, unsigned char* vertices);
 	Mesh(const Stream& stream);
 	Mesh();
 
-	//Member functions
+	// Member functions
 	unsigned int numElements() const;
 
 	template <class T>
@@ -47,7 +47,7 @@ class Mesh
 
 	void serialize(const Stream& stream) const;
 
-	//Destructor
+	// Destructor
 	~Mesh();
 
   private:

@@ -16,13 +16,13 @@ class Vector2
 		T vector[2];
 	};
 
-	//Constructors
+	// Constructors
 	Vector2(const T xVal, const T yVal);
 	Vector2(const T val[2]);
 	Vector2(const T value);
 	Vector2();
 
-	//Member functions
+	// Member functions
 	T dot() const;
 	T length() const;
 	T dot(const Vector2<T>& vector) const;
@@ -35,7 +35,7 @@ class Vector2
 	static Vector2<T> minima(const Vector2<T>& aVec, const Vector2<T>& bVec);
 	static Vector2<T> maxima(const Vector2<T>& aVec, const Vector2<T>& bVec);
 
-	//Unary operators
+	// Unary operators
 	Vector2<T> operator-() const;
 
 	Vector2<T>& operator=(const Vector2<T>& vector);
@@ -47,10 +47,10 @@ class Vector2
 	Vector2<T>& operator-=(const T value);
 	Vector2<T>& operator*=(const T value);
 
-	//Subscript operator
+	// Subscript operator
 	T& operator[](const int index);
 
-	//Binary operators
+	// Binary operators
 	bool operator==(const Vector2<T>& vector) const;
 	bool operator!=(const Vector2<T>& vector) const;
 
@@ -62,13 +62,13 @@ class Vector2
 	Vector2<T> operator-(const T value) const;
 	Vector2<T> operator*(const T value) const;
 
-	//Destructor
+	// Destructor
 	~Vector2() = default;
 
   private:
 };
 
-//Inline heterogeneous opeartors
+// Inline heterogeneous opeartors
 
 template <class T>
 Vector2<T> operator*(const T value, const Vector2<T>& vector)

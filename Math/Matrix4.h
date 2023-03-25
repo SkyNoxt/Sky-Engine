@@ -41,7 +41,7 @@ class Matrix4
 
 	static const Matrix4<T> IDENTITY;
 
-	//Constructors
+	// Constructors
 	Matrix4(T xxVal, T xyVal, T xzVal, T xwVal, T yxVal, T yyVal, T yzVal, T ywVal, T zxVal, T zyVal, T zzVal, T zwVal, T wxVal, T wyVal, T wzVal, T wwVal);
 	Matrix4(T matrix[16]);
 	Matrix4(T value);
@@ -52,7 +52,7 @@ class Matrix4
 
 	Matrix4(const Vector3<T>& eye, const Vector3<T>& center, const Vector3<T>& up = { 0, 1, 0 });
 
-	//Member functions
+	// Member functions
 	T determinant() const;
 
 	Matrix4<T> transpose() const;
@@ -67,16 +67,16 @@ class Matrix4
 	void scale(T x, T y, T z);
 	void scale(const Vector3<T>& scaling);
 
-	//Unary operators
+	// Unary operators
 	Matrix4<T>& operator=(const Matrix4<T>& matrix);
 	Matrix4<T>& operator*=(const Matrix4<T>& matrix);
 
 	Matrix4<T>& operator*=(const T value);
 
-	//Subsript operator
+	// Subsript operator
 	Vector4<T>& operator[](const int index);
 
-	//Binary operators
+	// Binary operators
 	bool operator==(const Matrix4<T>& matrix) const;
 	bool operator!=(const Matrix4<T>& matrix) const;
 
@@ -84,13 +84,13 @@ class Matrix4
 
 	Matrix4<T> operator*(const T value) const;
 
-	//Destructor
+	// Destructor
 	~Matrix4() = default;
 
   private:
 };
 
-//Inline heterogeneous opeartors
+// Inline heterogeneous opeartors
 
 /*template <class T>
 Vector3<T>& operator*=(Vector3<T>& vector, const Matrix4<T>& matrix)
@@ -101,9 +101,9 @@ Vector3<T>& operator*=(Vector3<T>& vector, const Matrix4<T>& matrix)
 template <class T>
 Vector3<T> operator*(const Vector3<T>& vector, const Matrix4<T>& matrix)
 {
-	//T w = 1 / (vector.x * matrix.xw + vector.y * matrix.yw + vector.z * matrix.zw + matrix.ww);
+	// T w = 1 / (vector.x * matrix.xw + vector.y * matrix.yw + vector.z * matrix.zw + matrix.ww);
 	//
-	//return Vector3<T>(
+	// return Vector3<T>(
 	//	vector.x * matrix.xx + vector.y * matrix.yx + vector.z * matrix.zx + matrix.wx * w,
 	//	vector.x * matrix.xy + vector.y * matrix.yy + vector.z * matrix.zy + matrix.wy * w,
 	//	vector.x * matrix.xz + vector.y * matrix.yz + vector.z * matrix.zz + matrix.wz * w

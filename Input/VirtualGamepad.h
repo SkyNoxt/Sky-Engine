@@ -33,7 +33,7 @@ class VirtualGamepad
 		float rightThumbY = 0.0;
 	} state;
 
-	//Member function
+	// Member function
 	virtual void poll() = 0;
 
 	virtual ~VirtualGamepad() = default;

@@ -18,13 +18,13 @@ class Vector4
 		T vector[4];
 	};
 
-	//Constructors
+	// Constructors
 	Vector4(const T xVal, const T yVal, const T zVal, const T wVal);
 	Vector4(const T val[4]);
 	Vector4(const T value);
 	Vector4();
 
-	//Member functions
+	// Member functions
 	T dot() const;
 	T length() const;
 	T dot(const Vector4<T>& vector) const;
@@ -37,7 +37,7 @@ class Vector4
 	static Vector4<T> minima(const Vector4<T>& aVec, const Vector4<T>& bVec);
 	static Vector4<T> maxima(const Vector4<T>& aVec, const Vector4<T>& bVec);
 
-	//Unary operators
+	// Unary operators
 	Vector4<T> operator-() const;
 
 	Vector4<T>& operator=(const Vector4<T>& vector);
@@ -49,10 +49,10 @@ class Vector4
 	Vector4<T>& operator-=(const T value);
 	Vector4<T>& operator*=(const T value);
 
-	//Subscript operator
+	// Subscript operator
 	T& operator[](const int index);
 
-	//Binary operators
+	// Binary operators
 	bool operator==(const Vector4<T>& vector) const;
 	bool operator!=(const Vector4<T>& vector) const;
 
@@ -64,13 +64,13 @@ class Vector4
 	Vector4<T> operator-(const T value) const;
 	Vector4<T> operator*(const T value) const;
 
-	//Destructor
+	// Destructor
 	~Vector4() = default;
 
   private:
 };
 
-//Inline heterogeneous opeartors
+// Inline heterogeneous opeartors
 
 template <class T>
 Vector4<T> operator*(const T value, const Vector4<T>& vector)

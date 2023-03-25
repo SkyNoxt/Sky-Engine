@@ -32,7 +32,7 @@ class Matrix3
 
 	static const Matrix3<T> IDENTITY;
 
-	//Constructors
+	// Constructors
 	Matrix3(T xxVal, T xyVal, T xzVal, T yxVal, T yyVal, T yzVal, T zxVal, T zyVal, T zzVal);
 	Matrix3(T matrix[9]);
 	Matrix3(T value);
@@ -41,22 +41,22 @@ class Matrix3
 	Matrix3(const Vector3<T>& xVec, const Vector3<T>& yVec, const Vector3<T>& zVec);
 	Matrix3(const Vector3<T> vec[3]);
 
-	//Member functions
+	// Member functions
 	T determinant() const;
 
 	Matrix3<T> transpose() const;
 	Matrix3<T> inverse() const;
 
-	//Unary operators
+	// Unary operators
 	Matrix3<T>& operator=(const Matrix3<T>& matrix);
 	Matrix3<T>& operator*=(const Matrix3<T>& matrix);
 
 	Matrix3<T>& operator*=(const T value);
 
-	//Subsript operator
+	// Subsript operator
 	Vector3<T>& operator[](const int index);
 
-	//Binary operators
+	// Binary operators
 	bool operator==(const Matrix3<T>& matrix) const;
 	bool operator!=(const Matrix3<T>& matrix) const;
 
@@ -64,13 +64,13 @@ class Matrix3
 
 	Matrix3<T> operator*(const T value) const;
 
-	//Destructor
+	// Destructor
 	~Matrix3() = default;
 
   private:
 };
 
-//Inline heterogeneous opeartors
+// Inline heterogeneous opeartors
 
 /*template <class T>
 Vector3<T>& operator*=(Vector3<T>& vector, const Matrix3<T>& matrix)

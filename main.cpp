@@ -14,7 +14,7 @@
 
 #include <FPS.h>
 
-//OPenCV test
+// OPenCV test
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 
@@ -28,7 +28,7 @@ Matrix4<>* modelMatrix;
 
 static Vector3<> castRay(Ray& ray, Camera& camera, unsigned int depth)
 {
-	//Inverse Ray Transform
+	// Inverse Ray Transform
 	/*Matrix4<> rayMatrix = modelMatrix->inverse();
 	Vector4<> rayOrigin = Vector4<>{ray.origin.x, ray.origin.y, ray.origin.z, 1.0} * rayMatrix;
 	ray = Ray({rayOrigin.x, rayOrigin.y, rayOrigin.z}, ray.direction * rayMatrix);*/
@@ -61,26 +61,26 @@ static Vector3<> castRay(Ray& ray, Camera& camera, unsigned int depth)
 
 	if(intersect)
 	{
-		//std::cout << index << std::endl;
-		//Vector3<> hitPoint = ray.origin + ray.direction * distance;
+		// std::cout << index << std::endl;
+		// Vector3<> hitPoint = ray.origin + ray.direction * distance;
 
 		/*Vector3<> n0 = meshes[meshIndex].vertex<Vertex>(index).normal;
 			Vector3<> n1 = meshes[meshIndex].vertex<Vertex>(index + 1).normal;
 			Vector3<> n2 = meshes[meshIndex].vertex<Vertex>(index + 2).normal;*/
 
-		/*Vector3<> v0 = meshes[meshIndex]->vertexArray[index    ].position; 
-    		Vector3<> v1 = meshes[meshIndex]->vertexArray[index + 1].position; 
-    		Vector3<> v2 = meshes[meshIndex]->vertexArray[index + 2].position;*/
+		/*Vector3<> v0 = meshes[meshIndex]->vertexArray[index    ].position;
+			Vector3<> v1 = meshes[meshIndex]->vertexArray[index + 1].position;
+			Vector3<> v2 = meshes[meshIndex]->vertexArray[index + 2].position;*/
 
-		//Face and vertex Normals
-		//Vector3<> fN = (v1 - v0).cross(v2 - v0).normalize();
-		//Vector3<> vN = (1 - uv.x - uv.y) * n0 + uv.x * n1 + uv.y * n2;
+		// Face and vertex Normals
+		// Vector3<> fN = (v1 - v0).cross(v2 - v0).normalize();
+		// Vector3<> vN = (1 - uv.x - uv.y) * n0 + uv.x * n1 + uv.y * n2;
 		Vector2<> txc = (1 - uv.x - uv.y) * meshes[meshIndex].vertex<Vertex>(index).texCoord + uv.x * meshes[meshIndex].vertex<Vertex>(index + 1).texCoord + uv.y * meshes[meshIndex].vertex<Vertex>(index + 2).texCoord;
 
-		//Light direction (inverse ray transformed)
-		//Vector3<> L = -(*lightDirection * modelMatrix->inverse());
+		// Light direction (inverse ray transformed)
+		// Vector3<> L = -(*lightDirection * modelMatrix->inverse());
 
-		//Texture mapping
+		// Texture mapping
 		txc.y = txc.y - (int)txc.y;
 
 		unsigned int xx = txc.x * texture->width;
@@ -89,11 +89,11 @@ static Vector3<> castRay(Ray& ray, Camera& camera, unsigned int depth)
 		Vector4<unsigned char>& texel = texture->sample<Vector4<unsigned char>>(xx, yy);
 		hitColor = Vector3<>{ texel.z / 255.0f, texel.y / 255.0f, texel.x / 255.0f };
 
-		//Face ratio
-		//hitColor = std::max(0.f, vN.dot(-ray.direction));
+		// Face ratio
+		// hitColor = std::max(0.f, vN.dot(-ray.direction));
 
-		//Diffuse shading
-		//hitColor = Vector3<>{0.18} * (1.0/M_PI) * light->intensity * light->color * std::max(0.f, vN.dot(L));
+		// Diffuse shading
+		// hitColor = Vector3<>{0.18} * (1.0/M_PI) * light->intensity * light->color * std::max(0.f, vN.dot(L));
 	}
 
 	return hitColor;
@@ -222,11 +222,11 @@ static void rasterize(Camera& camera, int width, int height)
 			float xmax = std::max({ r0.x, r1.x, r2.x });
 			float ymax = std::max({ r0.y, r1.y, r2.y });
 
-			//Partial triangle clipping
+			// Partial triangle clipping
 			if(xmin >= width || xmax < 0 || ymin >= height || ymax < 0)
 				continue;
-			//Full triangle clipping
-			//if (xmin < 0 || xmax >= width || ymin < 0 || ymax >= height) continue;
+			// Full triangle clipping
+			// if (xmin < 0 || xmax >= width || ymin < 0 || ymax >= height) continue;
 
 			if(xmax >= width)
 				xmax = width - 1;
@@ -240,8 +240,8 @@ static void rasterize(Camera& camera, int width, int height)
 			float area = frontFace(r0, r1, r2);
 			if(area <= 0)
 				continue;
-			//float (*edgeFunction)(const Vector3<>&, const Vector3<>&, const Vector3<>&) = &frontFace;
-			//float area = edgeFunction(r0, r1, r2);
+			// float (*edgeFunction)(const Vector3<>&, const Vector3<>&, const Vector3<>&) = &frontFace;
+			// float area = edgeFunction(r0, r1, r2);
 			/*if(area < 0)
 						{
 							area = -area;
@@ -307,7 +307,7 @@ int main(int argc, char* argv[])
 	int imgWidth = 1280;
 	int imgHeight = 720;
 
-	//OpenCV window
+	// OpenCV window
 	namedWindow("Sky Engine", cv::WINDOW_NORMAL);
 	cv::resizeWindow("Sky Engine", imgWidth, imgHeight);
 
@@ -317,17 +317,17 @@ int main(int argc, char* argv[])
 	model = new Model(FileStream("/home/sky/Documents/Other/sky/Models/Artisans/Artisans Hub.dat"));
 	texture = new Sampler(FileStream("/home/sky/Documents/Other/sky/Models/Artisans/Artisans Hub.tex"));
 
-	//Instance gamepad
+	// Instance gamepad
 	gamepad = new Gamepad();
 	fps = new FPS(&camera, gamepad);
 
-	//Compute transformation matrix
+	// Compute transformation matrix
 	modelMatrix = new Matrix4<>();
 
-	//Compute camera
+	// Compute camera
 	camera.viewMatrix = camera.cameraMatrix.inverse();
 
-	//Input thread
+	// Input thread
 	std::thread input = std::thread(
 		[]()
 		{
@@ -335,7 +335,7 @@ int main(int argc, char* argv[])
 				gamepad->poll();
 		});
 
-	//Game logic thread
+	// Game logic thread
 	std::thread logic = std::thread(
 		[]()
 		{
@@ -347,7 +347,7 @@ int main(int argc, char* argv[])
 			}
 		});
 
-	//Rendering (main) thread
+	// Rendering (main) thread
 	while(running)
 	{
 		auto start = std::chrono::steady_clock::now();

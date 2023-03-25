@@ -7,13 +7,13 @@ class LinuxGamepad : public VirtualGamepad
 {
 
   public:
-	//Constructor
+	// Constructor
 	LinuxGamepad();
 
-	//Member function
+	// Member function
 	void poll() override;
 
-	//Destructor
+	// Destructor
 	~LinuxGamepad() override;
 
   private:

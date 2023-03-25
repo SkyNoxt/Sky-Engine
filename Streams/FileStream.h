@@ -7,15 +7,15 @@ class FileStream : public Stream
 {
 
   public:
-	//Constructor
+	// Constructor
 	FileStream(const char* filePath);
 
-	//Member functions
+	// Member functions
 	unsigned int write(void* buffer, unsigned int size, unsigned int count) const override;
 	unsigned int read(void* buffer, unsigned int size, unsigned int count) const override;
 	void flush() const override;
 
-	//Destructor
+	// Destructor
 	~FileStream() override;
 
   private:

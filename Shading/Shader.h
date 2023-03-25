@@ -8,13 +8,13 @@ class Shader
 {
 
   public:
-	//Constructor
+	// Constructor
 	Shader() = default;
 
-	//Member functions
+	// Member functions
 	Vector3<> shade();
 	Vector4<> shadeAlpha();
 
-	//Destructor
+	// Destructor
 	~Shader() = default;
 };

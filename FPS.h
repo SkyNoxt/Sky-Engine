@@ -8,13 +8,13 @@ class FPS
 {
 
   public:
-	//Constructor
+	// Constructor
 	FPS(Camera* cam, Gamepad* pad, float moveSpd = 1.0, float rotationSpd = 1.0);
 
-	//Member function
+	// Member function
 	void update();
 
-	//Destructor
+	// Destructor
 	~FPS() = default;
 
   private:

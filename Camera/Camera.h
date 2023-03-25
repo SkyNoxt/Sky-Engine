@@ -10,18 +10,18 @@ class Camera
 
   public:
 	static const float DEG_TO_RAD;
-	//static const float RAD_TO_DEG;
+	// static const float RAD_TO_DEG;
 
-	//Constructors
+	// Constructors
 	Camera(float fLength, float fov, float targetRatio, float zNear = 0, float zFar = Ray::MAX_LENGTH);
 
-	//Member functions
+	// Member functions
 	Ray castRay(unsigned int width, unsigned int height, unsigned int x, unsigned int y) const;
 
-	//destructor
+	// destructor
 	~Camera() = default;
 
-	//private:
+	// private:
 
 	float focalLength;
 	float fieldOfView;

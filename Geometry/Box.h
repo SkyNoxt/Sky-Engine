@@ -12,12 +12,12 @@ class Box
   public:
 	Vector3<T> bounds[2];
 
-	//Constructor
+	// Constructor
 	Box(const Vector3<T>& min, const Vector3<T>& max);
 
-	//Member function
+	// Member function
 	bool intersect(const Ray& ray, T& distance) const;
 
-	//Destructor
+	// Destructor
 	~Box() = default;
 };

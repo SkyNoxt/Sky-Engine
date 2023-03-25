@@ -1,10 +1,10 @@
-﻿
+
 #include <cmath>
 
 #include "Camera.h"
 
 const float Camera::DEG_TO_RAD = M_PI / 180;
-//const float Camera::RAD_TO_DEG = 180 / M_PI;
+// const float Camera::RAD_TO_DEG = 180 / M_PI;
 
 Camera::Camera(float fLength, float fov, float targetRatio, float zNear, float zFar)
 	: focalLength(fLength)
@@ -27,8 +27,8 @@ Camera::Camera(float fLength, float fov, float targetRatio, float zNear, float z
 		0, 0, -farPlane * (nearPlane / distance), 0
 	};
 
-	//aperture = tan(fieldOfView / 2 * DEG_TO_RAD) * focalLength * 2;
-	//fieldOfView = atan((aperture / 2) / focalLength) * 2 * RAD_TO_DEG;
+	// aperture = tan(fieldOfView / 2 * DEG_TO_RAD) * focalLength * 2;
+	// fieldOfView = atan((aperture / 2) / focalLength) * 2 * RAD_TO_DEG;
 }
 
 Ray Camera::castRay(unsigned int width, unsigned int height, unsigned int x, unsigned int y) const

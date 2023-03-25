@@ -76,18 +76,18 @@ bool Body::collision(const Body& body, float& collisionLength, Vector3<>& collis
 		Particle* one = particleArray + constraint->one;
 		Particle* two = particleArray + constraint->two;
 
-		//Calculate the axis perpendicular to this edge and normalize it
+		// Calculate the axis perpendicular to this edge and normalize it
 		Vector3<> axis = (two->current - one->current).cross(Vector3<>{ 0, 1, 0 }).normalize();
 		std::cout << axis.x << " " << axis.y << " " << axis.z << std::endl;
-		float minA, minB, maxA, maxB; //Project both bodies onto the perpendicular axis
+		float minA, minB, maxA, maxB; // Project both bodies onto the perpendicular axis
 
 		project(axis, minA, maxA);
 		body.project(axis, minB, maxB);
 
-		//Calculate the distance between the two intervals
+		// Calculate the distance between the two intervals
 		float distance = minA < minB ? minB - maxA : minA - maxB;
 
-		if(distance > 0.0f) //If the intervals don't overlap, return, since there is no collision
+		if(distance > 0.0f) // If the intervals don't overlap, return, since there is no collision
 			return false;
 		else if(std::abs(distance) < minDistance)
 		{
@@ -128,15 +128,15 @@ bool Body::collision(const Body& body, float& collisionLength, Vector3<>& collis
 
 	/*-------------------------------------*/
 
-	float SmallestD = 10000.0f; //Initialize the smallest distance to a high value
+	float SmallestD = 10000.0f; // Initialize the smallest distance to a high value
 
 	for(unsigned int i = 0; i < numParticles; ++i)
 	{
-		//Measure the distance of the vertex from the line using the line equation
+		// Measure the distance of the vertex from the line using the line equation
 		float Distance = collisionVector.dot(particleArray[i].current);
 
-		//If the measured distance is smaller than the smallest distance reported
-		//so far, set the smallest distance and the collision vertex
+		// If the measured distance is smaller than the smallest distance reported
+		// so far, set the smallest distance and the collision vertex
 		if(Distance < SmallestD)
 		{
 			SmallestD = Distance;
@@ -146,7 +146,7 @@ bool Body::collision(const Body& body, float& collisionLength, Vector3<>& collis
 
 	/*-------------------------------------*/
 
-	return true; //There is no separating axis. Report a collision!
+	return true; // There is no separating axis. Report a collision!
 }
 
 void Body::project(const Vector3<>& axis, float& min, float& max) const
