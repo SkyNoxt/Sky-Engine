@@ -32,7 +32,6 @@ class Vector4
 	T dot(const Vector4& vector) const;
 	T distance(const Vector4& vector) const;
 
-	Vector4 invert() const;
 	Vector4 normalize() const;
 	Vector4 middle(const Vector4& vector) const;
 
