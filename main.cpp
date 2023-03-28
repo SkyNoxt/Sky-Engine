@@ -286,7 +286,7 @@ static void rasterize(Camera& camera, int width, int height)
 
 							uv.y = uv.y - (int)uv.y;
 
-							const Vector4<unsigned char>& texel = texture->sample<Vector4<unsigned char>>((unsigned int)(uv.x * texture->width), (unsigned int)(uv.y * texture->height));
+							const Vector4<unsigned char>& texel = texture->sample<Vector4<unsigned char>>(uv.x * texture->width, uv.y * texture->height);
 							framebuffer.sample<Vector4<unsigned char>>(x, y) = Vector4<unsigned char>{ texel.z, texel.y, texel.x, 255 };
 						}
 					}
@@ -351,6 +351,7 @@ int main(int argc, char* argv[])
 	while(running)
 	{
 		auto start = std::chrono::steady_clock::now();
+		auto next = start + std::chrono::milliseconds(32);
 
 		if(gamepad->state.buttons & Gamepad::BUTTON_RIGHT_SHOULDER)
 			render(camera, imgWidth, imgHeight);
@@ -362,6 +363,8 @@ int main(int argc, char* argv[])
 
 		if(gamepad->state.buttons & Gamepad::BUTTON_A)
 			running = false;
+
+		std::this_thread::sleep_until(next);
 	}
 
 	logic.join();

@@ -74,7 +74,5 @@ T Sampler::sample(float x, float y)
 	T f10 = ((T*)samples)[(iy + 1) * width + ix];
 	T f11 = ((T*)samples)[(iy + 1) * width + (ix + 1)];
 
-	T a = f00 * (1.f - dx) + f01 * dx;
-	T b = f10 * (1.f - dx) + f11 * dx;
-	return a * (1.f - dy) + b * dy;
+	return (f00 * (1.f - dx) + f01 * dx) * (1.f - dy) + (f10 * (1.f - dx) + f11 * dx) * dy;
 }
