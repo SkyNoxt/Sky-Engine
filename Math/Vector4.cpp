@@ -78,7 +78,7 @@ Vector4<T> Vector4<T>::normalize() const
 template <typename T>
 Vector4<T> Vector4<T>::middle(const Vector4<T>& vector) const
 {
-	return { (x + vector.x) * 0.5f, (y + vector.y) * 0.5f, (z + vector.z) * 0.5f, (w + vector.w) * 0.5f };
+	return { (x + vector.x) * 0.5, (y + vector.y) * 0.5, (z + vector.z) * 0.5, (w + vector.w) * 0.5 };
 }
 
 template <typename T>
@@ -233,18 +233,12 @@ Vector4<T> Vector4<T>::operator*(const Vector4<T>& vector) const
 // Inline heterogeneous opeartors
 
 template <typename T, typename S>
-Vector4<T> operator*(const S value, const Vector4<T>& vector)
-{
-	return vector * value;
-}
-
-template <typename T, typename S>
 Vector4<S> operator*(const Vector4<T>& vector, const S value)
 {
 	return { vector.x * value, vector.y * value, vector.z * value, vector.w * value };
 }
 
-// Explicit template instanciations
+// Explicit template instantiations
 
 // Classes
 
@@ -257,5 +251,4 @@ template Vector4<unsigned char>::Vector4(const Vector4<>& vector);
 
 // Heterogeneous opeartors
 
-template Vector4<> operator*(float, const Vector4<>&);
 template Vector4<> operator*(const Vector4<unsigned char>&, const float);

@@ -75,7 +75,4 @@ class Vector4
 // Heterogeneous opeartors
 
 template <typename T, typename S>
-Vector4<T> operator*(const S value, const Vector4<T>& vector);
-
-template <typename T, typename S>
 Vector4<S> operator*(const Vector4<T>& vector, const S value);

@@ -33,7 +33,7 @@ static Vector3<> castRay(Ray& ray, Camera& camera, unsigned int depth)
 	Vector4<> rayOrigin = Vector4<>{ray.origin.x, ray.origin.y, ray.origin.z, 1.0} * rayMatrix;
 	ray = Ray({rayOrigin.x, rayOrigin.y, rayOrigin.z}, ray.direction * rayMatrix);*/
 
-	Vector3<> hitColor = (ray.direction + Vector3<>{ 1 }) * 0.5;
+	Vector3<> hitColor = (ray.direction + Vector3<>{ 1 }) * 0.5f;
 
 	float distance = Ray::MAX_LENGTH;
 	unsigned int index;
@@ -75,7 +75,7 @@ static Vector3<> castRay(Ray& ray, Camera& camera, unsigned int depth)
 		// Face and vertex Normals
 		// Vector3<> fN = (v1 - v0).cross(v2 - v0).normalize();
 		// Vector3<> vN = (1 - uv.x - uv.y) * n0 + uv.x * n1 + uv.y * n2;
-		Vector2<> txc = (1 - uv.x - uv.y) * meshes[meshIndex].vertex<Vertex>(index).texCoord + uv.x * meshes[meshIndex].vertex<Vertex>(index + 1).texCoord + uv.y * meshes[meshIndex].vertex<Vertex>(index + 2).texCoord;
+		Vector2<> txc = meshes[meshIndex].vertex<Vertex>(index).texCoord * (1 - uv.x - uv.y) + meshes[meshIndex].vertex<Vertex>(index + 1).texCoord * uv.x + meshes[meshIndex].vertex<Vertex>(index + 2).texCoord * uv.y;
 
 		// Light direction (inverse ray transformed)
 		// Vector3<> L = -(*lightDirection * modelMatrix->inverse());
@@ -266,7 +266,7 @@ static void rasterize(Camera& camera, int width, int height)
 						float z = r0.z * w0 + r1.z * w1 + r2.z * w2;
 
 						Vector3<> persp = { w0 /= t0.w, w1 /= t1.w, w2 /= t2.w };
-						persp = (1.0f / (persp.x + persp.y + persp.z)) * persp;
+						persp = persp * (1.0f / (persp.x + persp.y + persp.z));
 						w0 = persp.x;
 						w1 = persp.y;
 						w2 = persp.z;

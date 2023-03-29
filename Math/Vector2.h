@@ -1,10 +1,9 @@
 ﻿
 #pragma once
 
-template <class T = float>
+template <typename T = float>
 class Vector2
 {
-
   public:
 	union
 	{
@@ -17,50 +16,53 @@ class Vector2
 	};
 
 	// Constructors
-	Vector2(const T xVal, const T yVal);
-	Vector2(const T val[2]);
+	Vector2(const T x, const T y);
+	Vector2(const T values[2]);
 	Vector2(const T value);
-	Vector2();
+	Vector2() = default;
+
+	template <typename S>
+	Vector2(const Vector2<S>& vector);
 
 	// Member functions
 	T dot() const;
 	T length() const;
-	T dot(const Vector2<T>& vector) const;
-	T distance(const Vector2<T>& vector) const;
+	T dot(const Vector2& vector) const;
+	T distance(const Vector2& vector) const;
 
-	Vector2<T> invert() const;
-	Vector2<T> normalize() const;
-	Vector2<T> middle(const Vector2<T>& vector) const;
+	Vector2 normalize() const;
+	Vector2 middle(const Vector2& vector) const;
 
-	static Vector2<T> minima(const Vector2<T>& aVec, const Vector2<T>& bVec);
-	static Vector2<T> maxima(const Vector2<T>& aVec, const Vector2<T>& bVec);
+	static Vector2 minima(const Vector2& a, const Vector2& b);
+	static Vector2 maxima(const Vector2& a, const Vector2& b);
 
 	// Unary operators
-	Vector2<T> operator-() const;
-
-	Vector2<T>& operator=(const Vector2<T>& vector);
-	Vector2<T>& operator+=(const Vector2<T>& vector);
-	Vector2<T>& operator-=(const Vector2<T>& vector);
-	Vector2<T>& operator*=(const Vector2<T>& vector);
-
-	Vector2<T>& operator+=(const T value);
-	Vector2<T>& operator-=(const T value);
-	Vector2<T>& operator*=(const T value);
+	Vector2 operator-() const;
 
 	// Subscript operator
 	T& operator[](const int index);
 
 	// Binary operators
-	bool operator==(const Vector2<T>& vector) const;
-	bool operator!=(const Vector2<T>& vector) const;
+	Vector2& operator=(const T value);
+	Vector2& operator+=(const T value);
+	Vector2& operator-=(const T value);
+	Vector2& operator*=(const T value);
 
-	Vector2<T> operator+(const Vector2<T>& vector) const;
-	Vector2<T> operator-(const Vector2<T>& vector) const;
-	Vector2<T> operator*(const Vector2<T>& vector) const;
+	Vector2& operator=(const Vector2& vector);
+	Vector2& operator+=(const Vector2& vector);
+	Vector2& operator-=(const Vector2& vector);
+	Vector2& operator*=(const Vector2& vector);
 
-	Vector2<T> operator+(const T value) const;
-	Vector2<T> operator-(const T value) const;
-	Vector2<T> operator*(const T value) const;
+	bool operator==(const Vector2& vector) const;
+	bool operator!=(const Vector2& vector) const;
+
+	Vector2 operator+(const T value) const;
+	Vector2 operator-(const T value) const;
+	Vector2 operator*(const T value) const;
+
+	Vector2 operator+(const Vector2& vector) const;
+	Vector2 operator-(const Vector2& vector) const;
+	Vector2 operator*(const Vector2& vector) const;
 
 	// Destructor
 	~Vector2() = default;
@@ -68,10 +70,7 @@ class Vector2
   private:
 };
 
-// Inline heterogeneous opeartors
+// Heterogeneous opeartors
 
-template <class T>
-Vector2<T> operator*(const T value, const Vector2<T>& vector)
-{
-	return vector * value;
-}
+template <typename T, typename S>
+Vector2<S> operator*(const Vector2<T>& vector, const S value);
