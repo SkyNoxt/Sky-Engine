@@ -53,13 +53,13 @@ T Vector4<T>::length() const
 }
 
 template <typename T>
-T Vector4<T>::dot(const Vector4<T>& vector) const
+T Vector4<T>::dot(const Vector4& vector) const
 {
 	return x * vector.x + y * vector.y + z * vector.z + w * vector.w;
 }
 
 template <typename T>
-T Vector4<T>::distance(const Vector4<T>& vector) const
+T Vector4<T>::distance(const Vector4& vector) const
 {
 	return (*this - vector).length();
 }
@@ -76,19 +76,19 @@ Vector4<T> Vector4<T>::normalize() const
 }
 
 template <typename T>
-Vector4<T> Vector4<T>::middle(const Vector4<T>& vector) const
+Vector4<T> Vector4<T>::middle(const Vector4& vector) const
 {
 	return { (x + vector.x) * 0.5, (y + vector.y) * 0.5, (z + vector.z) * 0.5, (w + vector.w) * 0.5 };
 }
 
 template <typename T>
-Vector4<T> Vector4<T>::minima(const Vector4<T>& a, const Vector4<T>& b)
+Vector4<T> Vector4<T>::minima(const Vector4& a, const Vector4& b)
 {
 	return { b.x < a.x ? b.x : a.x, b.y < a.y ? b.y : a.y, b.z < a.z ? b.z : a.z, b.w < a.w ? b.w : a.w };
 }
 
 template <typename T>
-Vector4<T> Vector4<T>::maxima(const Vector4<T>& a, const Vector4<T>& b)
+Vector4<T> Vector4<T>::maxima(const Vector4& a, const Vector4& b)
 {
 	return { a.x < b.x ? b.x : a.x, a.y < b.y ? b.y : a.y, a.z < b.z ? b.z : a.z, a.w < b.w ? b.w : a.w };
 }
@@ -143,7 +143,7 @@ Vector4<T>& Vector4<T>::operator*=(const T value)
 }
 
 template <typename T>
-Vector4<T>& Vector4<T>::operator=(const Vector4<T>& vector)
+Vector4<T>& Vector4<T>::operator=(const Vector4& vector)
 {
 	x = vector.x;
 	y = vector.y;
@@ -153,7 +153,7 @@ Vector4<T>& Vector4<T>::operator=(const Vector4<T>& vector)
 }
 
 template <typename T>
-Vector4<T>& Vector4<T>::operator+=(const Vector4<T>& vector)
+Vector4<T>& Vector4<T>::operator+=(const Vector4& vector)
 {
 	x += vector.x;
 	y += vector.y;
@@ -163,7 +163,7 @@ Vector4<T>& Vector4<T>::operator+=(const Vector4<T>& vector)
 }
 
 template <typename T>
-Vector4<T>& Vector4<T>::operator-=(const Vector4<T>& vector)
+Vector4<T>& Vector4<T>::operator-=(const Vector4& vector)
 {
 	x -= vector.x;
 	y -= vector.y;
@@ -173,7 +173,7 @@ Vector4<T>& Vector4<T>::operator-=(const Vector4<T>& vector)
 }
 
 template <typename T>
-Vector4<T>& Vector4<T>::operator*=(const Vector4<T>& vector)
+Vector4<T>& Vector4<T>::operator*=(const Vector4& vector)
 {
 	x *= vector.x;
 	y *= vector.y;
@@ -183,13 +183,13 @@ Vector4<T>& Vector4<T>::operator*=(const Vector4<T>& vector)
 }
 
 template <typename T>
-bool Vector4<T>::operator==(const Vector4<T>& vector) const
+bool Vector4<T>::operator==(const Vector4& vector) const
 {
 	return x == vector.x && y == vector.y && z == vector.z && w == vector.w;
 }
 
 template <typename T>
-bool Vector4<T>::operator!=(const Vector4<T>& vector) const
+bool Vector4<T>::operator!=(const Vector4& vector) const
 {
 	return x != vector.x || y != vector.y || z != vector.z || w != vector.w;
 }
@@ -213,19 +213,19 @@ Vector4<T> Vector4<T>::operator*(const T value) const
 }
 
 template <typename T>
-Vector4<T> Vector4<T>::operator+(const Vector4<T>& vector) const
+Vector4<T> Vector4<T>::operator+(const Vector4& vector) const
 {
 	return { x + vector.x, y + vector.y, z + vector.z, w + vector.w };
 }
 
 template <typename T>
-Vector4<T> Vector4<T>::operator-(const Vector4<T>& vector) const
+Vector4<T> Vector4<T>::operator-(const Vector4& vector) const
 {
 	return { x - vector.x, y - vector.y, z - vector.z, w - vector.w };
 }
 
 template <typename T>
-Vector4<T> Vector4<T>::operator*(const Vector4<T>& vector) const
+Vector4<T> Vector4<T>::operator*(const Vector4& vector) const
 {
 	return { x * vector.x, y * vector.y, z * vector.z, w * vector.w };
 }

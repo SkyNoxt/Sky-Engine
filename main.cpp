@@ -107,7 +107,7 @@ static void rasterLine(Vector3<> one, Vector3<> two, Sampler& framebuffer)
 	if(yLen > length)
 		length = yLen;
 
-	Vector3<> increment = (two - one) * (1.0 / length);
+	Vector3<> increment = (two - one) * (1.0f / length);
 
 	Vector3<> current = { one.x + 0.5, one.y + 0.5, one.z + 0.5 };
 	for(int i = 1; i <= length; ++i)
