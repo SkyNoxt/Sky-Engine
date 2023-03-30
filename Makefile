@@ -1,7 +1,7 @@
 
 # Declaration of variables
-CXXFLAGS = -c -std=c++20 -Ofast -flto -I . -I $(OPENCVINC) -Wall
-LDFLAGS = -Ofast -flto -L $(OPENCVLIB)
+CXXFLAGS = -c -std=c++20 -I . -I $(OPENCVINC) -Wall
+LDFLAGS = -L $(OPENCVLIB)
 
 EXECUTABLE = SkyEngine
 
@@ -23,6 +23,17 @@ SOURCES = $(shell find . -name "*.cpp")
 OBJECTS = $(SOURCES:.cpp=.$(OBJEX))
 
 TARGET = $(EXECUTABLE).$(EXEEX)
+
+# Targets
+
+all: release
+
+debug: CXXFLAGS += -g
+debug: $(TARGET)
+
+release: CXXFLAGS += -Ofast -flto
+release: LDFLAGS += -Ofast -flto
+release: $(TARGET)
 
 # Main target linking
 $(TARGET): $(OBJECTS)
