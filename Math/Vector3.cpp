@@ -66,7 +66,7 @@ Vector3<T> Vector3<T>::normalize() const
 	T l = 1 / length();
 
 	if(l)
-		return { x * l, y * l, z * l };
+		return { T(x * l), T(y * l), T(z * l) };
 
 	return { 0, 0, 0 };
 }
@@ -74,15 +74,15 @@ Vector3<T> Vector3<T>::normalize() const
 template <typename T>
 Vector3<T> Vector3<T>::middle(const Vector3& vector) const
 {
-	return { (x + vector.x) * 0.5, (y + vector.y) * 0.5, (z + vector.z) * 0.5 };
+	return { T((x + vector.x) * 0.5), T((y + vector.y) * 0.5), T((z + vector.z) * 0.5) };
 }
 
 template <typename T>
 Vector3<T> Vector3<T>::cross(const Vector3& vector) const
 {
-	return { y * vector.z - vector.y * z,
-			 z * vector.x - vector.z * x,
-			 x * vector.y - vector.x * y };
+	return { T(y * vector.z - vector.y * z),
+			 T(z * vector.x - vector.z * x),
+			 T(x * vector.y - vector.x * y) };
 }
 
 template <typename T>
@@ -100,7 +100,7 @@ Vector3<T> Vector3<T>::maxima(const Vector3& a, const Vector3& b)
 template <typename T>
 Vector3<T> Vector3<T>::operator-() const
 {
-	return { -x, -y, -z };
+	return { T(-x), T(-y), T(-z) };
 }
 
 template <typename T>
@@ -194,37 +194,37 @@ bool Vector3<T>::operator!=(const Vector3& vector) const
 template <typename T>
 Vector3<T> Vector3<T>::operator+(const T value) const
 {
-	return { x + value, y + value, z + value };
+	return { T(x + value), T(y + value), T(z + value) };
 }
 
 template <typename T>
 Vector3<T> Vector3<T>::operator-(const T value) const
 {
-	return { x - value, y - value, z - value };
+	return { T(x - value), T(y - value), T(z - value) };
 }
 
 template <typename T>
 Vector3<T> Vector3<T>::operator*(const T value) const
 {
-	return { x * value, y * value, z * value };
+	return { T(x * value), T(y * value), T(z * value) };
 }
 
 template <typename T>
 Vector3<T> Vector3<T>::operator+(const Vector3& vector) const
 {
-	return { x + vector.x, y + vector.y, z + vector.z };
+	return { T(x + vector.x), T(y + vector.y), T(z + vector.z) };
 }
 
 template <typename T>
 Vector3<T> Vector3<T>::operator-(const Vector3& vector) const
 {
-	return { x - vector.x, y - vector.y, z - vector.z };
+	return { T(x - vector.x), T(y - vector.y), T(z - vector.z) };
 }
 
 template <typename T>
 Vector3<T> Vector3<T>::operator*(const Vector3& vector) const
 {
-	return { x * vector.x, y * vector.y, z * vector.z };
+	return { T(x * vector.x), T(y * vector.y), T(z * vector.z) };
 }
 
 // Inline heterogeneous opeartors

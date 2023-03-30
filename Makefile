@@ -1,6 +1,6 @@
 
 # Declaration of variables
-CXXFLAGS = -c -std=c++20 -Ofast -flto -I . -I $(OPENCVINC) -Wall -Wno-narrowing
+CXXFLAGS = -c -std=c++20 -Ofast -flto -I . -I $(OPENCVINC) -Wall
 LDFLAGS = -Ofast -flto -L $(OPENCVLIB)
 
 EXECUTABLE = SkyEngine

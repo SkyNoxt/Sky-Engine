@@ -109,7 +109,7 @@ static void rasterLine(Vector3<> one, Vector3<> two, Sampler& framebuffer)
 
 	Vector3<> increment = (two - one) * (1.0f / length);
 
-	Vector3<> current = { one.x + 0.5, one.y + 0.5, one.z + 0.5 };
+	Vector3<> current = { one.x + 0.5f, one.y + 0.5f, one.z + 0.5f };
 	for(int i = 1; i <= length; ++i)
 	{
 		framebuffer.sample<Vector4<unsigned char>>(current.x, current.y) = Vector4<unsigned char>{ 0, 0, 255, 255 };

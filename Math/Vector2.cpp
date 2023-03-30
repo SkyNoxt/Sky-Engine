@@ -62,7 +62,7 @@ Vector2<T> Vector2<T>::normalize() const
 	T l = 1 / length();
 
 	if(l)
-		return { x * l, y * l };
+		return { T(x * l), T(y * l) };
 
 	return { 0, 0 };
 }
@@ -70,7 +70,7 @@ Vector2<T> Vector2<T>::normalize() const
 template <typename T>
 Vector2<T> Vector2<T>::middle(const Vector2& vector) const
 {
-	return { (x + vector.x) * 0.5, (y + vector.y) * 0.5 };
+	return { T((x + vector.x) * 0.5), T((y + vector.y) * 0.5) };
 }
 
 template <typename T>
@@ -88,7 +88,7 @@ Vector2<T> Vector2<T>::maxima(const Vector2& a, const Vector2& b)
 template <typename T>
 Vector2<T> Vector2<T>::operator-() const
 {
-	return { -x, -y };
+	return { T(-x), T(-y) };
 }
 
 template <typename T>
@@ -175,37 +175,37 @@ bool Vector2<T>::operator!=(const Vector2& vector) const
 template <typename T>
 Vector2<T> Vector2<T>::operator+(const T value) const
 {
-	return { x + value, y + value };
+	return { T(x + value), T(y + value) };
 }
 
 template <typename T>
 Vector2<T> Vector2<T>::operator-(const T value) const
 {
-	return { x - value, y - value };
+	return { T(x - value), T(y - value) };
 }
 
 template <typename T>
 Vector2<T> Vector2<T>::operator*(const T value) const
 {
-	return { x * value, y * value };
+	return { T(x * value), T(y * value) };
 }
 
 template <typename T>
 Vector2<T> Vector2<T>::operator+(const Vector2& vector) const
 {
-	return { x + vector.x, y + vector.y };
+	return { T(x + vector.x), T(y + vector.y) };
 }
 
 template <typename T>
 Vector2<T> Vector2<T>::operator-(const Vector2& vector) const
 {
-	return { x - vector.x, y - vector.y };
+	return { T(x - vector.x), T(y - vector.y) };
 }
 
 template <typename T>
 Vector2<T> Vector2<T>::operator*(const Vector2& vector) const
 {
-	return { x * vector.x, y * vector.y };
+	return { T(x * vector.x), T(y * vector.y) };
 }
 
 // Inline heterogeneous opeartors
