@@ -32,10 +32,10 @@ debug: CXXFLAGS += -g
 debug: $(TARGET)
 
 release: CXXFLAGS += -Ofast -flto
-release: LDFLAGS += -Ofast -flto
+release: LDFLAGS += -Ofast -flto -s
 release: $(TARGET)
 
-# Main target linking
+# Link main target
 $(TARGET): $(OBJECTS)
 	$(CXX) $^ $(LDFLAGS) -o $@
 
