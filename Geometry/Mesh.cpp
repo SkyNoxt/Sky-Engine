@@ -26,7 +26,7 @@ Mesh::Mesh(const Stream& stream)
 	, numVertices(stream.read<unsigned int>())
 	, numIndices(stream.read<unsigned int>())
 	, vertexArray(stream.read<unsigned char>(size * numVertices))
-	, indexArray(numVertices ? stream.read<unsigned int>(numIndices) : nullptr)
+	, indexArray(numIndices ? stream.read<unsigned int>(numIndices) : nullptr)
 {
 }
 
