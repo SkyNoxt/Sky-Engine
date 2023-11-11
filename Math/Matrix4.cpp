@@ -5,6 +5,7 @@
 #include "Matrix4.h"
 
 using Sky::Math::Matrix4;
+using Sky::Math::Vector3;
 using Sky::Math::Vector4;
 
 template <class T>
@@ -308,6 +309,27 @@ template <class T>
 Matrix4<T>& Matrix4<T>::operator*=(const Matrix4<T>& matrix)
 {
 	return *this = *this * matrix;
+}
+
+template <class T>
+Vector3<T> Matrix4<T>::operator*(const Vector3<T>& vector) const
+{
+	return Vector3<T>{
+		xx * vector.x + yx * vector.y + zx * vector.z,
+		xy * vector.x + yy * vector.y + zy * vector.z,
+		xz * vector.x + yz * vector.y + zz * vector.z
+	};
+}
+
+template <class T>
+Vector4<T> Matrix4<T>::operator*(const Vector4<T>& vector) const
+{
+	return Vector4<T>{
+		xx * vector.x + yx * vector.y + zx * vector.z + wx * vector.w,
+		xy * vector.x + yy * vector.y + zy * vector.z + wy * vector.w,
+		xz * vector.x + yz * vector.y + zz * vector.z + wz * vector.w,
+		xw * vector.x + yw * vector.y + zw * vector.z + ww * vector.w
+	};
 }
 
 template class Matrix4<>;
