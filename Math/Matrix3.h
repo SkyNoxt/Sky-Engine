@@ -1,6 +1,7 @@
 ﻿
 #pragma once
 
+#include "Vector2.h"
 #include "Vector3.h"
 
 namespace Sky::Math
@@ -57,6 +58,10 @@ namespace Sky::Math
 
 		Matrix3<T>& operator=(const Matrix3<T>& matrix);
 		Matrix3<T>& operator*=(const Matrix3<T>& matrix);
+
+		// Heterogeneous opeartors
+		Vector2<T> operator*(const Vector2<T>& vector) const;
+		Vector3<T> operator*(const Vector3<T>& vector) const;
 
 		// Destructor
 		~Matrix3() = default;

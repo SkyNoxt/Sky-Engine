@@ -1,6 +1,7 @@
 ﻿
 #pragma once
 
+#include "Vector2.h"
 #include "Vector3.h"
 #include "Vector4.h"
 
@@ -73,6 +74,7 @@ namespace Sky::Math
 		Matrix4<T>& operator*=(const Matrix4<T>& matrix);
 
 		// Heterogeneous opeartors
+		Vector2<T> operator*(const Vector2<T>& vector) const;
 		Vector3<T> operator*(const Vector3<T>& vector) const;
 		Vector4<T> operator*(const Vector4<T>& vector) const;
 

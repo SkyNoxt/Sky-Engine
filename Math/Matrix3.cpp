@@ -1,8 +1,10 @@
 ﻿
 #include "Matrix3.h"
 
-using Sky::Math::Matrix3;
+using Sky::Math::Vector2;
 using Sky::Math::Vector3;
+
+using Sky::Math::Matrix3;
 
 template <class T>
 const Matrix3<T> Matrix3<T>::IDENTITY = { 1, 0, 0,
@@ -177,6 +179,25 @@ template <class T>
 Matrix3<T>& Matrix3<T>::operator*=(const Matrix3<T>& matrix)
 {
 	return *this = *this * matrix;
+}
+
+template <class T>
+Vector2<T> Matrix3<T>::operator*(const Vector2<T>& vector) const
+{
+	return Vector2<T>{
+		xx * vector.x + yx * vector.y,
+		xy * vector.x + yy * vector.y
+	};
+}
+
+template <class T>
+Vector3<T> Matrix3<T>::operator*(const Vector3<T>& vector) const
+{
+	return Vector3<T>{
+		xx * vector.x + yx * vector.y + zx * vector.z,
+		xy * vector.x + yy * vector.y + zy * vector.z,
+		xz * vector.x + yz * vector.y + zz * vector.z
+	};
 }
 
 template class Matrix3<>;
