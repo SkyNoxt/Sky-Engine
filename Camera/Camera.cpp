@@ -37,7 +37,7 @@ Ray Camera::castRay(unsigned int width, unsigned int height, unsigned int x, uns
 	float dirX = (2 * (x + 0.5) / (float)width - 1) * aspectRatio * scale;
 	float dirY = (1 - 2 * (y + 0.5) / (float)height) * scale;
 
-	Vector3<> dir = (Vector3<>{ dirX, dirY, -1.0 } * cameraMatrix).normalize();
+	Vector3<> dir = (cameraMatrix * Vector3<>{ dirX, dirY, -1.0 }).normalize();
 
 	return Ray({ cameraMatrix.wx, cameraMatrix.wy, cameraMatrix.wz }, dir);
 }

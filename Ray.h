@@ -3,6 +3,8 @@
 
 #include <Math/Vector3.h>
 
+using Sky::Math::Vector3;
+
 class Ray
 {
 

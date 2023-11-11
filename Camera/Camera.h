@@ -5,6 +5,8 @@
 
 #include <Ray.h>
 
+using Sky::Math::Matrix4;
+
 class Camera
 {
 

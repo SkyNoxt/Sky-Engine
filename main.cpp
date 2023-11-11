@@ -18,6 +18,8 @@
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 
+using namespace Sky::Math;
+
 Gamepad* gamepad;
 FPS* fps;
 
@@ -193,9 +195,9 @@ static void rasterize(Camera& camera, int width, int height)
 			const Vector3<>& p1 = v1.position;
 			const Vector3<>& p2 = v2.position;
 
-			Vector4<> t0 = Vector4<>{ p0.x, p0.y, p0.z, 1.0 } * transform;
-			Vector4<> t1 = Vector4<>{ p1.x, p1.y, p1.z, 1.0 } * transform;
-			Vector4<> t2 = Vector4<>{ p2.x, p2.y, p2.z, 1.0 } * transform;
+			Vector4<> t0 = transform * Vector4<>{ p0.x, p0.y, p0.z, 1.0 };
+			Vector4<> t1 = transform * Vector4<>{ p1.x, p1.y, p1.z, 1.0 };
+			Vector4<> t2 = transform * Vector4<>{ p2.x, p2.y, p2.z, 1.0 };
 
 			if(t0.w < 0.0 || t1.w < 0.0 || t2.w < 0.0)
 				continue;
@@ -286,7 +288,7 @@ static void rasterize(Camera& camera, int width, int height)
 
 							uv.y = uv.y - (int)uv.y;
 
-							const Vector4<unsigned char>& texel = texture->sample<Vector4<unsigned char>>(uv.x * texture->width, uv.y * texture->height);
+							const Vector4<unsigned char>& texel = texture->sample<Vector4<unsigned char>>((unsigned int)(uv.x * texture->width), (unsigned int)(uv.y * texture->height));
 							framebuffer.sample<Vector4<unsigned char>>(x, y) = Vector4<unsigned char>{ texel.z, texel.y, texel.x, 255 };
 						}
 					}

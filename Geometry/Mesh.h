@@ -8,6 +8,9 @@
 
 #include <Streams/Stream.h>
 
+using Sky::Math::Vector2;
+using Sky::Math::Vector3;
+
 struct Vertex
 {
 	Vector3<> position;
