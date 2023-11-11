@@ -3,6 +3,8 @@
 
 #include "Vector4.h"
 
+using Sky::Math::Vector4;
+
 template <typename T>
 Vector4<T>::Vector4(const T x, const T y, const T z, const T w)
 	: x(x)
@@ -27,16 +29,6 @@ Vector4<T>::Vector4(const T value)
 	, y(value)
 	, z(value)
 	, w(value)
-{
-}
-
-template <typename T>
-template <typename S>
-Vector4<T>::Vector4(const Vector4<S>& vector)
-	: x(vector.x)
-	, y(vector.y)
-	, z(vector.z)
-	, w(vector.w)
 {
 }
 
@@ -106,6 +98,66 @@ T& Vector4<T>::operator[](const int index)
 }
 
 template <typename T>
+bool Vector4<T>::operator==(const Vector4& vector) const
+{
+	return x == vector.x && y == vector.y && z == vector.z && w == vector.w;
+}
+
+template <typename T>
+bool Vector4<T>::operator!=(const Vector4& vector) const
+{
+	return x != vector.x || y != vector.y || z != vector.z || w != vector.w;
+}
+
+template <typename T>
+Vector4<T> Vector4<T>::operator+(const T value) const
+{
+	return { T(x + value), T(y + value), T(z + value), T(w + value) };
+}
+
+template <typename T>
+Vector4<T> Vector4<T>::operator-(const T value) const
+{
+	return { T(x - value), T(y - value), T(z - value), T(w - value) };
+}
+
+template <typename T>
+Vector4<T> Vector4<T>::operator*(const T value) const
+{
+	return { T(x * value), T(y * value), T(z * value), T(w * value) };
+}
+
+template <typename T>
+Vector4<T> Vector4<T>::operator/(const T value) const
+{
+	return { T(x / value), T(y / value), T(z / value), T(w / value) };
+}
+
+template <typename T>
+Vector4<T> Vector4<T>::operator+(const Vector4& vector) const
+{
+	return { T(x + vector.x), T(y + vector.y), T(z + vector.z), T(w + vector.w) };
+}
+
+template <typename T>
+Vector4<T> Vector4<T>::operator-(const Vector4& vector) const
+{
+	return { T(x - vector.x), T(y - vector.y), T(z - vector.z), T(w - vector.w) };
+}
+
+template <typename T>
+Vector4<T> Vector4<T>::operator*(const Vector4& vector) const
+{
+	return { T(x * vector.x), T(y * vector.y), T(z * vector.z), T(w * vector.w) };
+}
+
+template <typename T>
+Vector4<T> Vector4<T>::operator/(const Vector4& vector) const
+{
+	return { T(x / vector.x), T(y / vector.y), T(z / vector.z), T(w / vector.w) };
+}
+
+template <typename T>
 Vector4<T>& Vector4<T>::operator=(const T value)
 {
 	x = y = z = w = value;
@@ -139,6 +191,16 @@ Vector4<T>& Vector4<T>::operator*=(const T value)
 	y *= value;
 	z *= value;
 	w *= value;
+	return *this;
+}
+
+template <typename T>
+Vector4<T>& Vector4<T>::operator/=(const T value)
+{
+	x /= value;
+	y /= value;
+	z /= value;
+	w /= value;
 	return *this;
 }
 
@@ -183,72 +245,14 @@ Vector4<T>& Vector4<T>::operator*=(const Vector4& vector)
 }
 
 template <typename T>
-bool Vector4<T>::operator==(const Vector4& vector) const
+Vector4<T>& Vector4<T>::operator/=(const Vector4& vector)
 {
-	return x == vector.x && y == vector.y && z == vector.z && w == vector.w;
+	x /= vector.x;
+	y /= vector.y;
+	z /= vector.z;
+	w /= vector.w;
+	return *this;
 }
-
-template <typename T>
-bool Vector4<T>::operator!=(const Vector4& vector) const
-{
-	return x != vector.x || y != vector.y || z != vector.z || w != vector.w;
-}
-
-template <typename T>
-Vector4<T> Vector4<T>::operator+(const T value) const
-{
-	return { T(x + value), T(y + value), T(z + value), T(w + value) };
-}
-
-template <typename T>
-Vector4<T> Vector4<T>::operator-(const T value) const
-{
-	return { T(x - value), T(y - value), T(z - value), T(w - value) };
-}
-
-template <typename T>
-Vector4<T> Vector4<T>::operator*(const T value) const
-{
-	return { T(x * value), T(y * value), T(z * value), T(w * value) };
-}
-
-template <typename T>
-Vector4<T> Vector4<T>::operator+(const Vector4& vector) const
-{
-	return { T(x + vector.x), T(y + vector.y), T(z + vector.z), T(w + vector.w) };
-}
-
-template <typename T>
-Vector4<T> Vector4<T>::operator-(const Vector4& vector) const
-{
-	return { T(x - vector.x), T(y - vector.y), T(z - vector.z), T(w - vector.w) };
-}
-
-template <typename T>
-Vector4<T> Vector4<T>::operator*(const Vector4& vector) const
-{
-	return { T(x * vector.x), T(y * vector.y), T(z * vector.z), T(w * vector.w) };
-}
-
-// Inline heterogeneous opeartors
-
-template <typename T, typename S>
-Vector4<S> operator*(const Vector4<T>& vector, const S value)
-{
-	return { vector.x * value, vector.y * value, vector.z * value, vector.w * value };
-}
-
-// Explicit template instantiations
-
-// Classes
 
 template class Vector4<>;
 template class Vector4<unsigned char>;
-
-// Constructors
-
-template Vector4<unsigned char>::Vector4(const Vector4<>& vector);
-
-// Heterogeneous opeartors
-
-template Vector4<> operator*(const Vector4<unsigned char>&, const float);

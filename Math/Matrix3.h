@@ -3,87 +3,64 @@
 
 #include "Vector3.h"
 
-template <class T = float>
-class Matrix3
+namespace Sky::Math
 {
-
-  public:
-	union
+	template <class T = float>
+	class Matrix3
 	{
-		struct
+	  public:
+		union
 		{
-			T xx;
-			T xy;
-			T xz;
-			T yx;
-			T yy;
-			T yz;
-			T zx;
-			T zy;
-			T zz;
+			struct
+			{
+				T xx, xy, xz;
+				T yx, yy, yz;
+				T zx, zy, zz;
+			};
+			struct
+			{
+				Vector3<T> x;
+				Vector3<T> y;
+				Vector3<T> z;
+			};
 		};
-		struct
-		{
-			Vector3<T> x;
-			Vector3<T> y;
-			Vector3<T> z;
-		};
-	};
 
-	static const Matrix3<T> IDENTITY;
+		static const Matrix3<T> IDENTITY;
 
-	// Constructors
-	Matrix3(T xxVal, T xyVal, T xzVal, T yxVal, T yyVal, T yzVal, T zxVal, T zyVal, T zzVal);
-	Matrix3(T matrix[9]);
-	Matrix3(T value);
-	Matrix3();
+		// Constructors
+		Matrix3(T xx, T xy, T xz, T yx, T yy, T yz, T zx, T zy, T zz);
+		Matrix3(T matrix[9]);
+		Matrix3(T value);
+		Matrix3();
 
-	Matrix3(const Vector3<T>& xVec, const Vector3<T>& yVec, const Vector3<T>& zVec);
-	Matrix3(const Vector3<T> vec[3]);
+		Matrix3(const Vector3<T>& x, const Vector3<T>& y, const Vector3<T>& z);
+		Matrix3(const Vector3<T> vector[3]);
 
-	// Member functions
-	T determinant() const;
+		// Member functions
+		T determinant() const;
 
-	Matrix3<T> transpose() const;
-	Matrix3<T> inverse() const;
+		Matrix3<T> transpose() const;
+		Matrix3<T> inverse() const;
 
-	// Unary operators
-	Matrix3<T>& operator=(const Matrix3<T>& matrix);
-	Matrix3<T>& operator*=(const Matrix3<T>& matrix);
+		// Subscript operator
+		Vector3<T>& operator[](const int index);
 
-	Matrix3<T>& operator*=(const T value);
+		// Binary operators
+		bool operator==(const Matrix3<T>& matrix) const;
+		bool operator!=(const Matrix3<T>& matrix) const;
 
-	// Subsript operator
-	Vector3<T>& operator[](const int index);
+		Matrix3<T> operator*(const T value) const;
+		Matrix3<T> operator*(const Matrix3<T>& matrix) const;
 
-	// Binary operators
-	bool operator==(const Matrix3<T>& matrix) const;
-	bool operator!=(const Matrix3<T>& matrix) const;
+		Matrix3<T>& operator=(const T value);
+		Matrix3<T>& operator*=(const T value);
 
-	Matrix3<T> operator*(const Matrix3<T>& matrix) const;
+		Matrix3<T>& operator=(const Matrix3<T>& matrix);
+		Matrix3<T>& operator*=(const Matrix3<T>& matrix);
 
-	Matrix3<T> operator*(const T value) const;
+		// Destructor
+		~Matrix3() = default;
 
-	// Destructor
-	~Matrix3() = default;
-
-  private:
-};
-
-// Inline heterogeneous opeartors
-
-/*template <class T>
-Vector3<T>& operator*=(Vector3<T>& vector, const Matrix3<T>& matrix)
-{
-	return vector = vector * matrix;
-}*/
-
-template <class T>
-Vector3<T> operator*(const Vector3<T>& vector, const Matrix3<T>& matrix)
-{
-	return Vector3<T>{
-		vector.x * matrix.xx + vector.y * matrix.yx + vector.z * matrix.zx,
-		vector.x * matrix.xy + vector.y * matrix.yy + vector.z * matrix.zy,
-		vector.x * matrix.xz + vector.y * matrix.yz + vector.z * matrix.zz
+	  private:
 	};
 }

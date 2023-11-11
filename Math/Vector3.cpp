@@ -3,6 +3,8 @@
 
 #include "Vector3.h"
 
+using Sky::Math::Vector3;
+
 template <typename T>
 Vector3<T>::Vector3(const T x, const T y, const T z)
 	: x(x)
@@ -24,15 +26,6 @@ Vector3<T>::Vector3(const T value)
 	: x(value)
 	, y(value)
 	, z(value)
-{
-}
-
-template <typename T>
-template <typename S>
-Vector3<T>::Vector3(const Vector3<S>& vector)
-	: x(vector.x)
-	, y(vector.y)
-	, z(vector.z)
 {
 }
 
@@ -110,6 +103,66 @@ T& Vector3<T>::operator[](const int index)
 }
 
 template <typename T>
+bool Vector3<T>::operator==(const Vector3& vector) const
+{
+	return x == vector.x && y == vector.y && z == vector.z;
+}
+
+template <typename T>
+bool Vector3<T>::operator!=(const Vector3& vector) const
+{
+	return x != vector.x || y != vector.y || z != vector.z;
+}
+
+template <typename T>
+Vector3<T> Vector3<T>::operator+(const T value) const
+{
+	return { T(x + value), T(y + value), T(z + value) };
+}
+
+template <typename T>
+Vector3<T> Vector3<T>::operator-(const T value) const
+{
+	return { T(x - value), T(y - value), T(z - value) };
+}
+
+template <typename T>
+Vector3<T> Vector3<T>::operator*(const T value) const
+{
+	return { T(x * value), T(y * value), T(z * value) };
+}
+
+template <typename T>
+Vector3<T> Vector3<T>::operator/(const T value) const
+{
+	return { T(x / value), T(y / value), T(z / value) };
+}
+
+template <typename T>
+Vector3<T> Vector3<T>::operator+(const Vector3& vector) const
+{
+	return { T(x + vector.x), T(y + vector.y), T(z + vector.z) };
+}
+
+template <typename T>
+Vector3<T> Vector3<T>::operator-(const Vector3& vector) const
+{
+	return { T(x - vector.x), T(y - vector.y), T(z - vector.z) };
+}
+
+template <typename T>
+Vector3<T> Vector3<T>::operator*(const Vector3& vector) const
+{
+	return { T(x * vector.x), T(y * vector.y), T(z * vector.z) };
+}
+
+template <typename T>
+Vector3<T> Vector3<T>::operator/(const Vector3& vector) const
+{
+	return { T(x / vector.x), T(y / vector.y), T(z / vector.z) };
+}
+
+template <typename T>
 Vector3<T>& Vector3<T>::operator=(const T value)
 {
 	x = y = z = value;
@@ -140,6 +193,15 @@ Vector3<T>& Vector3<T>::operator*=(const T value)
 	x *= value;
 	y *= value;
 	z *= value;
+	return *this;
+}
+
+template <typename T>
+Vector3<T>& Vector3<T>::operator/=(const T value)
+{
+	x /= value;
+	y /= value;
+	z /= value;
 	return *this;
 }
 
@@ -180,72 +242,13 @@ Vector3<T>& Vector3<T>::operator*=(const Vector3& vector)
 }
 
 template <typename T>
-bool Vector3<T>::operator==(const Vector3& vector) const
+Vector3<T>& Vector3<T>::operator/=(const Vector3& vector)
 {
-	return x == vector.x && y == vector.y && z == vector.z;
+	x /= vector.x;
+	y /= vector.y;
+	z /= vector.z;
+	return *this;
 }
-
-template <typename T>
-bool Vector3<T>::operator!=(const Vector3& vector) const
-{
-	return x != vector.x || y != vector.y || z != vector.z;
-}
-
-template <typename T>
-Vector3<T> Vector3<T>::operator+(const T value) const
-{
-	return { T(x + value), T(y + value), T(z + value) };
-}
-
-template <typename T>
-Vector3<T> Vector3<T>::operator-(const T value) const
-{
-	return { T(x - value), T(y - value), T(z - value) };
-}
-
-template <typename T>
-Vector3<T> Vector3<T>::operator*(const T value) const
-{
-	return { T(x * value), T(y * value), T(z * value) };
-}
-
-template <typename T>
-Vector3<T> Vector3<T>::operator+(const Vector3& vector) const
-{
-	return { T(x + vector.x), T(y + vector.y), T(z + vector.z) };
-}
-
-template <typename T>
-Vector3<T> Vector3<T>::operator-(const Vector3& vector) const
-{
-	return { T(x - vector.x), T(y - vector.y), T(z - vector.z) };
-}
-
-template <typename T>
-Vector3<T> Vector3<T>::operator*(const Vector3& vector) const
-{
-	return { T(x * vector.x), T(y * vector.y), T(z * vector.z) };
-}
-
-// Inline heterogeneous opeartors
-
-template <typename T, typename S>
-Vector3<S> operator*(const Vector3<T>& vector, const S value)
-{
-	return { vector.x * value, vector.y * value, vector.z * value };
-}
-
-// Explicit template instantiations
-
-// Classes
 
 template class Vector3<>;
 template class Vector3<unsigned char>;
-
-// Constructors
-
-template Vector3<unsigned char>::Vector3(const Vector3<>& vector);
-
-// Heterogeneous opeartors
-
-template Vector3<> operator*(const Vector3<unsigned char>&, const float);

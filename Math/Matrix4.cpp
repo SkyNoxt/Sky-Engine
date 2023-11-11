@@ -4,30 +4,33 @@
 
 #include "Matrix4.h"
 
-template <class T>
-const Matrix4<T> Matrix4<T>::IDENTITY = Matrix4<T>{ 1, 0, 0, 0,
-													0, 1, 0, 0,
-													0, 0, 1, 0,
-													0, 0, 0, 1 };
+using Sky::Math::Matrix4;
+using Sky::Math::Vector4;
 
 template <class T>
-Matrix4<T>::Matrix4(T xxVal, T xyVal, T xzVal, T xwVal, T yxVal, T yyVal, T yzVal, T ywVal, T zxVal, T zyVal, T zzVal, T zwVal, T wxVal, T wyVal, T wzVal, T wwVal)
-	: xx(xxVal)
-	, xy(xyVal)
-	, xz(xzVal)
-	, xw(xwVal)
-	, yx(yxVal)
-	, yy(yyVal)
-	, yz(yzVal)
-	, yw(ywVal)
-	, zx(zxVal)
-	, zy(zyVal)
-	, zz(zzVal)
-	, zw(zwVal)
-	, wx(wxVal)
-	, wy(wyVal)
-	, wz(wzVal)
-	, ww(wwVal)
+const Matrix4<T> Matrix4<T>::IDENTITY = { 1, 0, 0, 0,
+										  0, 1, 0, 0,
+										  0, 0, 1, 0,
+										  0, 0, 0, 1 };
+
+template <class T>
+Matrix4<T>::Matrix4(T xx, T xy, T xz, T xw, T yx, T yy, T yz, T yw, T zx, T zy, T zz, T zw, T wx, T wy, T wz, T ww)
+	: xx(xx)
+	, xy(xy)
+	, xz(xz)
+	, xw(xw)
+	, yx(yx)
+	, yy(yy)
+	, yz(yz)
+	, yw(yw)
+	, zx(zx)
+	, zy(zy)
+	, zz(zz)
+	, zw(zw)
+	, wx(wx)
+	, wy(wy)
+	, wz(wz)
+	, ww(ww)
 {
 }
 
@@ -80,20 +83,20 @@ Matrix4<T>::Matrix4()
 }
 
 template <class T>
-Matrix4<T>::Matrix4(const Vector4<T>& xVec, const Vector4<T>& yVec, const Vector4<T>& zVec, const Vector4<T>& wVec)
-	: x(xVec)
-	, y(yVec)
-	, z(zVec)
-	, w(wVec)
+Matrix4<T>::Matrix4(const Vector4<T>& x, const Vector4<T>& y, const Vector4<T>& z, const Vector4<T>& w)
+	: x(x)
+	, y(y)
+	, z(z)
+	, w(w)
 {
 }
 
 template <class T>
-Matrix4<T>::Matrix4(const Vector4<T> vec[4])
-	: x(vec[0])
-	, y(vec[1])
-	, z(vec[2])
-	, w(vec[3])
+Matrix4<T>::Matrix4(const Vector4<T> vector[4])
+	: x(vector[0])
+	, y(vector[1])
+	, z(vector[2])
+	, w(vector[3])
 {
 }
 
@@ -175,27 +178,16 @@ void Matrix4<T>::rotate(T angle, T x, T y, T z)
 {
 	T s = std::sin(angle * std::numbers::pi / 180),
 	  c = std::cos(angle * std::numbers::pi / 180),
-	  xx,
-	  yy,
-	  zz,
-	  xy,
-	  yz,
-	  zx,
-	  xs,
-	  ys,
-	  zs,
-	  c1;
-
-	xx = x * x;
-	yy = y * y;
-	zz = z * z;
-	xy = x * y;
-	yz = y * z;
-	zx = z * x;
-	xs = x * s;
-	ys = y * s;
-	zs = z * s;
-	c1 = 1 - c;
+	  xx = x * x,
+	  yy = y * y,
+	  zz = z * z,
+	  xy = x * y,
+	  yz = y * z,
+	  zx = z * x,
+	  xs = x * s,
+	  ys = y * s,
+	  zs = z * s,
+	  c1 = 1 - c;
 
 	Matrix4<T> rotationMatrix = Matrix4<T>{ (c1 * xx) + c, (c1 * xy) + zs, (c1 * zx) - ys, 0,
 											(c1 * xy) - zs, (c1 * yy) + c, (c1 * yz) + xs, 0,
@@ -237,28 +229,6 @@ void Matrix4<T>::scale(const Vector3<T>& scaling)
 }
 
 template <class T>
-Matrix4<T>& Matrix4<T>::operator=(const Matrix4<T>& matrix)
-{
-	x = matrix.x;
-	y = matrix.y;
-	z = matrix.z;
-	w = matrix.w;
-	return *this;
-}
-
-template <class T>
-Matrix4<T>& Matrix4<T>::operator*=(const Matrix4<T>& matrix)
-{
-	return *this = *this * matrix;
-}
-
-template <class T>
-Matrix4<T>& Matrix4<T>::operator*=(const T value)
-{
-	return *this = *this * value;
-}
-
-template <class T>
 Vector4<T>& Matrix4<T>::operator[](const int index)
 {
 	return *(((Vector4<T>*)this) + index);
@@ -274,6 +244,12 @@ template <class T>
 bool Matrix4<T>::operator!=(const Matrix4<T>& matrix) const
 {
 	return x != matrix.x || y != matrix.y || z != matrix.z || w != matrix.w;
+}
+
+template <class T>
+Matrix4<T> Matrix4<T>::operator*(const T value) const
+{
+	return Matrix4<T>{ x * value, y * value, z * value, w * value };
 }
 
 template <class T>
@@ -303,9 +279,35 @@ Matrix4<T> Matrix4<T>::operator*(const Matrix4<T>& matrix) const
 }
 
 template <class T>
-Matrix4<T> Matrix4<T>::operator*(const T value) const
+Matrix4<T>& Matrix4<T>::operator=(const T value)
 {
-	return Matrix4<T>{ x * value, y * value, z * value, w * value };
+	x = value;
+	y = value;
+	z = value;
+	w = value;
+	return *this;
+}
+
+template <class T>
+Matrix4<T>& Matrix4<T>::operator*=(const T value)
+{
+	return *this = *this * value;
+}
+
+template <class T>
+Matrix4<T>& Matrix4<T>::operator=(const Matrix4<T>& matrix)
+{
+	x = matrix.x;
+	y = matrix.y;
+	z = matrix.z;
+	w = matrix.w;
+	return *this;
+}
+
+template <class T>
+Matrix4<T>& Matrix4<T>::operator*=(const Matrix4<T>& matrix)
+{
+	return *this = *this * matrix;
 }
 
 template class Matrix4<>;
