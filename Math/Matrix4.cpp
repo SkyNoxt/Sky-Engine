@@ -10,13 +10,13 @@ using Sky::Math::Vector4;
 
 using Sky::Math::Matrix4;
 
-template <class T>
+template <typename T>
 const Matrix4<T> Matrix4<T>::IDENTITY = { 1, 0, 0, 0,
 										  0, 1, 0, 0,
 										  0, 0, 1, 0,
 										  0, 0, 0, 1 };
 
-template <class T>
+template <typename T>
 Matrix4<T>::Matrix4(T xx, T xy, T xz, T xw, T yx, T yy, T yz, T yw, T zx, T zy, T zz, T zw, T wx, T wy, T wz, T ww)
 	: xx(xx)
 	, xy(xy)
@@ -37,7 +37,7 @@ Matrix4<T>::Matrix4(T xx, T xy, T xz, T xw, T yx, T yy, T yz, T yw, T zx, T zy, 
 {
 }
 
-template <class T>
+template <typename T>
 Matrix4<T>::Matrix4(T matrix[16])
 	: xx(matrix[0])
 	, xy(matrix[1])
@@ -58,7 +58,7 @@ Matrix4<T>::Matrix4(T matrix[16])
 {
 }
 
-template <class T>
+template <typename T>
 Matrix4<T>::Matrix4(T value)
 	: xx(value)
 	, xy(value)
@@ -79,13 +79,13 @@ Matrix4<T>::Matrix4(T value)
 {
 }
 
-template <class T>
+template <typename T>
 Matrix4<T>::Matrix4()
 {
 	*this = IDENTITY;
 }
 
-template <class T>
+template <typename T>
 Matrix4<T>::Matrix4(const Vector4<T>& x, const Vector4<T>& y, const Vector4<T>& z, const Vector4<T>& w)
 	: x(x)
 	, y(y)
@@ -94,7 +94,7 @@ Matrix4<T>::Matrix4(const Vector4<T>& x, const Vector4<T>& y, const Vector4<T>& 
 {
 }
 
-template <class T>
+template <typename T>
 Matrix4<T>::Matrix4(const Vector4<T> vector[4])
 	: x(vector[0])
 	, y(vector[1])
@@ -103,7 +103,7 @@ Matrix4<T>::Matrix4(const Vector4<T> vector[4])
 {
 }
 
-template <class T>
+template <typename T>
 Matrix4<T>::Matrix4(const Vector3<T>& eye, const Vector3<T>& center, const Vector3<T>& up)
 {
 	Vector3<T> zVec = (eye - center).normalize();
@@ -116,13 +116,13 @@ Matrix4<T>::Matrix4(const Vector3<T>& eye, const Vector3<T>& center, const Vecto
 	w = { eye.x, eye.y, eye.z, 1 };
 }
 
-template <class T>
+template <typename T>
 T Matrix4<T>::determinant() const
 {
 	return xw * yz * zy * wx - xz * yw * zy * wx - xw * yy * zz * wx + xy * yw * zz * wx + xz * yy * zw * wx - xy * yz * zw * wx - xw * yz * zx * wy + xz * yw * zx * wy + xw * yx * zz * wy - xx * yw * zz * wy - xz * yx * zw * wy + xx * yz * zw * wy + xw * yy * zx * wz - xy * yw * zx * wz - xw * yx * zy * wz + xx * yw * zy * wz + xy * yx * zw * wz - xx * yy * zw * wz - xz * yy * zx * ww + xy * yz * zx * ww + xz * yx * zy * ww - xx * yz * zy * ww - xy * yx * zz * ww + xx * yy * zz * ww;
 }
 
-template <class T>
+template <typename T>
 Matrix4<T> Matrix4<T>::transpose() const
 {
 	return Matrix4<T>{
@@ -133,7 +133,7 @@ Matrix4<T> Matrix4<T>::transpose() const
 	};
 }
 
-template <class T>
+template <typename T>
 Matrix4<T> Matrix4<T>::inverse() const
 {
 	Matrix4<T> inverse = Matrix4<T>{
@@ -161,7 +161,7 @@ Matrix4<T> Matrix4<T>::inverse() const
 	return inverse * (1 / (xx * inverse.xx + xy * inverse.yx + xz * inverse.zx + xw * inverse.wx));
 }
 
-template <class T>
+template <typename T>
 void Matrix4<T>::translate(T x, T y, T z)
 {
 	wx += xx * x + yx * y + zx * z;
@@ -170,13 +170,13 @@ void Matrix4<T>::translate(T x, T y, T z)
 	ww += xw * x + yw * y + zw * z;
 }
 
-template <class T>
+template <typename T>
 void Matrix4<T>::translate(const Vector3<T>& translation)
 {
 	translate(translation.x, translation.y, translation.z);
 }
 
-template <class T>
+template <typename T>
 void Matrix4<T>::rotate(T angle, T x, T y, T z)
 {
 	T s = std::sin(angle * std::numbers::pi / 180),
@@ -200,13 +200,13 @@ void Matrix4<T>::rotate(T angle, T x, T y, T z)
 	*this *= rotationMatrix;
 }
 
-template <class T>
+template <typename T>
 void Matrix4<T>::rotate(const Vector4<T>& rotation)
 {
 	rotate(rotation.w, rotation.x, rotation.y, rotation.z);
 }
 
-template <class T>
+template <typename T>
 void Matrix4<T>::scale(T x, T y, T z)
 {
 	xx *= x;
@@ -225,37 +225,37 @@ void Matrix4<T>::scale(T x, T y, T z)
 	zw *= z;
 }
 
-template <class T>
+template <typename T>
 void Matrix4<T>::scale(const Vector3<T>& scaling)
 {
 	scale(scaling.x, scaling.y, scaling.z);
 }
 
-template <class T>
+template <typename T>
 Vector4<T>& Matrix4<T>::operator[](const int index)
 {
 	return *(((Vector4<T>*)this) + index);
 }
 
-template <class T>
+template <typename T>
 bool Matrix4<T>::operator==(const Matrix4<T>& matrix) const
 {
 	return x == matrix.x && y == matrix.y && z == matrix.z && w == matrix.w;
 }
 
-template <class T>
+template <typename T>
 bool Matrix4<T>::operator!=(const Matrix4<T>& matrix) const
 {
 	return x != matrix.x || y != matrix.y || z != matrix.z || w != matrix.w;
 }
 
-template <class T>
+template <typename T>
 Matrix4<T> Matrix4<T>::operator*(const T value) const
 {
 	return Matrix4<T>{ x * value, y * value, z * value, w * value };
 }
 
-template <class T>
+template <typename T>
 Matrix4<T> Matrix4<T>::operator*(const Matrix4<T>& matrix) const
 {
 	return Matrix4<T>{
@@ -281,7 +281,7 @@ Matrix4<T> Matrix4<T>::operator*(const Matrix4<T>& matrix) const
 	};
 }
 
-template <class T>
+template <typename T>
 Matrix4<T>& Matrix4<T>::operator=(const T value)
 {
 	x = value;
@@ -291,13 +291,13 @@ Matrix4<T>& Matrix4<T>::operator=(const T value)
 	return *this;
 }
 
-template <class T>
+template <typename T>
 Matrix4<T>& Matrix4<T>::operator*=(const T value)
 {
 	return *this = *this * value;
 }
 
-template <class T>
+template <typename T>
 Matrix4<T>& Matrix4<T>::operator=(const Matrix4<T>& matrix)
 {
 	x = matrix.x;
@@ -307,13 +307,13 @@ Matrix4<T>& Matrix4<T>::operator=(const Matrix4<T>& matrix)
 	return *this;
 }
 
-template <class T>
+template <typename T>
 Matrix4<T>& Matrix4<T>::operator*=(const Matrix4<T>& matrix)
 {
 	return *this = *this * matrix;
 }
 
-template <class T>
+template <typename T>
 Vector2<T> Matrix4<T>::operator*(const Vector2<T>& vector) const
 {
 	return Vector2<T>{
@@ -322,7 +322,7 @@ Vector2<T> Matrix4<T>::operator*(const Vector2<T>& vector) const
 	};
 }
 
-template <class T>
+template <typename T>
 Vector3<T> Matrix4<T>::operator*(const Vector3<T>& vector) const
 {
 	return Vector3<T>{
@@ -332,7 +332,7 @@ Vector3<T> Matrix4<T>::operator*(const Vector3<T>& vector) const
 	};
 }
 
-template <class T>
+template <typename T>
 Vector4<T> Matrix4<T>::operator*(const Vector4<T>& vector) const
 {
 	return Vector4<T>{

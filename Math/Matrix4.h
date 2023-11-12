@@ -7,7 +7,7 @@
 
 namespace Sky::Math
 {
-	template <class T = float>
+	template <typename T = float>
 	class Matrix4
 	{
 	  public:
