@@ -178,7 +178,7 @@ static void rasterize(Camera& camera, int width, int height)
 {
 	memset(framebuffer.samples, 0, framebuffer.size * framebuffer.width * framebuffer.height);
 	for(int i = 0; i < width * height; ++i)
-		depthbuffer[i] = camera.farPlane;
+		depthbuffer[i] = 1;
 
 	Matrix4<> transform = camera.projectionMatrix * camera.viewMatrix * *modelMatrix;
 

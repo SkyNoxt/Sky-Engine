@@ -14,6 +14,10 @@ class Camera
 	static const float DEG_TO_RAD;
 	// static const float RAD_TO_DEG;
 
+	Matrix4<> cameraMatrix;
+	Matrix4<> viewMatrix;
+	Matrix4<> projectionMatrix;
+
 	// Constructors
 	Camera(float fLength, float fov, float targetRatio, float zNear = 0, float zFar = Ray::MAX_LENGTH);
 
@@ -23,8 +27,7 @@ class Camera
 	// destructor
 	~Camera() = default;
 
-	// private:
-
+  private:
 	float focalLength;
 	float fieldOfView;
 	float aspectRatio;
@@ -33,8 +36,4 @@ class Camera
 	float farPlane;
 
 	float scale;
-
-	Matrix4<> cameraMatrix;
-	Matrix4<> viewMatrix;
-	Matrix4<> projectionMatrix;
 };
