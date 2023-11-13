@@ -5,19 +5,21 @@
 
 #include <Ray.h>
 
-template <class T = float>
-class Box
+namespace Sky::Geometry
 {
+	template <class T = float>
+	class Box
+	{
+	  public:
+		Vector3<T> bounds[2];
 
-  public:
-	Vector3<T> bounds[2];
+		// Constructor
+		Box(const Vector3<T>& min, const Vector3<T>& max);
 
-	// Constructor
-	Box(const Vector3<T>& min, const Vector3<T>& max);
+		// Member function
+		bool intersect(const Ray& ray, T& distance) const;
 
-	// Member function
-	bool intersect(const Ray& ray, T& distance) const;
-
-	// Destructor
-	~Box() = default;
-};
+		// Destructor
+		~Box() = default;
+	};
+}

@@ -1,6 +1,8 @@
 ﻿
 #include "Box.h"
 
+using Sky::Geometry::Box;
+
 template <class T>
 Box<T>::Box(const Vector3<T>& min, const Vector3<T>& max)
 	: bounds{ min, max }
@@ -10,13 +12,11 @@ Box<T>::Box(const Vector3<T>& min, const Vector3<T>& max)
 template <class T>
 bool Box<T>::intersect(const Ray& ray, T& distance) const
 {
-	T xMin, xMax, yMin, yMax, zMin, zMax;
+	T xMin = (bounds[ray.sign[0]].x - ray.origin.x) * ray.inverseDirection.x;
+	T xMax = (bounds[1 - ray.sign[0]].x - ray.origin.x) * ray.inverseDirection.x;
 
-	xMin = (bounds[ray.sign[0]].x - ray.origin.x) * ray.inverseDirection.x;
-	xMax = (bounds[1 - ray.sign[0]].x - ray.origin.x) * ray.inverseDirection.x;
-
-	yMin = (bounds[ray.sign[1]].y - ray.origin.y) * ray.inverseDirection.y;
-	yMax = (bounds[1 - ray.sign[1]].y - ray.origin.y) * ray.inverseDirection.y;
+	T yMin = (bounds[ray.sign[1]].y - ray.origin.y) * ray.inverseDirection.y;
+	T yMax = (bounds[1 - ray.sign[1]].y - ray.origin.y) * ray.inverseDirection.y;
 
 	if((xMin > yMax) || (yMin > xMax))
 		return false;
@@ -26,8 +26,8 @@ bool Box<T>::intersect(const Ray& ray, T& distance) const
 	if(yMax < xMax)
 		xMax = yMax;
 
-	zMin = (bounds[ray.sign[2]].z - ray.origin.z) * ray.inverseDirection.z;
-	zMax = (bounds[1 - ray.sign[2]].z - ray.origin.z) * ray.inverseDirection.z;
+	T zMin = (bounds[ray.sign[2]].z - ray.origin.z) * ray.inverseDirection.z;
+	T zMax = (bounds[1 - ray.sign[2]].z - ray.origin.z) * ray.inverseDirection.z;
 
 	if((xMin > zMax) || (zMin > xMax))
 		return false;
