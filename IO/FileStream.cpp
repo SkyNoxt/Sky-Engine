@@ -2,24 +2,21 @@
 #include <cstdio>
 #include <fcntl.h>
 
-#if !defined(O_BINARY)
-#define O_BINARY 0
-#endif
-
 #if defined(WINDOWS)
 #include <io.h>
 #endif
 
+#if !defined(O_BINARY)
+#define O_BINARY 0
+#endif
+
 #include "FileStream.h"
+
+using Sky::IO::FileStream;
 
 FileStream::FileStream(const char* filePath)
 	: file(fdopen(open(filePath, O_RDWR | O_CREAT | O_BINARY, 0666), "r+"))
 {
-}
-
-unsigned int FileStream::write(void* buffer, unsigned int size, unsigned int count) const
-{
-	return fwrite(buffer, size, count, file);
 }
 
 unsigned int FileStream::read(void* buffer, unsigned int size, unsigned int count) const
@@ -27,9 +24,9 @@ unsigned int FileStream::read(void* buffer, unsigned int size, unsigned int coun
 	return fread(buffer, size, count, file);
 }
 
-void FileStream::flush() const
+unsigned int FileStream::write(void* buffer, unsigned int size, unsigned int count) const
 {
-	fflush(file);
+	return fwrite(buffer, size, count, file);
 }
 
 FileStream::~FileStream()

@@ -7,7 +7,7 @@
 
 namespace Sky::Geometry
 {
-	template <class T = float>
+	template <typename T = float>
 	class Box
 	{
 	  public:
