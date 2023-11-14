@@ -3,7 +3,7 @@
 
 #include <new>
 
-#include <Streams/Stream.h>
+#include <IO/Stream.h>
 
 #include "Mesh.h"
 

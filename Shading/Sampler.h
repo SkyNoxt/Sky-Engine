@@ -1,7 +1,9 @@
 
 #pragma once
 
-#include <Streams/Stream.h>
+#include <IO/Stream.h>
+
+using Sky::IO::Stream;
 
 class Sampler
 {

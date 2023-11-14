@@ -6,10 +6,12 @@
 
 #include <Ray.h>
 
-#include <Streams/Stream.h>
+#include <IO/Stream.h>
 
 using Sky::Math::Vector2;
 using Sky::Math::Vector3;
+
+using Sky::IO::Stream;
 
 struct Vertex
 {

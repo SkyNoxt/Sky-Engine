@@ -5,7 +5,7 @@
 
 #include <Camera/Camera.h>
 
-#include <Streams/FileStream.h>
+#include <IO/FileStream.h>
 
 #include <Geometry/Model.h>
 #include <Shading/Sampler.h>
@@ -19,6 +19,7 @@
 #include <opencv2/highgui/highgui.hpp>
 
 using namespace Sky::Math;
+using namespace Sky::IO;
 
 Gamepad* gamepad;
 FPS* fps;
