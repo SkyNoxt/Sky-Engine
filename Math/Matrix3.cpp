@@ -200,4 +200,4 @@ Vector3<T> Matrix3<T>::operator*(const Vector3<T>& vector) const
 	};
 }
 
-template class Matrix3<>;
+template class Sky::Math::Matrix3<>;

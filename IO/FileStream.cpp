@@ -14,8 +14,8 @@
 
 using Sky::IO::FileStream;
 
-FileStream::FileStream(const char* filePath)
-	: file(fdopen(open(filePath, O_RDWR | O_CREAT | O_BINARY, 0666), "r+"))
+FileStream::FileStream(const char* file)
+	: file(fdopen(open(file, O_RDWR | O_CREAT | O_BINARY, 0666), "r+"))
 {
 }
 

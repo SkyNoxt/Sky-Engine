@@ -10,7 +10,7 @@ namespace Sky::IO
 
 	  public:
 		// Constructor
-		FileStream(const char* filePath);
+		FileStream(const char* file);
 
 		// Member functions
 		unsigned int read(void* buffer, unsigned int size, unsigned int count) const override;

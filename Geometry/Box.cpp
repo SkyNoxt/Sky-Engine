@@ -41,4 +41,4 @@ bool Box<T>::intersect(const Ray& ray, T& distance) const
 	return !(distance < 0);
 }
 
-template class Box<>;
+template class Sky::Geometry::Box<>;

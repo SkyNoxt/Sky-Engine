@@ -254,5 +254,5 @@ Vector4<T>& Vector4<T>::operator/=(const Vector4& vector)
 	return *this;
 }
 
-template class Vector4<>;
-template class Vector4<unsigned char>;
+template class Sky::Math::Vector4<>;
+template class Sky::Math::Vector4<unsigned char>;

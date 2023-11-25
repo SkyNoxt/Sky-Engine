@@ -343,4 +343,4 @@ Vector4<T> Matrix4<T>::operator*(const Vector4<T>& vector) const
 	};
 }
 
-template class Matrix4<>;
+template class Sky::Math::Matrix4<>;
