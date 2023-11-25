@@ -18,6 +18,7 @@
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 
+using namespace Sky::Geometry;
 using namespace Sky::Math;
 using namespace Sky::IO;
 
@@ -48,9 +49,9 @@ static Vector3<> castRay(Ray& ray, Camera& camera, unsigned int depth)
 	bool intersect = false;
 	int meshIndex;
 
-	unsigned int numMeshes = model->numMeshes;
-	Mesh* meshes = model->meshArray;
-	for(unsigned int i = 0; i < numMeshes; ++i)
+	unsigned int meshCount = model->meshCount;
+	Mesh* meshes = model->meshes;
+	for(unsigned int i = 0; i < meshCount; ++i)
 	{
 		if(meshes[i].intersect<Vertex>(ray, tempDistance, tempIndex, tempUV) && tempDistance > 0 && tempDistance < distance)
 		{
@@ -183,14 +184,14 @@ static void rasterize(Camera& camera, int width, int height)
 
 	Matrix4<> transform = camera.projectionMatrix * camera.viewMatrix * *modelMatrix;
 
-	for(unsigned int m = 0; m < model->numMeshes; ++m)
+	for(unsigned int m = 0; m < model->meshCount; ++m)
 	{
-		unsigned int numTriangles = model->meshArray[m].numElements() / 3;
+		unsigned int numTriangles = model->meshes[m].numElements() / 3;
 		for(unsigned int i = 0; i < numTriangles; ++i)
 		{
-			const Vertex& v0 = model->meshArray[m].vertex<Vertex>(i * 3);
-			const Vertex& v1 = model->meshArray[m].vertex<Vertex>(i * 3 + 1);
-			const Vertex& v2 = model->meshArray[m].vertex<Vertex>(i * 3 + 2);
+			const Vertex& v0 = model->meshes[m].vertex<Vertex>(i * 3);
+			const Vertex& v1 = model->meshes[m].vertex<Vertex>(i * 3 + 1);
+			const Vertex& v2 = model->meshes[m].vertex<Vertex>(i * 3 + 2);
 
 			const Vector3<>& p0 = v0.position;
 			const Vector3<>& p1 = v1.position;
