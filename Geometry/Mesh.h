@@ -41,13 +41,13 @@ class Mesh
 	// Member functions
 	unsigned int numElements() const;
 
-	template <class T>
+	template <typename T>
 	bool intersect(const Ray& ray, float& distance, unsigned int& index, Vector2<>& barycenter) const;
 
-	template <class T>
+	template <typename T>
 	const T& vertex(unsigned int index) const;
 
-	template <class T>
+	template <typename T>
 	T& vertex(unsigned int index);
 
 	void serialize(const Stream& stream) const;

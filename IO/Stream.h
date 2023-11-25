@@ -10,23 +10,23 @@ namespace Sky::IO
 		virtual unsigned int read(void* buffer, unsigned int size, unsigned int count) const = 0;
 		virtual unsigned int write(void* buffer, unsigned int size, unsigned int count) const = 0;
 
-		template <class T>
+		template <typename T>
 		T read() const;
 
-		template <class T>
+		template <typename T>
 		T* read(unsigned int count) const;
 
-		template <class T>
+		template <typename T>
 		void write(T value) const;
 
-		template <class T>
+		template <typename T>
 		void write(T* value, unsigned int count) const;
 
 		// Destructor
 		virtual ~Stream() = default;
 	};
 
-	template <class T>
+	template <typename T>
 	T Stream::read() const
 	{
 		T value;
@@ -34,7 +34,7 @@ namespace Sky::IO
 		return value;
 	}
 
-	template <class T>
+	template <typename T>
 	T* Stream::read(unsigned int count) const
 	{
 		T* value = new T[count];
@@ -42,13 +42,13 @@ namespace Sky::IO
 		return value;
 	}
 
-	template <class T>
+	template <typename T>
 	void Stream::write(T value) const
 	{
 		write(&value, sizeof(T), 1);
 	}
 
-	template <class T>
+	template <typename T>
 	void Stream::write(T* value, unsigned int count) const
 	{
 		write(value, sizeof(T), count);

@@ -46,7 +46,7 @@ unsigned int Mesh::numElements() const
 	return numVertices;
 }
 
-template <class T>
+template <typename T>
 bool Mesh::intersect(const Ray& ray, float& distance, unsigned int& index, Vector2<>& barycenter) const
 {
 	bool intersect = false;
@@ -68,7 +68,7 @@ bool Mesh::intersect(const Ray& ray, float& distance, unsigned int& index, Vecto
 	return intersect;
 }
 
-template <class T>
+template <typename T>
 const T& Mesh::vertex(unsigned int index) const
 {
 	if(indexArray)
@@ -76,7 +76,7 @@ const T& Mesh::vertex(unsigned int index) const
 	return ((T*)vertexArray)[index];
 }
 
-template <class T>
+template <typename T>
 T& Mesh::vertex(unsigned int index)
 {
 	if(indexArray)

@@ -23,14 +23,14 @@ class Sampler
 
 	// Member functions
 
-	template <class T>
+	template <typename T>
 	T& sample(unsigned int x);
-	template <class T>
+	template <typename T>
 	T& sample(unsigned int x, unsigned int y);
 
-	template <class T>
+	template <typename T>
 	T sample(float x);
-	template <class T>
+	template <typename T>
 	T sample(float x, float y);
 
 	void serialize(const Stream& stream) const;
@@ -39,19 +39,19 @@ class Sampler
 	~Sampler();
 };
 
-template <class T>
+template <typename T>
 T& Sampler::sample(unsigned int x)
 {
 	return ((T*)samples)[x];
 }
 
-template <class T>
+template <typename T>
 T& Sampler::sample(unsigned int x, unsigned int y)
 {
 	return ((T*)samples)[y * width + x];
 }
 
-template <class T>
+template <typename T>
 T Sampler::sample(float x)
 {
 	unsigned int ix = (unsigned int)x;
@@ -63,7 +63,7 @@ T Sampler::sample(float x)
 	return f0 * (1.f - dx) + f1 * dx;
 }
 
-template <class T>
+template <typename T>
 T Sampler::sample(float x, float y)
 {
 	unsigned int ix = (unsigned int)x;
