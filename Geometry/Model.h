@@ -1,8 +1,6 @@
 
 #pragma once
 
-#include <IO/Stream.h>
-
 #include "Mesh.h"
 
 namespace Sky::Geometry

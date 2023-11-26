@@ -1,6 +1,4 @@
 
-#include <cmath>
-
 #include "Body.h"
 
 Body::Body(unsigned int particleCount, unsigned int constraintCount, Particle* particles, Constraint* constraints)

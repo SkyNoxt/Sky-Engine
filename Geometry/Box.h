@@ -1,8 +1,6 @@
 ﻿
 #pragma once
 
-#include <Math/Vector3.h>
-
 #include <Ray.h>
 
 namespace Sky::Geometry

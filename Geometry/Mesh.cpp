@@ -1,6 +1,4 @@
 ﻿
-#include <cmath>
-
 #include "Mesh.h"
 
 Mesh::Mesh(unsigned int vertexSize, unsigned int vertexCount, unsigned int indexCount, unsigned char* vertices, unsigned int* indices)
@@ -111,8 +109,6 @@ bool Mesh::triangleIntersect(const Ray& ray,
 	float det = edge1.dot(pvec);
 
 	if(culling && det <= 0)
-		return false;
-	if(std::abs(det) == 0)
 		return false;
 
 	float invDet = 1 / det;

@@ -1,16 +1,13 @@
 ﻿
 #include <chrono>
-#include <iostream>
 #include <thread>
-
-#include <Camera/Camera.h>
 
 #include <IO/FileStream.h>
 
+#include <Camera/Camera.h>
+
 #include <Geometry/Model.h>
 #include <Shading/Sampler.h>
-
-#include <Input/Gamepad.h>
 
 #include <FPS.h>
 
