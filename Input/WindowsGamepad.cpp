@@ -3,6 +3,9 @@
 
 #include <cmath>
 
+#include <windows.h>
+#include <xinput.h>
+
 #include "WindowsGamepad.h"
 
 WindowsGamepad::WindowsGamepad()
@@ -14,13 +17,8 @@ void WindowsGamepad::poll()
 	XINPUT_STATE newState;
 	XInputGetState(0, &newState);
 
-	update(state, newState);
-}
-
-void WindowsGamepad::update(State& dest, const XINPUT_STATE& src)
-{
-	float lx = src.Gamepad.sThumbLX;
-	float ly = src.Gamepad.sThumbLY;
+	float lx = newState.Gamepad.sThumbLX;
+	float ly = newState.Gamepad.sThumbLY;
 	float lMag = std::sqrt(lx * lx + ly * ly);
 
 	if(lMag > XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE)
@@ -38,8 +36,8 @@ void WindowsGamepad::update(State& dest, const XINPUT_STATE& src)
 		lx = ly = 0.0f;
 	}
 
-	float rx = src.Gamepad.sThumbRX;
-	float ry = src.Gamepad.sThumbRY;
+	float rx = newState.Gamepad.sThumbRX;
+	float ry = newState.Gamepad.sThumbRY;
 	float rMag = std::sqrt(rx * rx + ry * ry);
 
 	if(rMag > XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE)
@@ -58,20 +56,20 @@ void WindowsGamepad::update(State& dest, const XINPUT_STATE& src)
 	}
 
 	float lt = 0.0f;
-	if(src.Gamepad.bLeftTrigger > XINPUT_GAMEPAD_TRIGGER_THRESHOLD)
-		lt = float(src.Gamepad.bLeftTrigger - XINPUT_GAMEPAD_TRIGGER_THRESHOLD) / (255 - XINPUT_GAMEPAD_TRIGGER_THRESHOLD);
+	if(newState.Gamepad.bLeftTrigger > XINPUT_GAMEPAD_TRIGGER_THRESHOLD)
+		lt = float(newState.Gamepad.bLeftTrigger - XINPUT_GAMEPAD_TRIGGER_THRESHOLD) / (255 - XINPUT_GAMEPAD_TRIGGER_THRESHOLD);
 
 	float rt = 0.0f;
-	if(src.Gamepad.bRightTrigger > XINPUT_GAMEPAD_TRIGGER_THRESHOLD)
-		rt = float(src.Gamepad.bRightTrigger - XINPUT_GAMEPAD_TRIGGER_THRESHOLD) / (255 - XINPUT_GAMEPAD_TRIGGER_THRESHOLD);
+	if(newState.Gamepad.bRightTrigger > XINPUT_GAMEPAD_TRIGGER_THRESHOLD)
+		rt = float(newState.Gamepad.bRightTrigger - XINPUT_GAMEPAD_TRIGGER_THRESHOLD) / (255 - XINPUT_GAMEPAD_TRIGGER_THRESHOLD);
 
-	dest.buttons = src.Gamepad.wButtons;
-	dest.leftThumbX = lx;
-	dest.leftThumbY = -ly; // flip to match Android
-	dest.rightThumbX = rx;
-	dest.rightThumbY = -ry; // flip to match Android
-	dest.leftTrigger = lt;
-	dest.rightTrigger = rt;
+	state.buttons = newState.Gamepad.wButtons;
+	state.leftThumbX = lx;
+	state.leftThumbY = -ly; // flip to match Android
+	state.rightThumbX = rx;
+	state.rightThumbY = -ry; // flip to match Android
+	state.leftTrigger = lt;
+	state.rightTrigger = rt;
 }
 
 WindowsGamepad::~WindowsGamepad()

@@ -1,14 +1,10 @@
 
 #pragma once
 
-#include <windows.h>
-#include <xinput.h>
-
 #include "VirtualGamepad.h"
 
 class WindowsGamepad : public VirtualGamepad
 {
-
   public:
 	// Constructor
 	WindowsGamepad();
@@ -18,7 +14,4 @@ class WindowsGamepad : public VirtualGamepad
 
 	// Destructor
 	~WindowsGamepad() override;
-
-  private:
-	void update(State& dest, const XINPUT_STATE& src);
 };
