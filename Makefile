@@ -40,7 +40,7 @@ $(TARGET): $(OBJECTS)
 	$(CXX) $^ $(LDFLAGS) -o $@
 
 # Compile source files
-%.$(OBJEX): %.cpp $(wildcard %.h) Makefile
+%.$(OBJEX): %.cpp %.h Makefile
 	$(CXX) $(CXXFLAGS) $< -o $@
 
 # Format code
