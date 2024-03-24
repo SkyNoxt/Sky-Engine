@@ -64,6 +64,6 @@ class WinAPIWindow
 		}
 	} windowClass;
 
-	HWND handle;
 	const char* title;
+	HWND handle;
 };
