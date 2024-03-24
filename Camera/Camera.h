@@ -28,7 +28,7 @@ class Camera
 	~Camera() = default;
 
   private:
-	float focalLength;
+	// float focalLength;
 	float fieldOfView;
 	float aspectRatio;
 

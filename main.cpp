@@ -11,9 +11,7 @@
 
 #include <FPS.h>
 
-// OPenCV test
-#include <opencv2/core/core.hpp>
-#include <opencv2/highgui/highgui.hpp>
+#include <Window/WinAPIWindow.h>
 
 using namespace Sky::Geometry;
 using namespace Sky::Math;
@@ -26,6 +24,11 @@ Model* model;
 Sampler* texture;
 
 Matrix4<>* modelMatrix;
+
+Sampler framebuffer = Sampler(4, 1280, 720, 1, 1, 0);
+float depthbuffer[1280 * 720];
+
+bool running = true;
 
 static Vector3<> castRay(Ray& ray, Camera& camera, unsigned int depth)
 {
@@ -100,7 +103,7 @@ static Vector3<> castRay(Ray& ray, Camera& camera, unsigned int depth)
 	return hitColor;
 }
 
-static void rasterLine(Vector3<> one, Vector3<> two, Sampler& framebuffer)
+/*static void rasterLine(Vector3<> one, Vector3<> two, Sampler& framebuffer)
 {
 	int length = abs(two.x - one.x);
 	int yLen = abs(two.y - one.y);
@@ -116,9 +119,9 @@ static void rasterLine(Vector3<> one, Vector3<> two, Sampler& framebuffer)
 		framebuffer.sample<Vector4<unsigned char>>(current.x, current.y) = Vector4<unsigned char>{ 0, 0, 255, 255 };
 		current += increment;
 	}
-}
+}*/
 
-static bool rasterVertex(Vector3<>& raster, const Vector4<>& vertex, unsigned int width, unsigned int height)
+/*static bool rasterVertex(Vector3<>& raster, const Vector4<>& vertex, unsigned int width, unsigned int height)
 {
 	raster = { vertex.x, vertex.y, -vertex.z };
 
@@ -136,7 +139,7 @@ static bool rasterVertex(Vector3<>& raster, const Vector4<>& vertex, unsigned in
 	raster.y = ((1 - (raster.y + 1) * 0.5) * height);
 
 	return true;
-}
+}*/
 
 static void render(Camera& camera, unsigned int width, unsigned int height)
 {
@@ -153,10 +156,6 @@ static void render(Camera& camera, unsigned int width, unsigned int height)
 		}
 	}
 
-	cv::Mat img(height, width, CV_32FC3, framebuffer);
-	imshow("Sky Engine", img);
-	cv::waitKey(1);
-
 	delete[] framebuffer;
 }
 
@@ -169,9 +168,6 @@ float backFace(const Vector3<>& a, const Vector3<>& b, const Vector3<>& c)
 {
 	return (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x);
 }
-
-Sampler framebuffer = Sampler(4, 1280, 720, 1, 1, 0);
-float depthbuffer[1280 * 720];
 
 static void rasterize(Camera& camera, int width, int height)
 {
@@ -218,10 +214,10 @@ static void rasterize(Camera& camera, int width, int height)
 			r2.x = ((r2.x + 1) * 0.5 * width);
 			r2.y = ((1 - (r2.y + 1) * 0.5) * height);
 
-			float xmin = std::min({ r0.x, r1.x, r2.x });
-			float ymin = std::min({ r0.y, r1.y, r2.y });
-			float xmax = std::max({ r0.x, r1.x, r2.x });
-			float ymax = std::max({ r0.y, r1.y, r2.y });
+			float xmin = std::min<float>({ r0.x, r1.x, r2.x });
+			float ymin = std::min<float>({ r0.y, r1.y, r2.y });
+			float xmax = std::max<float>({ r0.x, r1.x, r2.x });
+			float ymax = std::max<float>({ r0.y, r1.y, r2.y });
 
 			// Partial triangle clipping
 			if(xmin >= width || xmax < 0 || ymin >= height || ymax < 0)
@@ -295,28 +291,22 @@ static void rasterize(Camera& camera, int width, int height)
 			}
 		}
 	}
-
-	cv::Mat img(height, width, CV_8UC4, framebuffer.samples);
-	imshow("Sky Engine", img);
-	cv::waitKey(1);
 }
-
-bool running = true;
 
 int main(int argc, char* argv[])
 {
 	int imgWidth = 1280;
 	int imgHeight = 720;
 
-	// OpenCV window
-	namedWindow("Sky Engine", cv::WINDOW_NORMAL);
-	cv::resizeWindow("Sky Engine", imgWidth, imgHeight);
+	WinAPIWindow window = WinAPIWindow("Hello World!");
+	window.destroy = []
+	{ PostQuitMessage(0); };
 
 	framebuffer.samples = (unsigned char*)calloc(1, imgWidth * imgHeight * 4);
 
 	Camera camera = Camera(1.0, 90, imgWidth / (float)imgHeight, 0.1, 200.0);
-	model = new Model(FileStream("/home/sky/Documents/Other/sky/Models/Artisans/Artisans Hub.dat"));
-	texture = new Sampler(FileStream("/home/sky/Documents/Other/sky/Models/Artisans/Artisans Hub.tex"));
+	model = new Model(FileStream("D:/Models/Artisans/Artisans Hub.dat"));
+	texture = new Sampler(FileStream("D:/Models/Artisans/Artisans Hub.tex"));
 
 	// Instance gamepad
 	gamepad = new Gamepad();
@@ -348,26 +338,34 @@ int main(int argc, char* argv[])
 			}
 		});
 
-	// Rendering (main) thread
-	while(running)
-	{
-		auto start = std::chrono::steady_clock::now();
-		auto next = start + std::chrono::milliseconds(32);
+	// Rendering thread
+	std::thread graphics = std::thread(
+		[&]()
+		{
+			while(running)
+			{
+				auto start = std::chrono::steady_clock::now();
+				auto next = start + std::chrono::milliseconds(32);
 
-		if(gamepad->state.buttons & Gamepad::BUTTON_RIGHT_SHOULDER)
-			render(camera, imgWidth, imgHeight);
-		else
-			rasterize(camera, imgWidth, imgHeight);
+				if(gamepad->state.buttons & Gamepad::BUTTON_RIGHT_SHOULDER)
+					render(camera, imgWidth, imgHeight);
+				else
+					rasterize(camera, imgWidth, imgHeight);
 
-		auto ms = std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now() - start);
-		printf("Graphics: %f\n", 1000000000.0 / ms.count());
+				auto ms = std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now() - start);
+				printf("\rGraphics: %f", 1000000000.0 / ms.count());
 
-		if(gamepad->state.buttons & Gamepad::BUTTON_A)
-			running = false;
+				if(gamepad->state.buttons & Gamepad::BUTTON_A)
+					running = false;
 
-		std::this_thread::sleep_until(next);
-	}
+				std::this_thread::sleep_until(next);
+			}
+		});
 
+	// Main (GUI) thread
+	WinAPIWindow::loop();
+
+	graphics.join();
 	logic.join();
 	input.join();
 

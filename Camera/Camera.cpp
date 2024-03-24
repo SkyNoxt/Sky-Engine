@@ -8,14 +8,14 @@ const float Camera::DEG_TO_RAD = std::numbers::pi / 180;
 // const float Camera::RAD_TO_DEG = 180 / std::numbers::pi;
 
 Camera::Camera(float fLength, float fov, float targetRatio, float zNear, float zFar)
-	: focalLength(fLength)
+	: cameraMatrix(Matrix4<>())
+	, viewMatrix(Matrix4<>())
+	//, focalLength(fLength)
 	, fieldOfView(fov)
 	, aspectRatio(targetRatio)
 	, nearPlane(zNear)
 	, farPlane(zFar)
 	, scale(std::tan(fieldOfView * 0.5 * DEG_TO_RAD))
-	, cameraMatrix(Matrix4<>())
-	, viewMatrix(Matrix4<>())
 {
 
 	float invScale = 1.0 / scale;
