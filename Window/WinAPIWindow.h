@@ -1,69 +1,35 @@
 
 #pragma once
 
-#include <windows.h>
-
 class WinAPIWindow
 {
   public:
-	// Callbacks
+	// Callback
 	void (*destroy)() = nullptr;
 
 	// Constructor
-	WinAPIWindow(const char* windowTitle, unsigned int x = CW_USEDEFAULT, unsigned int y = CW_USEDEFAULT, unsigned int width = CW_USEDEFAULT, unsigned int height = CW_USEDEFAULT);
+	WinAPIWindow(const char* windowTitle, unsigned int x = 0x80000000, unsigned int y = 0x80000000, unsigned int width = 0x80000000, unsigned int height = 0x80000000);
 
 	// Destructor
 	~WinAPIWindow() = default;
 
-	static void loop()
-	{
-		MSG message;
-		while(GetMessage(&message, nullptr, 0, 0) > 0)
-		{
-			TranslateMessage(&message);
-			DispatchMessage(&message);
-		}
-	}
+	// Static member function
+	static void loop();
 
   private:
-	static class WindowClass
+	static class Class
 	{
 	  public:
-		const char* name = "Sky Engine Window";
+		// Static member variable
+		static const char* name;
 
-		WindowClass()
-		{
-			windowClass.lpfnWndProc = callback;
-			windowClass.lpszClassName = name;
-			windowClass.hbrBackground = (HBRUSH)COLOR_WINDOW;
-			windowClass.hCursor = LoadCursor(nullptr, IDC_ARROW);
-			windowClass.cbWndExtra = sizeof(WinAPIWindow*);
+		// Constructor
+		Class();
 
-			RegisterClass(&windowClass);
-		}
-
-		~WindowClass()
-		{
-			UnregisterClass(name, GetModuleHandle(nullptr));
-		}
-
-	  private:
-		WNDCLASS windowClass = {};
-
-		static LRESULT callback(HWND handle, UINT message, WPARAM wParam, LPARAM lParam)
-		{
-			WinAPIWindow* window = (WinAPIWindow*)GetWindowLongPtr(handle, 0);
-			switch(message)
-			{
-				case WM_DESTROY:
-					if(window->destroy)
-						window->destroy();
-					break;
-			}
-			return DefWindowProc(handle, message, wParam, lParam);
-		}
+		// Destructor
+		~Class();
 	} windowClass;
 
+	// Member variable
 	const char* title;
-	HWND handle;
 };

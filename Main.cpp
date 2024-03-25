@@ -299,8 +299,7 @@ int main(int argc, char* argv[])
 	int imgHeight = 720;
 
 	WinAPIWindow window = WinAPIWindow("Hello World!");
-	window.destroy = []
-	{ PostQuitMessage(0); };
+	window.destroy = [] {};
 
 	framebuffer.samples = (unsigned char*)calloc(1, imgWidth * imgHeight * 4);
 
