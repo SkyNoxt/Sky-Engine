@@ -31,8 +31,8 @@ all: release
 debug: CXXFLAGS += -g
 debug: $(TARGET)
 
-release: CXXFLAGS += -Ofast -flto
-release: LDFLAGS += -Ofast -flto
+release: CXXFLAGS += -Ofast -march=native -flto
+release: LDFLAGS +=
 release: $(TARGET)
 
 # Link main target
