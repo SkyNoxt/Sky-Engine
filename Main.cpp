@@ -1,7 +1,12 @@
 ﻿
+// C
+#include <cstring>
+
+// C++
 #include <chrono>
 #include <thread>
 
+// Sky Engine
 #include <IO/FileStream.h>
 
 #include <Camera/Camera.h>
@@ -322,7 +327,7 @@ int main(int argc, char* argv[])
 		[]()
 		{
 			while(running)
-				gamepad->poll();
+				gamepad->update();
 		});
 
 	// Game logic thread

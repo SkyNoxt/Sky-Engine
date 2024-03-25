@@ -3,15 +3,18 @@
 
 #include "VirtualGamepad.h"
 
-class WindowsGamepad : public VirtualGamepad
+namespace Sky::Input
 {
-  public:
-	// Constructor
-	WindowsGamepad();
+	class WindowsGamepad : public VirtualGamepad
+	{
+	  public:
+		// Constructor
+		WindowsGamepad();
 
-	// Member function
-	void poll() override;
+		// Member function
+		void update() override;
 
-	// Destructor
-	~WindowsGamepad() override;
-};
+		// Destructor
+		~WindowsGamepad() override;
+	};
+}

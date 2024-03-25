@@ -8,16 +8,18 @@
 
 #include "LinuxGamepad.h"
 
+using Sky::Input::LinuxGamepad;
+
 char joyDevPath[16] = "/dev/input/js0";
 
 LinuxGamepad::LinuxGamepad()
-	: stickDeadzone(8000)
+	: joyFile(open(joyDevPath, O_RDONLY))
+	, stickDeadzone(8000)
 	, triggerDeadzone(400)
-	, joyFile(open(joyDevPath, O_RDONLY))
 {
 }
 
-void LinuxGamepad::poll()
+void LinuxGamepad::update()
 {
 	struct js_event evBuf[255];
 	int evCount = read(joyFile, evBuf, sizeof(evBuf));
@@ -80,10 +82,10 @@ LinuxGamepad::~LinuxGamepad()
 
 const float LinuxGamepad::AXIS_MAP = 1.0 / 32767.0;
 
-float LinuxGamepad::mapCenteredAxis(short rawValue, int deadi)
+float LinuxGamepad::mapCenteredAxis(short raw, short dead)
 {
-	const float value = (rawValue * AXIS_MAP);
-	const float deadZone = (deadi * AXIS_MAP);
+	const float value = (raw * AXIS_MAP);
+	const float deadZone = (dead * AXIS_MAP);
 	if(value > deadZone)
 		return (value - deadZone) / (1.0f - deadZone);
 	if(value < -deadZone)
@@ -91,10 +93,10 @@ float LinuxGamepad::mapCenteredAxis(short rawValue, int deadi)
 	return 0.0f;
 }
 
-float LinuxGamepad::mapAxis(short rawValue, int deadi)
+float LinuxGamepad::mapAxis(short raw, short dead)
 {
-	const float value = (rawValue * AXIS_MAP);
-	const float deadZone = (deadi * AXIS_MAP);
+	const float value = (raw * AXIS_MAP);
+	const float deadZone = (dead * AXIS_MAP);
 	if(value > deadZone)
 		return (value - deadZone) / (1.0f - deadZone);
 	return 0.0f;
@@ -111,9 +113,9 @@ void LinuxGamepad::updateButtonMask(bool down, unsigned int& currentMask, unsign
 		currentMask &= (~flag);
 }
 
-unsigned int LinuxGamepad::linuxButton(unsigned int btn)
+unsigned int LinuxGamepad::linuxButton(unsigned int button)
 {
-	switch(btn)
+	switch(button)
 	{
 		case 0:
 			return BUTTON_A;

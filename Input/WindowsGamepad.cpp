@@ -8,11 +8,13 @@
 
 #include "WindowsGamepad.h"
 
+using Sky::Input::WindowsGamepad;
+
 WindowsGamepad::WindowsGamepad()
 {
 }
 
-void WindowsGamepad::poll()
+void WindowsGamepad::update()
 {
 	XINPUT_STATE newState;
 	XInputGetState(0, &newState);

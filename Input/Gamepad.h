@@ -3,19 +3,19 @@
 
 #include "LinuxGamepad.h"
 
-typedef LinuxGamepad Gamepad;
+typedef Sky::Input::LinuxGamepad Gamepad;
 
 #elif defined(ANDROID)
 
 #include "AndroidGamepad.h"
 
-typedef AndroidGamepad Gamepad;
+typedef Sky::Input::AndroidGamepad Gamepad;
 
 #elif defined(WINDOWS)
 
 #include "WindowsGamepad.h"
 
-typedef WindowsGamepad Gamepad;
+typedef Sky::Input::WindowsGamepad Gamepad;
 
 #else
 
