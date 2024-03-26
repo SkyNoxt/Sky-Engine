@@ -5,12 +5,11 @@
 
 #include "WinAPIWindow.h"
 
-WinAPIWindow::WinAPIWindow(const char* windowTitle, unsigned int x, unsigned int y, unsigned int width, unsigned int height)
-	: title(windowTitle)
+WinAPIWindow::WinAPIWindow(const char* title, unsigned int x, unsigned int y, unsigned int width, unsigned int height)
+	: handle(CreateWindow(windowClass.name, title, WS_OVERLAPPEDWINDOW, x, y, width, height, nullptr, nullptr, GetModuleHandle(nullptr), nullptr))
 {
-	HWND handle = CreateWindow(windowClass.name, title, WS_OVERLAPPEDWINDOW, x, y, width, height, nullptr, nullptr, GetModuleHandle(nullptr), nullptr);
-	SetWindowLongPtr(handle, 0, (LONG_PTR)this);
-	ShowWindow(handle, SW_SHOW);
+	SetWindowLongPtr((HWND)handle, 0, (LONG_PTR)this);
+	ShowWindow((HWND)handle, SW_SHOW);
 }
 
 void WinAPIWindow::loop()

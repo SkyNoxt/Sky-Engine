@@ -359,15 +359,14 @@ int main(int argc, char* argv[])
 				auto ms = std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now() - start);
 				printf("\rGraphics: %f", 1000000000.0 / ms.count());
 
-				if(gamepad->state.buttons & Gamepad::BUTTON_A)
-					running = false;
-
 				std::this_thread::sleep_until(next);
 			}
+			putchar('\n');
 		});
 
 	// Main (GUI) thread
 	WinAPIWindow::loop();
+	running = false;
 
 	graphics.join();
 	logic.join();

@@ -8,7 +8,7 @@ class WinAPIWindow
 	void (*destroy)() = nullptr;
 
 	// Constructor
-	WinAPIWindow(const char* windowTitle, unsigned int x = 0x80000000, unsigned int y = 0x80000000, unsigned int width = 0x80000000, unsigned int height = 0x80000000);
+	WinAPIWindow(const char* title, unsigned int x = 0x80000000, unsigned int y = 0x80000000, unsigned int width = 0x80000000, unsigned int height = 0x80000000);
 
 	// Destructor
 	~WinAPIWindow() = default;
@@ -31,5 +31,5 @@ class WinAPIWindow
 	} windowClass;
 
 	// Member variable
-	const char* title;
+	void* handle;
 };
