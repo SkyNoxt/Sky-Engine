@@ -22,6 +22,9 @@ using namespace Sky::Geometry;
 using namespace Sky::Math;
 using namespace Sky::IO;
 
+const int imgWidth = 1280;
+const int imgHeight = 720;
+
 Gamepad* gamepad;
 FPS* fps;
 
@@ -30,8 +33,8 @@ Sampler* texture;
 
 Matrix4<>* modelMatrix;
 
-Sampler framebuffer = Sampler(4, 1280, 720, 1, 1, 0);
-float depthbuffer[1280 * 720];
+Sampler *framebuffer;
+float depthbuffer[imgWidth * imgHeight];
 
 bool running = true;
 
@@ -176,7 +179,7 @@ float backFace(const Vector3<>& a, const Vector3<>& b, const Vector3<>& c)
 
 static void rasterize(Camera& camera, int width, int height)
 {
-	memset(framebuffer.samples, 0, framebuffer.size * framebuffer.width * framebuffer.height);
+	memset(framebuffer->samples, 0, framebuffer->size * framebuffer->width * framebuffer->height);
 	for(int i = 0; i < width * height; ++i)
 		depthbuffer[i] = 1;
 
@@ -289,7 +292,7 @@ static void rasterize(Camera& camera, int width, int height)
 							uv.y = uv.y - (int)uv.y;
 
 							const Vector4<unsigned char>& texel = texture->sample<Vector4<unsigned char>>((unsigned int)(uv.x * texture->width), (unsigned int)(uv.y * texture->height));
-							framebuffer.sample<Vector4<unsigned char>>(x, y) = Vector4<unsigned char>{ texel.z, texel.y, texel.x, 255 };
+							framebuffer->sample<Vector3<unsigned char>>(x, y) = Vector3<unsigned char>{ texel.z, texel.y, texel.x };
 						}
 					}
 				}
@@ -300,13 +303,14 @@ static void rasterize(Camera& camera, int width, int height)
 
 int main(int argc, char* argv[])
 {
-	int imgWidth = 1280;
-	int imgHeight = 720;
+	WinAPIWindow* window = new WinAPIWindow("Sky Engine", 100, 100, 1280, 720);
+	window->destroy = []()
+	{
+		running = false;
+		WinAPIWindow::quit();
+	};
 
-	WinAPIWindow window = WinAPIWindow("Hello World!");
-	window.destroy = [] {};
-
-	framebuffer.samples = (unsigned char*)calloc(1, imgWidth * imgHeight * 4);
+	framebuffer = new Sampler(3, imgWidth, imgHeight, 1, 1, (unsigned char*)window->data);
 
 	Camera camera = Camera(1.0, 90, imgWidth / (float)imgHeight, 0.1, 200.0);
 	model = new Model(FileStream("D:/Models/Artisans/Artisans Hub.dat"));
@@ -349,7 +353,7 @@ int main(int argc, char* argv[])
 			while(running)
 			{
 				auto start = std::chrono::steady_clock::now();
-				auto next = start + std::chrono::milliseconds(32);
+				auto next = start + std::chrono::milliseconds(16);
 
 				if(gamepad->state.buttons & Gamepad::BUTTON_RIGHT_SHOULDER)
 					render(camera, imgWidth, imgHeight);
@@ -359,6 +363,8 @@ int main(int argc, char* argv[])
 				auto ms = std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now() - start);
 				printf("\rGraphics: %f", 1000000000.0 / ms.count());
 
+				window->update();
+
 				std::this_thread::sleep_until(next);
 			}
 			putchar('\n');
@@ -366,13 +372,14 @@ int main(int argc, char* argv[])
 
 	// Main (GUI) thread
 	WinAPIWindow::loop();
-	running = false;
 
 	graphics.join();
 	logic.join();
 	input.join();
 
+	delete fps;
 	delete gamepad;
+	delete window;
 
 	return 0;
 }

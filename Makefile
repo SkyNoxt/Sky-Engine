@@ -7,7 +7,7 @@ EXECUTABLE = SkyEngine
 
 ifdef OS
 	CXXFLAGS += -D WINDOWS -Wno-deprecated-declarations
-	LDFLAGS += -fuse-ld=lld -l user32 -l xinput
+	LDFLAGS += -fuse-ld=lld -l user32 -l gdi32 -l xinput
 	EXEEX = exe
 	OBJEX = obj
 else

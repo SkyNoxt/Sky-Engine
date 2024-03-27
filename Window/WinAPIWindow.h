@@ -4,19 +4,23 @@
 class WinAPIWindow
 {
   public:
+	// Static member functions
+	static void loop();
+	static void quit();
+
 	// Callback
 	void (*destroy)() = nullptr;
 
 	// Constructor
-	WinAPIWindow(const char* title, unsigned int x = 0x80000000, unsigned int y = 0x80000000, unsigned int width = 0x80000000, unsigned int height = 0x80000000);
+	WinAPIWindow(const char* title, unsigned int x, unsigned int y, unsigned int width, unsigned int height);
+
+	// Member function
+	void update();
 
 	// Destructor
 	~WinAPIWindow() = default;
 
-	// Static member function
-	static void loop();
-
-  private:
+	// private:
 	static class Class
 	{
 	  public:
@@ -30,6 +34,10 @@ class WinAPIWindow
 		~Class();
 	} windowClass;
 
-	// Member variable
+	// Member variables
 	void* handle;
+
+	void* context;
+	void* device;
+	void* data;
 };
